@@ -1,0 +1,15 @@
+03/23/2018 16:44:39.925 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - Issuer certificate saved to PKI\CA\private\ProsysSampleCA.der
+03/23/2018 16:44:40.648 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - Issuer private key saved to PKI\CA\private\ProsysSampleCA.pem
+03/23/2018 16:44:40.648 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - Creating a new application certificate & private key
+03/23/2018 16:44:40.811 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - Created a new Certificate: O=Sample Organisation, CN=SampleConsoleServer@con-mmw; ApplicationURI=urn:con-mmw:OPCUA:SampleConsoleServer KeySize=2048
+03/23/2018 16:44:41.014 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - HTTPS certificate saved to PKI\CA\private\SampleConsoleServer@con-mmw_https.der
+03/23/2018 16:44:41.023 INFO  [main] com.prosysopc.ua.ApplicationIdentity                - HTTPS private key saved to PKI\CA\private\SampleConsoleServer@con-mmw_https.pem
+03/23/2018 16:44:41.132 INFO  [main] com.prosysopc.ua.server.NodeManagerTable            - Loading model from jar:file:/C:/Users/mmw/Documents/Uni/BPA/sick/Libraries/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar!/com/prosysopc/ua/types/opcua/server/Opc.Ua.NodeSet2.xml
+03/23/2018 16:44:49.037 WARN  [main] com.prosysopc.ua.server.UaServer                    - Could not register server (offline) to Discovery Server at opc.tcp://localhost:4840 Cause: Failed to retrieve endpoints. The server is not available: opc.tcp://localhost:4840 
+03/23/2018 16:44:49.228 INFO  [main] com.prosysopc.ua.samples.server.SampleConsoleServer     - Address space created.
+03/23/2018 16:44:49.665 INFO  [main] com.prosysopc.ua.server.UaServer                    - Server endpoint: opc.tcp://con-mmw.contact.de:52520/OPCUA/SampleConsoleServer [[http://opcfoundation.org/UA/SecurityPolicy#None,None], [http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15,Sign], [http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15,SignAndEncrypt], [http://opcfoundation.org/UA/SecurityPolicy#Basic256,Sign], [http://opcfoundation.org/UA/SecurityPolicy#Basic256,SignAndEncrypt]]
+03/23/2018 16:44:49.681 INFO  [main] com.prosysopc.ua.server.UaServer                    - Endpoint bound to: [127.0.0.1:52520, 141.56.230.227:52520]
+03/23/2018 16:44:49.743 INFO  [main] com.prosysopc.ua.server.UaServer                    - Server endpoint: https://con-mmw.contact.de:52443/OPCUA/SampleConsoleServer [[http://opcfoundation.org/UA/SecurityPolicy#None,None]]
+03/23/2018 16:44:49.844 INFO  [main] com.prosysopc.ua.server.UaServer                    - Endpoint bound to: [127.0.0.1:52443, 141.56.230.227:52443]
+03/23/2018 16:44:55.092 WARN  [main] com.prosysopc.ua.server.UaServer                    - Could not register server (online) to Discovery Server at opc.tcp://localhost:4840 Cause: Failed to retrieve endpoints. The server is not available: opc.tcp://localhost:4840 
+03/23/2018 16:44:55.132 INFO  [main] com.prosysopc.ua.samples.server.SampleConsoleServer     - Simulation started.
