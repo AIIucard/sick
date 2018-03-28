@@ -8,10 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 
 public class PropertyManager {
-	// TODO: Fix this
 	private final static String DEFAULT_CFG_FILE = "cfg" + File.separator + "default.cfg";
 	private final static String USER_CFG_FILE = "cfg" + File.separator + "user.cfg";
 
@@ -21,7 +22,7 @@ public class PropertyManager {
 	private static Object lock = new Object();
 	private static PropertyManager instance = null;
 
-	private Hashtable propertiesHashTable = null;
+	private Hashtable<String, ArrayList<PropertyChangeListener>> listeners = null;
 
 	private PropertyManager() {
 	}
@@ -42,21 +43,22 @@ public class PropertyManager {
 	private void loadProperties() throws IOException {
 
 		// create and load default properties
-		FileInputStream inputStream = new FileInputStream(DEFAULT_CFG_FILE);
-		defaultProps.load(inputStream);
-		inputStream.close();
+		FileInputStream in = new FileInputStream(DEFAULT_CFG_FILE);
+		defaultProps.load(in);
+		in.close();
 
 		// create application properties with default
-		defaultProps = new Properties(defaultProps);
+		userProps = new Properties(defaultProps);
 
 		try {
 			// user/application properties
-			inputStream = new FileInputStream(USER_CFG_FILE);
-			userProps.load(inputStream);
-			inputStream.close();
+			in = new FileInputStream(USER_CFG_FILE);
+			userProps.load(in);
+			in.close();
 		} catch (Throwable th) {
 			// TODO: log something
 		}
+
 	}
 
 	public void storeProperties() throws IOException {
@@ -68,6 +70,7 @@ public class PropertyManager {
 		out = new FileOutputStream(USER_CFG_FILE);
 		userProps.store(out, "---App/User properties---");
 		out.close();
+
 	}
 
 	public String getProperty(String key) {
@@ -95,39 +98,52 @@ public class PropertyManager {
 		oldValue = getProperty(key);
 
 		userProps.setProperty(key, val);
-		if (propertiesHashTable.containsKey(key)) {
-			list = (ArrayList) propertiesHashTable.get(key);
+		if (listeners.containsKey(key)) {
+			list = (ArrayList<?>) listeners.get(key);
 			int len = list.size();
 			if (len > 0) {
 				PropertyChangeEvent evt = new PropertyChangeEvent(this, key, oldValue, val);
 				for (int i = 0; i < len; i++) {
-					if (list.get(i) instanceof PropertyChangeListener) {
+					if (list.get(i) instanceof PropertyChangeListener)
 						((PropertyChangeListener) list.get(i)).propertyChange(evt);
-					}
 				}
 			}
 		}
+
 	}
 
-	public boolean addProperty(String key, PropertyChangeListener listener) {
+	public boolean addListener(String key, PropertyChangeListener listener) {
 		boolean added = false;
-		ArrayList list = null;
-		if (propertiesHashTable == null)
-			propertiesHashTable = new Hashtable();
+		ArrayList<PropertyChangeListener> list = null;
+		if (listeners == null)
+			listeners = new Hashtable<String, ArrayList<PropertyChangeListener>>();
 
-		if (!propertiesHashTable.contains(key)) {
-			list = new ArrayList();
+		if (!listeners.contains(key)) {
+			list = new ArrayList<PropertyChangeListener>();
 			added = list.add(listener);
-			propertiesHashTable.put(key, list);
+			listeners.put(key, list);
 		} else {
-			list = (ArrayList) propertiesHashTable.get(key);
+			list = (ArrayList<PropertyChangeListener>) listeners.get(key);
 			added = list.add(listener);
 		}
 		return (added);
 	}
 
 	public void removeListener(PropertyChangeListener listener) {
-		if (propertiesHashTable != null && propertiesHashTable.size() > 0)
-			propertiesHashTable.remove(listener);
+		String keyToDelete = null;
+		if (listeners != null && listeners.size() > 0) {
+			for (Entry<String, ArrayList<PropertyChangeListener>> entry : listeners.entrySet()) {
+				for (PropertyChangeListener currentListener : entry.getValue()) {
+					if (Objects.equals(listener, currentListener)) {
+						keyToDelete = entry.getKey();
+						break;
+					}
+				}
+			}
+
+		}
+		if (keyToDelete != null) {
+			listeners.remove(keyToDelete);
+		}
 	}
 }
