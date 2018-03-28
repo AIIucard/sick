@@ -43,20 +43,24 @@ public class PropertyManager {
 	private void loadProperties() throws IOException {
 
 		// create and load default properties
+		System.out.println("Load default properties file...");
 		FileInputStream in = new FileInputStream(DEFAULT_CFG_FILE);
 		defaultProps.load(in);
 		in.close();
+		System.out.println("Default properties loaded.");
 
 		// create application properties with default
 		userProps = new Properties(defaultProps);
 
 		try {
 			// user/application properties
+			System.out.println("Load user properties file...");
 			in = new FileInputStream(USER_CFG_FILE);
 			userProps.load(in);
 			in.close();
+			System.out.println("User properties loaded.");
 		} catch (Throwable th) {
-			// TODO: log something
+			System.err.println("Cannot load user properties!");
 		}
 
 	}
@@ -66,11 +70,12 @@ public class PropertyManager {
 		FileOutputStream out = new FileOutputStream(DEFAULT_CFG_FILE);
 		defaultProps.store(out, "---Default properties---");
 		out.close();
+		System.out.println("Stored default properties.");
 
 		out = new FileOutputStream(USER_CFG_FILE);
-		userProps.store(out, "---App/User properties---");
+		userProps.store(out, "---User properties---");
 		out.close();
-
+		System.out.println("Stored user properties.");
 	}
 
 	public String getProperty(String key) {
