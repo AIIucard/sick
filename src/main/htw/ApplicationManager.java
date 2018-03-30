@@ -2,6 +2,9 @@ package main.htw;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ApplicationManager {
 
 	private boolean isRunning = false;
@@ -11,6 +14,8 @@ public class ApplicationManager {
 
 	private static Thread t = null;
 	private static BusinessLogic logic = null;
+
+	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private ApplicationManager() {
 
@@ -28,15 +33,14 @@ public class ApplicationManager {
 	}
 
 	public void startApplication() {
-		if(!isRunning){
-                    isRunning = true;
-                    logic = new BusinessLogic();
-                    t = new Thread(logic);
-                    t.start();
-                }
-                else {
-                    
-                }
+		if (!isRunning) {
+			isRunning = true;
+			logic = new BusinessLogic();
+			t = new Thread(logic);
+			t.start();
+		} else {
+			log.debug("Tried to start new thread but application is already running!");
+		}
 	}
 
 	public void stopApplication() {
