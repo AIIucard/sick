@@ -1,7 +1,5 @@
 package main.htw.handler;
 
-import main.htw.IHandler;
-
 public class CoordinatesHandler implements IHandler{
 
 	@Override

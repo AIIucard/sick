@@ -1,4 +1,4 @@
-package main.htw;
+package main.htw.handler;
 
 public interface IHandler {
 	public void handleConnection();
