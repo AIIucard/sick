@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class ApplicationManager {
 
-	private boolean isRunnig = false;
+	private boolean isRunning = false;
 
 	private static Object lock = new Object();
 	private static ApplicationManager instance = null;
@@ -28,20 +28,25 @@ public class ApplicationManager {
 	}
 
 	public void startApplication() {
-		isRunnig = true;
-		logic = new BusinessLogic();
-		t = new Thread(logic);
-		t.start();
+		if(!isRunning){
+                    isRunning = true;
+                    logic = new BusinessLogic();
+                    t = new Thread(logic);
+                    t.start();
+                }
+                else {
+                    
+                }
 	}
 
 	public void stopApplication() {
-		isRunnig = false;
+		isRunning = false;
 		if (t != null && logic != null) {
 			logic.terminate();
 		}
 	}
 
 	public boolean isRunning() {
-		return isRunnig;
+		return isRunning;
 	}
 }
