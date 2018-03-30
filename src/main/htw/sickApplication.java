@@ -104,7 +104,7 @@ public class sickApplication extends Application {
 		if (propManager != null) {
 			propManager.storeProperties();
 		} else {
-			System.err.println("Cannot store  properties!");
+                        log.error("Cannot store properties!");
 		}
 	}
 
