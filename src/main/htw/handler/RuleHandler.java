@@ -1,7 +1,5 @@
 package main.htw.handler;
 
-import main.htw.IHandler;
-
 public class RuleHandler implements IHandler {
 
 	@Override

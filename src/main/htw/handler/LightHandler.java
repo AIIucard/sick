@@ -1,7 +1,5 @@
 package main.htw.handler;
 
-import main.htw.IHandler;
-
 public class LightHandler implements IHandler {
 
 	@Override
