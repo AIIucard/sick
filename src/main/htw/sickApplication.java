@@ -2,6 +2,9 @@ package main.htw;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +24,8 @@ public class sickApplication extends Application {
 	private static double width = 200;
 	private static double height = 200;
 
+	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
 	public static void main(String[] args) {
 
 		launch(args);
@@ -35,7 +40,7 @@ public class sickApplication extends Application {
 				width = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_WIDTH));
 				height = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_HEIGHT));
 			} else {
-				System.out.println("Continue without loaded properties...");
+				log.info("Continue without loaded properties...");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -53,7 +58,7 @@ public class sickApplication extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				System.out.println("Started Application...");
+				log.info("Started Application...");
 				try {
 					appManager = ApplicationManager.getInstance();
 					appManager.startApplication();
@@ -72,7 +77,7 @@ public class sickApplication extends Application {
 				try {
 					appManager = ApplicationManager.getInstance();
 					appManager.stopApplication();
-					System.out.println("Stopped Application...");
+					log.info("Stopped Application...");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
