@@ -1,5 +1,4 @@
 <configuration>
-  
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>log/sick.log</file>
     <append>false</append>
