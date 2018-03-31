@@ -51,6 +51,22 @@ public class SickApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		createPrimaryStage(primaryStage);
+		addPropertyListener(primaryStage);
+		primaryStage.show();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		if (propManager != null) {
+			propManager.storeProperties();
+		} else {
+			log.error("Cannot store properties!");
+		}
+	}
+
+	public void createPrimaryStage(Stage primaryStage) {
 
 		primaryStage.setTitle("This is S!ck");
 		Button startButton = new Button();
@@ -99,16 +115,23 @@ public class SickApplication extends Application {
 		borderPane.setBottom(emulatorGUI);
 
 		primaryStage.setScene(new Scene(borderPane, width, height));
-		primaryStage.show();
 	}
 
-	@Override
-	public void stop() throws Exception {
-		super.stop();
-		if (propManager != null) {
-			propManager.storeProperties();
-		} else {
-			log.error("Cannot store properties!");
-		}
+	private void addPropertyListener(Stage primaryStage) {
+		primaryStage.getScene().widthProperty().addListener((obs, oldVal, newVal) -> {
+			if (propManager != null) {
+				propManager.setProperty(PropertiesKeys.APP_WIDTH, "" + newVal);
+			} else {
+				log.error("Cannot change app width property!");
+			}
+		});
+
+		primaryStage.getScene().heightProperty().addListener((obs, oldVal, newVal) -> {
+			if (propManager != null) {
+				propManager.setProperty(PropertiesKeys.APP_HEIGHT, "" + newVal);
+			} else {
+				log.error("Cannot change app height property!");
+			}
+		});
 	}
 }
