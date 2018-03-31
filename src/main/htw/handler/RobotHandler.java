@@ -2,23 +2,23 @@ package main.htw.handler;
 
 import java.io.IOException;
 
-public class LightHandler implements IHandler {
+public class RobotHandler implements IHandler {
 
 	private static Object lock = new Object();
-	private static LightHandler instance = null;
+	private static RobotHandler instance = null;
 
-	public static LightHandler getInstance() throws IOException {
+	public static RobotHandler getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new LightHandler();
+					instance = new RobotHandler();
 				}
 			}
 		}
 		return (instance);
 	}
 
-	private LightHandler() {
+	private RobotHandler() {
 		// TODO Auto-generated constructor stub
 	}
 
