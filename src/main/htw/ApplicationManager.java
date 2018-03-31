@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.htw.database.SickDatabase;
 import main.htw.threads.BusinessLogicThread;
 
 public class ApplicationManager {
@@ -17,6 +18,8 @@ public class ApplicationManager {
 	private static Thread t = null;
 	private static BusinessLogicThread logic = null;
 
+	private static SickDatabase database = null;
+
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private ApplicationManager() {
@@ -28,6 +31,7 @@ public class ApplicationManager {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new ApplicationManager();
+					database = new SickDatabase();
 				}
 			}
 		}
@@ -37,7 +41,7 @@ public class ApplicationManager {
 	public void startApplication() {
 		if (!isRunning) {
 			isRunning = true;
-			logic = new BusinessLogicThread();
+			logic = new BusinessLogicThread(getDatabase());
 			t = new Thread(logic, "SickBusinessLogic");
 			t.start();
 		} else {
@@ -54,5 +58,9 @@ public class ApplicationManager {
 
 	public boolean isRunning() {
 		return isRunning;
+	}
+
+	public SickDatabase getDatabase() {
+		return database;
 	}
 }
