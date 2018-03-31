@@ -11,5 +11,4 @@ package main.htw.messages;
  */
 public class obdevice {
     
-    
 }
