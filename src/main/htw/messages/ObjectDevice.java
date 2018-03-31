@@ -11,7 +11,7 @@ import org.json.JSONArray;
  *
  * @author stefan.riedel
  */
-public class obdevice {
+public class ObjectDevice {
     
     private long timestamp;
     private boolean connected;
