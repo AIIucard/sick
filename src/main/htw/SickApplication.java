@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import main.htw.emulator.EmulatorGUI;
 
-public class sickApplication extends Application {
+public class SickApplication extends Application {
 
 	private static PropertyManager propManager = null;
 	private static ApplicationManager appManager = null;
