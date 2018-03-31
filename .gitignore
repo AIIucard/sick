@@ -1,5 +1,6 @@
 /nbproject/private/
-/build/
+/build/*
 /dist/
-/bin/
-/log/
+*
+/bin/*
+/log/*

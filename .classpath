@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="cfg"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Prosysopc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Json"/>
 	<classpathentry kind="lib" path="lib/bcpkix-jdk15on-1.54.jar"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk15on-1.54.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
@@ -15,5 +16,6 @@
 	<classpathentry kind="lib" path="lib/opc-ua-stack-1.3.343-167.jar"/>
 	<classpathentry kind="lib" path="lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Logback"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Websocket"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

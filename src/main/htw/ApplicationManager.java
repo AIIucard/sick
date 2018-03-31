@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.htw.threads.BusinessLogicThread;
+
 public class ApplicationManager {
 
 	private boolean isRunning = false;
@@ -13,7 +15,7 @@ public class ApplicationManager {
 	private static ApplicationManager instance = null;
 
 	private static Thread t = null;
-	private static BusinessLogic logic = null;
+	private static BusinessLogicThread logic = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -35,8 +37,8 @@ public class ApplicationManager {
 	public void startApplication() {
 		if (!isRunning) {
 			isRunning = true;
-			logic = new BusinessLogic();
-			t = new Thread(logic);
+			logic = new BusinessLogicThread();
+			t = new Thread(logic, "SickBusinessLogic");
 			t.start();
 		} else {
 			log.debug("Tried to start new thread but application is already running!");
