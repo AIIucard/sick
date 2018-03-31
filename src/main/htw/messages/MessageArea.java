@@ -9,11 +9,6 @@ package main.htw.messages;
  *
  * @author stefan.riedel
  */
-public class GetMessageoOjects {
-    
-    private String url = "";
-    private String methode = "";
-    private String url_params = "";
-    private String data;
+public class MessageArea {
     
 }
