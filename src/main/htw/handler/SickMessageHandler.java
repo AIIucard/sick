@@ -62,6 +62,8 @@ public class SickMessageHandler {
     }
 
     private void handleGeofencingEvent(JSONObject payload) {
+        // get Area ID 
+        // Badge ID
         log.warn("NOT IMPLEMENTED");
     }
 }
