@@ -25,7 +25,7 @@ public class RTLSConnectionManager {
 
     Session userSession = null;
 
-    private MessageHandler messageHandler;
+    private SickMessageHandler sickMessageHandler;
 
     private static Object lock = new Object();
     private static RTLSConnectionManager instance = null;
@@ -82,10 +82,15 @@ public class RTLSConnectionManager {
      */
     @OnMessage
     public void onMessage(String message) {
-        if (this.messageHandler != null) {
-            this.messageHandler.handleMessage(message);
-            log.info(message);
+        if (this.sickMessageHandler == null) {
+            log.warn("Message handler uninitialized!");
+            try {
+                this.sickMessageHandler = SickMessageHandler.getInstance();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        this.sickMessageHandler.handleMessage(message);
     }
 
     /**
@@ -93,8 +98,8 @@ public class RTLSConnectionManager {
      *
      * @param msgHandler
      */
-    public void addMessageHandler(MessageHandler msgHandler) {
-        this.messageHandler = msgHandler;
+    public void addMessageHandler(SickMessageHandler msgHandler) {
+        this.sickMessageHandler = msgHandler;
     }
 
     /**
@@ -104,15 +109,5 @@ public class RTLSConnectionManager {
      */
     public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(message);
-    }
-
-    /**
-     * Message handler.
-     *
-     * @author Jiji_Sasidharan
-     */
-    public static interface MessageHandler {
-
-        public void handleMessage(String message);
     }
 }

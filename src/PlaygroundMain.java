@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import main.htw.PropertiesKeys;
 import main.htw.PropertyManager;
 import main.htw.handler.RTLSConnectionManager;
+import main.htw.handler.SickMessageHandler;
 import org.slf4j.LoggerFactory;
 
 /*
@@ -34,11 +35,7 @@ public class PlaygroundMain {
             clientEndPoint.connectToURI(new URI(uriString));
 
             // add listener
-            clientEndPoint.addMessageHandler(new RTLSConnectionManager.MessageHandler() {
-                public void handleMessage(String message) {
-                    log.info(message);
-                }
-            });
+            clientEndPoint.addMessageHandler(SickMessageHandler.getInstance());
 
             // send message to websocket
             clientEndPoint.sendMessage(
