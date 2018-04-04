@@ -16,6 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import main.htw.emulator.EmulatorGUI;
+import main.htw.properties.PropertiesKeys;
+import main.htw.properties.PropertyManager;
 
 public class SickApplication extends Application {
 

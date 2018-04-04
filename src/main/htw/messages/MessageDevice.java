@@ -5,220 +5,218 @@
  */
 package main.htw.messages;
 
-import org.json.JSONArray;
-
 /**
  *
  * @author stefan.riedel
  */
 public class MessageDevice {
-    
-    private long timestamp;
-    private boolean connected;
-    private int networkid;
-    private int anchorID;
-    private int shortAddr;
-    private int parentAddr;
-    private String networkRole;
-    private String networkType;
-    private String appRole;
-    private int deviceState;
-    private boolean activated;
-    private String customName;
-    private String customType;
-    private String hardwareName;
-    private int softwareversion;
-    private float battery;
-    private int rssi;
-    private String rangingCapabilities;
-    private String shortAddrAsHexString;
-    private int address;
-    private String addressAsHexString;
-    private String parentAddrAsHexString;
-    private String softwareVersionAsString;
 
-    public long getTimestamp() {
-        return timestamp;
-    }
+	private long timestamp;
+	private boolean connected;
+	private int networkid;
+	private int anchorID;
+	private int shortAddr;
+	private int parentAddr;
+	private String networkRole;
+	private String networkType;
+	private String appRole;
+	private int deviceState;
+	private boolean activated;
+	private String customName;
+	private String customType;
+	private String hardwareName;
+	private int softwareversion;
+	private float battery;
+	private int rssi;
+	private String rangingCapabilities;
+	private String shortAddrAsHexString;
+	private int address;
+	private String addressAsHexString;
+	private String parentAddrAsHexString;
+	private String softwareVersionAsString;
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+	public long getTimestamp() {
+		return timestamp;
+	}
 
-    public boolean isConnected() {
-        return connected;
-    }
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    public void setConnected(boolean connected) {
-        this.connected = connected;
-    }
+	public boolean isConnected() {
+		return connected;
+	}
 
-    public int getNetworkid() {
-        return networkid;
-    }
+	public void setConnected(boolean connected) {
+		this.connected = connected;
+	}
 
-    public void setNetworkid(int networkid) {
-        this.networkid = networkid;
-    }
+	public int getNetworkid() {
+		return networkid;
+	}
 
-    public int getAnchorID() {
-        return anchorID;
-    }
+	public void setNetworkid(int networkid) {
+		this.networkid = networkid;
+	}
 
-    public void setAnchorID(int anchorID) {
-        this.anchorID = anchorID;
-    }
+	public int getAnchorID() {
+		return anchorID;
+	}
 
-    public int getShortAddr() {
-        return shortAddr;
-    }
+	public void setAnchorID(int anchorID) {
+		this.anchorID = anchorID;
+	}
 
-    public void setShortAddr(int shortAddr) {
-        this.shortAddr = shortAddr;
-    }
+	public int getShortAddr() {
+		return shortAddr;
+	}
 
-    public int getParentAddr() {
-        return parentAddr;
-    }
+	public void setShortAddr(int shortAddr) {
+		this.shortAddr = shortAddr;
+	}
 
-    public void setParentAddr(int parentAddr) {
-        this.parentAddr = parentAddr;
-    }
+	public int getParentAddr() {
+		return parentAddr;
+	}
 
-    public String getNetworkRole() {
-        return networkRole;
-    }
+	public void setParentAddr(int parentAddr) {
+		this.parentAddr = parentAddr;
+	}
 
-    public void setNetworkRole(String networkRole) {
-        this.networkRole = networkRole;
-    }
+	public String getNetworkRole() {
+		return networkRole;
+	}
 
-    public String getNetworkType() {
-        return networkType;
-    }
+	public void setNetworkRole(String networkRole) {
+		this.networkRole = networkRole;
+	}
 
-    public void setNetworkType(String networkType) {
-        this.networkType = networkType;
-    }
+	public String getNetworkType() {
+		return networkType;
+	}
 
-    public String getAppRole() {
-        return appRole;
-    }
+	public void setNetworkType(String networkType) {
+		this.networkType = networkType;
+	}
 
-    public void setAppRole(String appRole) {
-        this.appRole = appRole;
-    }
+	public String getAppRole() {
+		return appRole;
+	}
 
-    public int getDeviceState() {
-        return deviceState;
-    }
+	public void setAppRole(String appRole) {
+		this.appRole = appRole;
+	}
 
-    public void setDeviceState(int deviceState) {
-        this.deviceState = deviceState;
-    }
+	public int getDeviceState() {
+		return deviceState;
+	}
 
-    public boolean isActivated() {
-        return activated;
-    }
+	public void setDeviceState(int deviceState) {
+		this.deviceState = deviceState;
+	}
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
+	public boolean isActivated() {
+		return activated;
+	}
 
-    public String getCustomName() {
-        return customName;
-    }
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
 
-    public void setCustomName(String customName) {
-        this.customName = customName;
-    }
+	public String getCustomName() {
+		return customName;
+	}
 
-    public String getCustomType() {
-        return customType;
-    }
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
 
-    public void setCustomType(String customType) {
-        this.customType = customType;
-    }
+	public String getCustomType() {
+		return customType;
+	}
 
-    public String getHardwareName() {
-        return hardwareName;
-    }
+	public void setCustomType(String customType) {
+		this.customType = customType;
+	}
 
-    public void setHardwareName(String hardwareName) {
-        this.hardwareName = hardwareName;
-    }
+	public String getHardwareName() {
+		return hardwareName;
+	}
 
-    public int getSoftwareversion() {
-        return softwareversion;
-    }
+	public void setHardwareName(String hardwareName) {
+		this.hardwareName = hardwareName;
+	}
 
-    public void setSoftwareversion(int softwareversion) {
-        this.softwareversion = softwareversion;
-    }
+	public int getSoftwareversion() {
+		return softwareversion;
+	}
 
-    public float getBattery() {
-        return battery;
-    }
+	public void setSoftwareversion(int softwareversion) {
+		this.softwareversion = softwareversion;
+	}
 
-    public void setBattery(float battery) {
-        this.battery = battery;
-    }
+	public float getBattery() {
+		return battery;
+	}
 
-    public int getRssi() {
-        return rssi;
-    }
+	public void setBattery(float battery) {
+		this.battery = battery;
+	}
 
-    public void setRssi(int rssi) {
-        this.rssi = rssi;
-    }
+	public int getRssi() {
+		return rssi;
+	}
 
-    public String getRangingCapabilities() {
-        return rangingCapabilities;
-    }
+	public void setRssi(int rssi) {
+		this.rssi = rssi;
+	}
 
-    public void setRangingCapabilities(String rangingCapabilities) {
-        this.rangingCapabilities = rangingCapabilities;
-    }
+	public String getRangingCapabilities() {
+		return rangingCapabilities;
+	}
 
-    public String getShortAddrAsHexString() {
-        return shortAddrAsHexString;
-    }
+	public void setRangingCapabilities(String rangingCapabilities) {
+		this.rangingCapabilities = rangingCapabilities;
+	}
 
-    public void setShortAddrAsHexString(String shortAddrAsHexString) {
-        this.shortAddrAsHexString = shortAddrAsHexString;
-    }
+	public String getShortAddrAsHexString() {
+		return shortAddrAsHexString;
+	}
 
-    public int getAddress() {
-        return address;
-    }
+	public void setShortAddrAsHexString(String shortAddrAsHexString) {
+		this.shortAddrAsHexString = shortAddrAsHexString;
+	}
 
-    public void setAddress(int address) {
-        this.address = address;
-    }
+	public int getAddress() {
+		return address;
+	}
 
-    public String getAddressAsHexString() {
-        return addressAsHexString;
-    }
+	public void setAddress(int address) {
+		this.address = address;
+	}
 
-    public void setAddressAsHexString(String addressAsHexString) {
-        this.addressAsHexString = addressAsHexString;
-    }
+	public String getAddressAsHexString() {
+		return addressAsHexString;
+	}
 
-    public String getParentAddrAsHexString() {
-        return parentAddrAsHexString;
-    }
+	public void setAddressAsHexString(String addressAsHexString) {
+		this.addressAsHexString = addressAsHexString;
+	}
 
-    public void setParentAddrAsHexString(String parentAddrAsHexString) {
-        this.parentAddrAsHexString = parentAddrAsHexString;
-    }
+	public String getParentAddrAsHexString() {
+		return parentAddrAsHexString;
+	}
 
-    public String getSoftwareVersionAsString() {
-        return softwareVersionAsString;
-    }
+	public void setParentAddrAsHexString(String parentAddrAsHexString) {
+		this.parentAddrAsHexString = parentAddrAsHexString;
+	}
 
-    public void setSoftwareVersionAsString(String softwareVersionAsString) {
-        this.softwareVersionAsString = softwareVersionAsString;
-    }
-    
+	public String getSoftwareVersionAsString() {
+		return softwareVersionAsString;
+	}
+
+	public void setSoftwareVersionAsString(String softwareVersionAsString) {
+		this.softwareVersionAsString = softwareVersionAsString;
+	}
+
 }

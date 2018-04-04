@@ -1,4 +1,4 @@
-package main.htw;
+package main.htw.properties;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ public class PropertyManager {
 	private final static String DEFAULT_CFG_FILE = "cfg" + File.separator + "default.cfg";
 	private final static String USER_CFG_FILE = "cfg" + File.separator + "user.cfg";
 
-	private Properties defaultProps = new Properties();
+	private Properties defaultProps = new CleanProperties();
 	private Properties userProps = null;
 
 	private static Object lock = new Object();
@@ -46,7 +46,7 @@ public class PropertyManager {
 		log.info("Default properties loaded.");
 
 		// create application properties with default
-		userProps = new Properties(defaultProps);
+		userProps = new CleanProperties(defaultProps);
 
 		try {
 			// user/application properties
@@ -62,12 +62,14 @@ public class PropertyManager {
 
 	public void storeProperties() throws IOException {
 		FileOutputStream out = new FileOutputStream(DEFAULT_CFG_FILE);
-		defaultProps.store(out, "---Default properties---");
+		// defaultProps.store(out, "---Default properties---");
+		defaultProps.store(out, "");
 		out.close();
 		log.info("Stored default properties.");
 
 		out = new FileOutputStream(USER_CFG_FILE);
-		userProps.store(out, "---User properties---");
+		// userProps.store(out, "---User properties---");
+		userProps.store(out, "");
 		out.close();
 		log.info("Stored user properties.");
 	}

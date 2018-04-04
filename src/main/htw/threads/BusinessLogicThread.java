@@ -10,7 +10,7 @@ public class BusinessLogicThread implements Runnable {
 	private volatile boolean running = true;
 	private static Thread t = null;
 	private static RTLSThread logic = null;
-	private static SickDatabase database = null;
+	private SickDatabase database = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

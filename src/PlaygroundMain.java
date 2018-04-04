@@ -7,10 +7,10 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import main.htw.PropertiesKeys;
-import main.htw.PropertyManager;
 import main.htw.handler.RTLSConnectionManager;
 import main.htw.handler.SickMessageHandler;
+import main.htw.properties.PropertiesKeys;
+import main.htw.properties.PropertyManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

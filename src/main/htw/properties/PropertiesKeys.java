@@ -1,4 +1,4 @@
-package main.htw;
+package main.htw.properties;
 
 public class PropertiesKeys {
 
