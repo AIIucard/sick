@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.htw.objects;
+package main.htw.datamodell;
 
 /**
  *
@@ -13,7 +13,7 @@ public class Badge {
     private String id;
     private String label;
     private Integer currentGeoFence;
-    private Integer accessLevel;
+ 
 
     public String getId() {
         return id;
@@ -39,13 +39,6 @@ public class Badge {
         this.currentGeoFence = currentGeoFence;
     }
 
-    public Integer getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(Integer accessLevel) {
-        this.accessLevel = accessLevel;
-    }
     
     
     
