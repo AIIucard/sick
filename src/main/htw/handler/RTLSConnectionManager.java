@@ -59,7 +59,7 @@ public class RTLSConnectionManager {
     @OnOpen
     public void onOpen(Session userSession) {
         log.info("opening websocket");
-        this.userSession = userSession;
+        userSession = userSession;
     }
 
     /**
@@ -82,15 +82,15 @@ public class RTLSConnectionManager {
      */
     @OnMessage
     public void onMessage(String message) {
-        if (this.sickMessageHandler == null) {
+        if (sickMessageHandler == null) {
             log.warn("Message handler uninitialized!");
             try {
-                this.sickMessageHandler = SickMessageHandler.getInstance();
+                sickMessageHandler = SickMessageHandler.getInstance();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        this.sickMessageHandler.handleMessage(message);
+        sickMessageHandler.handleMessage(message);
     }
 
     /**
@@ -99,7 +99,7 @@ public class RTLSConnectionManager {
      * @param msgHandler
      */
     public void addMessageHandler(SickMessageHandler msgHandler) {
-        this.sickMessageHandler = msgHandler;
+        sickMessageHandler = msgHandler;
     }
 
     /**
@@ -108,6 +108,6 @@ public class RTLSConnectionManager {
      * @param message
      */
     public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+        userSession.getAsyncRemote().sendText(message);
     }
 }
