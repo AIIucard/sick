@@ -1,6 +1,0 @@
-INFO  2018-04-04 17:00:46.195 [          JavaFX-Launcher] - Load default properties file... [42][PropertyManager]
-INFO  2018-04-04 17:00:46.201 [          JavaFX-Launcher] - Default properties loaded. [46][PropertyManager]
-INFO  2018-04-04 17:00:46.202 [          JavaFX-Launcher] - Load user properties file... [53][PropertyManager]
-INFO  2018-04-04 17:00:46.202 [          JavaFX-Launcher] - User properties loaded. [57][PropertyManager]
-INFO  2018-04-04 17:00:47.843 [JavaFX Application Thread] - Stored default properties. [68][PropertyManager]
-INFO  2018-04-04 17:00:47.852 [JavaFX Application Thread] - Stored user properties. [74][PropertyManager]

@@ -62,13 +62,11 @@ public class PropertyManager {
 
 	public void storeProperties() throws IOException {
 		FileOutputStream out = new FileOutputStream(DEFAULT_CFG_FILE);
-		// defaultProps.store(out, "---Default properties---");
 		defaultProps.store(out, "");
 		out.close();
 		log.info("Stored default properties.");
 
 		out = new FileOutputStream(USER_CFG_FILE);
-		// userProps.store(out, "---User properties---");
 		userProps.store(out, "");
 		out.close();
 		log.info("Stored user properties.");

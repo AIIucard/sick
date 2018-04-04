@@ -24,6 +24,9 @@ public class SickApplication extends Application {
 	private static PropertyManager propManager = null;
 	private static ApplicationManager appManager = null;
 
+	private Button startButton;
+	private Button stopButton;
+
 	private static double width = 200;
 	private static double height = 200;
 
@@ -70,7 +73,7 @@ public class SickApplication extends Application {
 	public void createPrimaryStage(Stage primaryStage) {
 
 		primaryStage.setTitle("This is S!ck");
-		Button startButton = new Button();
+		startButton = new Button();
 		startButton.setText("Start Sick");
 		startButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -80,13 +83,15 @@ public class SickApplication extends Application {
 				try {
 					appManager = ApplicationManager.getInstance();
 					appManager.startApplication();
+					startButton.setDisable(true);
+					stopButton.setDisable(false);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
 
-		Button stopButton = new Button();
+		stopButton = new Button();
 		stopButton.setText("Stop Sick");
 		stopButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -95,12 +100,17 @@ public class SickApplication extends Application {
 				try {
 					appManager = ApplicationManager.getInstance();
 					appManager.stopApplication();
+					startButton.setDisable(false);
+					stopButton.setDisable(true);
 					log.info("Stopped Application...");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
+
+		startButton.setDisable(false);
+		stopButton.setDisable(true);
 
 		HBox hBox = new HBox();
 		hBox.setPadding(new Insets(15, 12, 15, 12));
