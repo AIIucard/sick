@@ -28,7 +28,6 @@ public class SickApplication extends Application {
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	public static void main(String[] args) {
-
 		launch(args);
 	}
 
