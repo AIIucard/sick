@@ -17,11 +17,11 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import main.htw.emulator.EmulatorGUI;
 import main.htw.properties.PropertiesKeys;
-import main.htw.properties.PropertyManager;
+import main.htw.properties.CFGPropertyManager;
 
 public class SickApplication extends Application {
 
-	private static PropertyManager propManager = null;
+	private static CFGPropertyManager propManager = null;
 	private static ApplicationManager appManager = null;
 
 	private Button startButton;
@@ -40,7 +40,7 @@ public class SickApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		try {
-			propManager = PropertyManager.getInstance();
+			propManager = CFGPropertyManager.getInstance();
 			if (propManager != null) {
 				width = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_WIDTH));
 				height = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_HEIGHT));

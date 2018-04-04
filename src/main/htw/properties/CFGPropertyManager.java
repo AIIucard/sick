@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PropertyManager {
+public class CFGPropertyManager {
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private final static String DEFAULT_CFG_FILE = "cfg" + File.separator + "default.cfg";
@@ -19,16 +19,17 @@ public class PropertyManager {
 	private Properties userProps = null;
 
 	private static Object lock = new Object();
-	private static PropertyManager instance = null;
+	private static CFGPropertyManager instance = null;
 
-	private PropertyManager() {
+	private CFGPropertyManager() {
+		// Use getInstance
 	}
 
-	public static PropertyManager getInstance() throws IOException {
+	public static CFGPropertyManager getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new PropertyManager();
+					instance = new CFGPropertyManager();
 					instance.loadProperties();
 				}
 			}
@@ -38,6 +39,7 @@ public class PropertyManager {
 	}
 
 	private void loadProperties() throws IOException {
+
 		// create and load default properties
 		log.info("Load default properties file...");
 		FileInputStream in = new FileInputStream(DEFAULT_CFG_FILE);

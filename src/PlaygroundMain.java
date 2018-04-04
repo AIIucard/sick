@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import main.htw.handler.RTLSConnectionManager;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.PropertiesKeys;
-import main.htw.properties.PropertyManager;
+import main.htw.properties.CFGPropertyManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,7 +30,7 @@ public class PlaygroundMain {
 		try {
 			// open websocket
 			System.out.println("Hi");
-			PropertyManager propManager = PropertyManager.getInstance();
+			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			String uriString = propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL);
 
 			final RTLSConnectionManager clientEndPoint = RTLSConnectionManager.getInstance();
