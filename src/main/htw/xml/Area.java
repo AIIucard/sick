@@ -3,7 +3,6 @@ package main.htw.xml;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "area")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -13,8 +12,6 @@ public class Area {
 	private String name;
 	private Integer layer;
 	private Shape shape;
-
-	@XmlTransient
 	private Double distanceToRobot;
 
 	public Area() {

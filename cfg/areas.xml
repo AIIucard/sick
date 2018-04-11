@@ -11,5 +11,6 @@
                 <y>11.004</y>
             </coordinates>
         </shape>
+        <distanceToRobot>1.0</distanceToRobot>
     </area>
 </areas>
