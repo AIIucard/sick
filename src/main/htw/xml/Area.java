@@ -3,6 +3,7 @@ package main.htw.xml;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "area")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -12,6 +13,9 @@ public class Area {
 	private String name;
 	private Integer layer;
 	private Shape shape;
+
+	@XmlTransient
+	private Double distanceToRobot;
 
 	public Area() {
 		// Default constructor
@@ -40,11 +44,11 @@ public class Area {
 		this.name = name;
 	}
 
-	public int getLayer() {
+	public Integer getLayer() {
 		return layer;
 	}
 
-	public void setLayer(int layer) {
+	public void setLayer(Integer layer) {
 		this.layer = layer;
 	}
 
@@ -54,5 +58,13 @@ public class Area {
 
 	public void setShape(Shape shape) {
 		this.shape = shape;
+	}
+
+	public Double getDistanceToRobot() {
+		return distanceToRobot;
+	}
+
+	public void setDistanceToRobot(Double distanceToRobot) {
+		this.distanceToRobot = distanceToRobot;
 	}
 }
