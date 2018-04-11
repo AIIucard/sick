@@ -2,18 +2,18 @@ package main.htw.handler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
-import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketListener;
 
 /**
  * ChatServer Client
@@ -25,95 +25,73 @@ public class RTLSConnectionManager {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	Session userSession = null;
-
 	private SickMessageHandler sickMessageHandler;
+
+	private WebSocket websocket;
+	private URI endpointURI;
+	private String registerGeoFenceMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
+	private String registerPositionMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
 	private static Object lock = new Object();
 	private static RTLSConnectionManager instance = null;
 
-	public static RTLSConnectionManager getInstance() throws IOException {
+	public static RTLSConnectionManager getInstance(URI endpointURI) throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new RTLSConnectionManager();
+					instance.createWebsocket(endpointURI);
 				}
 			}
 		}
 		return (instance);
 	}
 
-	public void connectToURI(URI endpointURI) {
+	public void createWebsocket(URI endpointURI) {
 		try {
-			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			container.connectToServer(this, endpointURI);
+			// WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			// container.connectToServer(this, endpointURI);
+			this.endpointURI = endpointURI;
+			WebSocketFactory factory = new WebSocketFactory();
+			SSLContext context;
+			context = NaiveSSLContext.getInstance("TLS");
+			factory.setSSLContext(context);
+			factory.setVerifyHostname(false);
+			websocket = factory.createSocket(endpointURI);
 		} catch (Exception e) {
 			log.error("Connection error! \n" + e.getLocalizedMessage());
 			throw new RuntimeException(e);
 		}
 	}
 
-	/**
-	 * Callback hook for Connection open events.
-	 *
-	 * @param userSession
-	 *            the userSession which is opened.
-	 */
-	@OnOpen
-	public void onOpen(Session userSession) {
-		log.info("opening websocket");
-		this.userSession = userSession;
+	public void registerGeoFence() throws WebSocketException {
+		websocket.addListener(sickMessageHandler);
+		websocket.connect();
+		websocket.sendText(registerGeoFenceMsg);
 	}
 
-	/**
-	 * Callback hook for Connection close events.
-	 *
-	 * @param userSession
-	 *            the userSession which is getting closed.
-	 * @param reason
-	 *            the reason for connection close
-	 */
-	@OnClose
-	public void onClose(Session userSession, CloseReason reason) {
-		log.info("closing websocket");
-		this.userSession = null;
+	public void registerPosition() throws WebSocketException {
+		log.info("Registering to topic POSITION");
+		websocket.addListener(sickMessageHandler);
+		websocket.connect();
+		websocket.sendText(registerPositionMsg);
 	}
 
-	/**
-	 * Callback hook for Message Events. This method will be invoked when a client
-	 * send a message.
-	 *
-	 * @param message
-	 *            The text message
-	 */
-	@OnMessage
-	public void onMessage(String message) {
-		if (sickMessageHandler == null) {
-			log.warn("Message handler uninitialized!");
-			try {
-				sickMessageHandler = SickMessageHandler.getInstance();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		sickMessageHandler.handleMessage(message);
+	public void tryReconnect() throws NoSuchAlgorithmException, IOException, WebSocketException {
+		log.debug("Recreating Websocket");
+		WebSocketFactory factory = new WebSocketFactory();
+		SSLContext context;
+		context = NaiveSSLContext.getInstance("TLS");
+		factory.setSSLContext(context);
+		factory.setVerifyHostname(false);
+		websocket = factory.createSocket(this.endpointURI);
+
+		websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
+		websocket.connect();
+		// websocket.sendText(registerGeoFenceMsg);
 	}
 
-	/**
-	 * register message handler
-	 *
-	 * @param msgHandler
-	 */
-	public void addMessageHandler(SickMessageHandler msgHandler) {
-		sickMessageHandler = msgHandler;
-	}
-
-	/**
-	 * Send a message.
-	 *
-	 * @param message
-	 */
-	public void sendMessage(String message) {
-		userSession.getAsyncRemote().sendText(message);
+	public WebSocket getWebsocket() {
+		return websocket;
 	}
 }

@@ -1,3 +1,4 @@
+package main.htw;
 
 import java.io.IOException;
 import java.net.URI;
@@ -7,10 +8,12 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
+import com.neovisionaries.ws.client.WebSocketException;
+
 import main.htw.handler.RTLSConnectionManager;
 import main.htw.handler.SickMessageHandler;
-import main.htw.properties.PropertiesKeys;
 import main.htw.properties.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,18 +34,26 @@ public class PlaygroundMain {
 			// open websocket
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
-			String uriString = propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL);
+			URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 
-			final RTLSConnectionManager clientEndPoint = RTLSConnectionManager.getInstance();
-			log.info("Connecting to " + uriString);
-			clientEndPoint.connectToURI(new URI(uriString));
+			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance(uri);
+			final SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
+			log.info("Connecting to " + uri);
+			connectionManager.createWebsocket(uri);
 
 			// add listener
-			clientEndPoint.addMessageHandler(SickMessageHandler.getInstance());
+			// clientEndPoint.addMessageHandler(SickMessageHandler.getInstance());
 
 			// send message to websocket
-			clientEndPoint.sendMessage(
-					"{\n" + "\"topic\":\"REGISTER\",\n" + "\"payload\":[\"POSITION\",\"DISTANCES\"]\n" + "}");
+			// sickMessageHandler.sendMessage(
+			// "{\n" + "\"topic\":\"REGISTER\",\n" +
+			// "\"payload\":[\"POSITION\",\"DISTANCES\"]\n" + "}");
+			try {
+				connectionManager.registerPosition();
+			} catch (WebSocketException e) {
+				log.error("Connection Error");
+				e.printStackTrace();
+			}
 
 			// // send message to websocket
 			// clientEndPoint.sendMessage("{\n" +
