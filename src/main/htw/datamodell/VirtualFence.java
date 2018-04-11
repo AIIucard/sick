@@ -10,45 +10,46 @@ package main.htw.datamodell;
  * @author b00341
  */
 public class VirtualFence {
-    
-    private Integer id;
-    private Integer layer;
-    private String label;
-    // the area range defines the distance from the light gate to the outer border
-    // of the virtual fence so that the coordinates can be calculated
-    private Float areaRange; 
 
-    public Integer getId() {
-        return id;
-    }
+	// TODO: Check if this is needed (Area XML Object in xml package)
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Integer id;
+	private Integer layer;
+	private String label;
+	// the area range defines the distance from the light gate to the outer border
+	// of the virtual fence so that the coordinates can be calculated
+	private Float areaRange;
 
-    public Integer getLayer() {
-        return layer;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setLayer(Integer layer) {
-        this.layer = layer;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public Integer getLayer() {
+		return layer;
+	}
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	public void setLayer(Integer layer) {
+		this.layer = layer;
+	}
 
-    public Float getAreaRange() {
-        return areaRange;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public void setAreaRange(Float areaRange) {
-        this.areaRange = areaRange;
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    
+	public Float getAreaRange() {
+		return areaRange;
+	}
+
+	public void setAreaRange(Float areaRange) {
+		this.areaRange = areaRange;
+	}
+
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<areas>
+    <area>
+        <id>1</id>
+        <name>Room A</name>
+        <layer>1337</layer>
+        <shape>
+            <type>Polygon</type>
+            <coordinates>
+                <x>6.138</x>
+                <y>11.004</y>
+            </coordinates>
+        </shape>
+    </area>
+</areas>
