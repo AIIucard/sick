@@ -1,8 +1,6 @@
 package main.htw;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,7 +10,6 @@ import com.neovisionaries.ws.client.WebSocketException;
 
 import main.htw.handler.RTLSConnectionManager;
 import main.htw.properties.CFGPropertyManager;
-import main.htw.properties.PropertiesKeys;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,13 +30,10 @@ public class PlaygroundMain {
 			// open websocket
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
-			URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 
-			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance(uri);
+			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance();
 			// final SickMessageHandler sickMessageHandler =
 			// SickMessageHandler.getInstance();
-			log.info("Connecting to " + uri);
-			connectionManager.createWebsocket(uri);
 
 			// add listener
 			// clientEndPoint.addMessageHandler(SickMessageHandler.getInstance());
@@ -65,8 +59,6 @@ public class PlaygroundMain {
 
 		} catch (InterruptedException ex) {
 			System.err.println("InterruptedException exception: " + ex.getMessage());
-		} catch (URISyntaxException ex) {
-			System.err.println("URISyntaxException exception: " + ex.getMessage());
 		} catch (IOException ex) {
 			Logger.getLogger(PlaygroundMain.class.getName()).log(Level.SEVERE, null, ex);
 		}

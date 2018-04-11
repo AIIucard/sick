@@ -2,6 +2,7 @@ package main.htw.handler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLContext;
@@ -14,6 +15,9 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
+
+import main.htw.properties.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
 
 /**
  * ChatServer Client
@@ -35,12 +39,20 @@ public class RTLSConnectionManager {
 	private static Object lock = new Object();
 	private static RTLSConnectionManager instance = null;
 
-	public static RTLSConnectionManager getInstance(URI endpointURI) throws IOException {
+	private static URI uri;
+
+	public static RTLSConnectionManager getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new RTLSConnectionManager();
-					instance.createWebsocket(endpointURI);
+					try {
+						uri = new URI(CFGPropertyManager.getInstance().getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
+					log.info("Connecting to " + uri);
+					instance.createWebsocket(uri);
 				}
 			}
 		}
