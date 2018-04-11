@@ -1,6 +1,8 @@
 package main.htw.emulator;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +17,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import main.htw.handler.RTLSConnectionManager;
+import main.htw.handler.SickMessageHandler;
+import main.htw.properties.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
 
 public class EmulatorGUI extends FlowPane {
 
@@ -42,6 +47,8 @@ public class EmulatorGUI extends FlowPane {
 			public void handle(ActionEvent event) {
 				log.info("Send Areas Reply button hitted...");
 				try {
+					CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+					URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 
 					JSONArray areas = new JSONArray();
 
@@ -61,14 +68,18 @@ public class EmulatorGUI extends FlowPane {
 					areas.put(area2);
 					areas.put(area3);
 
-					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance();
-					rtlsConnectionManager.onMessage(areas.toString());
+					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
+					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
+					sickMessagehandler.onMessage(areas.toString());
 					log.info(areas.toString());
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -87,6 +98,8 @@ public class EmulatorGUI extends FlowPane {
 			public void handle(ActionEvent event) {
 				log.info("Send Devices Reply button hitted...");
 				try {
+					CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+					URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 					JSONArray devices = new JSONArray();
 
 					JSONObject device1 = new JSONObject();
@@ -152,14 +165,18 @@ public class EmulatorGUI extends FlowPane {
 					devices.put(device1);
 					devices.put(device2);
 
-					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance();
-					rtlsConnectionManager.onMessage(devices.toString());
+					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
+					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
+					sickMessagehandler.onMessage(devices.toString());
 					log.info(devices.toString());
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -178,6 +195,8 @@ public class EmulatorGUI extends FlowPane {
 			public void handle(ActionEvent event) {
 				log.info("Send Fence Notify button hitted...");
 				try {
+					CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+					URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 					int deviceNumber = (int) (Math.random() * 2) + 1;
 					int levelNumber = (int) (Math.random() * 3) + 1;
 					JSONObject notifyEvent = new JSONObject();
@@ -194,13 +213,17 @@ public class EmulatorGUI extends FlowPane {
 					geofencingEvent.put("customName", ((deviceNumber == 2) ? "Uwe Gaul" : "Horst Schneider"));
 					notifyEvent.put("payload", geofencingEvent);
 
-					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance();
-					rtlsConnectionManager.onMessage(notifyEvent.toString());
+					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
+					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
+					sickMessagehandler.onMessage(notifyEvent.toString());
 					log.info(notifyEvent.toString());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
