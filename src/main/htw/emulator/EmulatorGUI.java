@@ -70,7 +70,7 @@ public class EmulatorGUI extends FlowPane {
 
 					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onMessage(areas.toString());
+					sickMessagehandler.onTextMessage(rtlsConnectionManager.getWebsocket(), areas.toString());
 					log.info(areas.toString());
 
 				} catch (JSONException e) {
@@ -167,7 +167,7 @@ public class EmulatorGUI extends FlowPane {
 
 					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onMessage(devices.toString());
+					sickMessagehandler.onTextMessage(rtlsConnectionManager.getWebsocket(), devices.toString());
 					log.info(devices.toString());
 
 				} catch (JSONException e) {
@@ -215,7 +215,7 @@ public class EmulatorGUI extends FlowPane {
 
 					RTLSConnectionManager rtlsConnectionManager = RTLSConnectionManager.getInstance(uri);
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onMessage(notifyEvent.toString());
+					sickMessagehandler.onTextMessage(rtlsConnectionManager.getWebsocket(), notifyEvent.toString());
 					log.info(notifyEvent.toString());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

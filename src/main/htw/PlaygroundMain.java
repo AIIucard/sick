@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.neovisionaries.ws.client.WebSocketException;
 
 import main.htw.handler.RTLSConnectionManager;
-import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 
@@ -37,7 +36,8 @@ public class PlaygroundMain {
 			URI uri = new URI(propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
 
 			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance(uri);
-			final SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
+			// final SickMessageHandler sickMessageHandler =
+			// SickMessageHandler.getInstance();
 			log.info("Connecting to " + uri);
 			connectionManager.createWebsocket(uri);
 
@@ -49,7 +49,7 @@ public class PlaygroundMain {
 			// "{\n" + "\"topic\":\"REGISTER\",\n" +
 			// "\"payload\":[\"POSITION\",\"DISTANCES\"]\n" + "}");
 			try {
-				connectionManager.registerPosition();
+				connectionManager.registerGeoFence();
 			} catch (WebSocketException e) {
 				log.error("Connection Error");
 				e.printStackTrace();

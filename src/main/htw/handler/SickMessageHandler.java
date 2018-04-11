@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
@@ -19,6 +18,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
 /**
@@ -110,8 +110,8 @@ public class SickMessageHandler extends WebSocketAdapter {
 	 * @param message
 	 *            The text message
 	 */
-	@OnMessage
-	public void onMessage(String message) {
+	@Override
+	public void onTextMessage(WebSocket ws, String message) {
 		log.info("message received!");
 		handleMessage(message);
 	}

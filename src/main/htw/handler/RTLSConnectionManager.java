@@ -25,7 +25,7 @@ public class RTLSConnectionManager {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	private SickMessageHandler sickMessageHandler;
+	private SickMessageHandler sickMessageHandler = null;
 
 	private WebSocket websocket;
 	private URI endpointURI;
@@ -58,6 +58,10 @@ public class RTLSConnectionManager {
 			factory.setSSLContext(context);
 			factory.setVerifyHostname(false);
 			websocket = factory.createSocket(endpointURI);
+			if (sickMessageHandler == null) {
+				log.info("Initializing Message Handler");
+				sickMessageHandler = SickMessageHandler.getInstance();
+			}
 		} catch (Exception e) {
 			log.error("Connection error! \n" + e.getLocalizedMessage());
 			throw new RuntimeException(e);
@@ -65,6 +69,10 @@ public class RTLSConnectionManager {
 	}
 
 	public void registerGeoFence() throws WebSocketException {
+		log.info("Registering to topic GEOFENCEING_EVENT");
+		if (sickMessageHandler == null) {
+			log.warn("sickMessagehandler is not initiliazed!");
+		}
 		websocket.addListener(sickMessageHandler);
 		websocket.connect();
 		websocket.sendText(registerGeoFenceMsg);
@@ -72,6 +80,9 @@ public class RTLSConnectionManager {
 
 	public void registerPosition() throws WebSocketException {
 		log.info("Registering to topic POSITION");
+		if (sickMessageHandler == null) {
+			log.warn("sickMessagehandler is not initiliazed!");
+		}
 		websocket.addListener(sickMessageHandler);
 		websocket.connect();
 		websocket.sendText(registerPositionMsg);
