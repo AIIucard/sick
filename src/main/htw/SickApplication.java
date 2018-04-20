@@ -1,6 +1,7 @@
 package main.htw;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -27,6 +29,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import main.htw.gui.AddFenceGUI;
 import main.htw.gui.EmulatorGUI;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
@@ -277,8 +281,13 @@ public class SickApplication extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				log.info("Add Area button hitted...");
-				// TODO: Add Button Function
+				log.debug("Add Area button hitted...");
+				Dialog<Pair<String, Double>> dialog = new AddFenceGUI();
+				Optional<Pair<String, Double>> result = dialog.showAndWait();
+
+				result.ifPresent(nameDistance -> {
+					System.out.println("Fence Name=" + nameDistance.getKey() + ", Distance=" + nameDistance.getValue());
+				});
 			}
 		});
 		return button;
@@ -291,8 +300,8 @@ public class SickApplication extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				log.info("Add Area button hitted...");
-				// TODO: Add Button Function
+				log.debug("Edit Area button hitted...");
+				// TODO: Edit Button Function
 			}
 		});
 		return button;
@@ -305,8 +314,8 @@ public class SickApplication extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				log.info("Add Area button hitted...");
-				// TODO: Add Button Function
+				log.debug("Remove Area button hitted...");
+				// TODO: Remove Button Function
 			}
 		});
 		return button;
