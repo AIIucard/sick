@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
+import main.htw.messages.MessageGeoFence;
+
 /**
  *
  * @author richter
@@ -32,6 +34,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	private static SickMessageHandler instance = null;
 	Session userSession = null;
 	private JSONParser parser = new JSONParser();
+	private RuleHandler ruleHandler;
 
 	public static SickMessageHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -49,6 +52,10 @@ public class SickMessageHandler extends WebSocketAdapter {
 		log.info("handle message: " + message);
 
 		try {
+			if (ruleHandler == null) {
+				ruleHandler = RuleHandler.getInstance();
+			}
+
 			Object obj = parser.parse(message);
 			JSONObject jsonObject = (JSONObject) obj;
 
@@ -68,13 +75,43 @@ public class SickMessageHandler extends WebSocketAdapter {
 
 		} catch (ParseException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private void handleGeofencingEvent(JSONObject payload) {
-		// get Area ID
-		// Badge ID
-		log.warn("NOT IMPLEMENTED");
+		MessageGeoFence geoFence = new MessageGeoFence();
+		String eventType = "";
+		try {
+			eventType = (String) payload.get("eventType");
+			geoFence.setAddress((String) payload.get("address"));
+			geoFence.setAreaId(((Long) payload.get("areaId")).intValue());
+			geoFence.setCustomName((String) payload.get("customName"));
+			geoFence.setEventType(eventType);
+			geoFence.setMessage((String) payload.get("message"));
+			geoFence.setTimestamp((Long) payload.get("timestamp"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		geoFence.printObjectInformation();
+
+		switch (eventType) {
+		case "IN":
+			log.info("IN EVENT");
+			ruleHandler.handleGeofenceIn(geoFence);
+			break;
+		case "OUT":
+			log.info("OUT EVENT");
+			ruleHandler.handleGeofenceOut(geoFence);
+			break;
+		default:
+			log.error("UNKOWN EVENT TYPE: '" + eventType + "'");
+			break;
+		}
+
 	}
 
 	/**

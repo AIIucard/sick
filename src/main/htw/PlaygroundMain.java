@@ -6,9 +6,8 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import com.neovisionaries.ws.client.WebSocketException;
-
 import main.htw.handler.RTLSConnectionManager;
+import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
 /*
@@ -25,36 +24,24 @@ public class PlaygroundMain {
 	private static org.slf4j.Logger log = LoggerFactory
 			.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	private static String geoFenceEvent = "{\"topic\":\"GEOFENCING_EVENT\",\"payload\":{\"timestamp\":1523438446430,\"customName\":\"IIoT Test Badge\",\"eventType\":\"IN\",\"message\":\"Device 'IIoT Test Badge' enters area 'Handarbeitsplatz'\",\"areaId\":1,\"address\":\"8121069331292357553\"}}";
+
 	public static void main(String[] args) {
 		try {
 			// open websocket
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
 
 			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance();
-			// final SickMessageHandler sickMessageHandler =
-			// SickMessageHandler.getInstance();
-
-			// add listener
-			// clientEndPoint.addMessageHandler(SickMessageHandler.getInstance());
-
-			// send message to websocket
-			// sickMessageHandler.sendMessage(
-			// "{\n" + "\"topic\":\"REGISTER\",\n" +
-			// "\"payload\":[\"POSITION\",\"DISTANCES\"]\n" + "}");
 			try {
-				connectionManager.registerGeoFence();
-			} catch (WebSocketException e) {
-				log.error("Connection Error");
+				// connectionManager.registerGeoFence();
+				sickMessageHandler.onTextMessage(null, geoFenceEvent);
+			} catch (Exception e) {
+				log.error("Error");
 				e.printStackTrace();
 			}
 
-			// // send message to websocket
-			// clientEndPoint.sendMessage("{\n" +
-			// "\"topic\":\"UNREGISTER\",\n" +
-			// "\"payload\":[\"POSITION\",\"DISTANCES\"]\n" +
-			// "}");
-			// wait 5 seconds for messages from websocket
 			Thread.sleep(10);
 
 		} catch (InterruptedException ex) {
