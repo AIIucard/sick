@@ -3,11 +3,15 @@ package main.htw.handler;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
 
+import org.json.JSONException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +20,8 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
+import main.htw.messages.MessageArea;
+import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 
@@ -31,6 +37,8 @@ public class RTLSConnectionManager {
 
 	private SickMessageHandler sickMessageHandler = null;
 
+	private static CFGPropertyManager propManager = null;
+
 	private WebSocket websocket;
 	private URI endpointURI;
 	private String registerGeoFenceMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
@@ -41,13 +49,21 @@ public class RTLSConnectionManager {
 
 	private static URI uri;
 
+	private JSONParser parser = new JSONParser();
+
 	public static RTLSConnectionManager getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new RTLSConnectionManager();
 					try {
-						uri = new URI(CFGPropertyManager.getInstance().getProperty(PropertiesKeys.ZIGPOS_BASE_URL));
+						if (propManager == null) {
+							propManager = CFGPropertyManager.getInstance();
+						}
+
+						String websocketString = propManager.getProperty(PropertiesKeys.WEBSOCKET_PROTOCOL)
+								+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
+						uri = new URI(websocketString);
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
@@ -98,6 +114,33 @@ public class RTLSConnectionManager {
 		websocket.addListener(sickMessageHandler);
 		websocket.connect();
 		websocket.sendText(registerPositionMsg);
+	}
+
+	public void addArea(MessageArea area) throws WebSocketException {
+		log.info("Adding new Area to Zigpos");
+		log.warn("NOT IMPLEMENTED");
+	}
+
+	public void removeArea(MessageArea area) throws WebSocketException {
+		log.info("REMOVING Area from Zigpos");
+		log.warn("NOT IMPLEMENTED");
+	}
+
+	public MessageArea[] getAllAreas() throws IOException {
+		log.info("Getting All Areas");
+		String urlString = propManager.getProperty(PropertiesKeys.HTTP_PROTOCOL)
+				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
+		URL url = new URL(urlString);
+
+		try {
+			JSONObject jsonObject = JsonReader.readJsonFromUrl(urlString);
+			System.out.println(jsonObject.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public void tryReconnect() throws NoSuchAlgorithmException, IOException, WebSocketException {

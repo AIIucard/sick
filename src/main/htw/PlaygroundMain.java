@@ -36,7 +36,8 @@ public class PlaygroundMain {
 			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance();
 			try {
 				// connectionManager.registerGeoFence();
-				sickMessageHandler.onTextMessage(null, geoFenceEvent);
+				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
+				connectionManager.getAllAreas();
 			} catch (Exception e) {
 				log.error("Error");
 				e.printStackTrace();
