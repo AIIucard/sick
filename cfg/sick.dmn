@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions namespace="http://www.signavio.com/dmn/1.1/diagram/1a81650b5d8a4e2aaf9acd25dc49b656.xml" exporterVersion="11.13.0" name="Urlaubsbedarf ermitteln" id="id-afaf45bcaea14e8abb0de29deecbadbc" sigExt:revisionId="5df3c5f7b9064393b16cbc11f8a45506" sigExt:revisionNumber="3" xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:sig="http://www.signavio.com/dmn/1.1/diagram/1a81650b5d8a4e2aaf9acd25dc49b656.xml" xmlns:sigExt="http://www.signavio.com/schema/dmn/1.1/" xmlns:feel="http://www.omg.org/spec/FEEL/20140401">
+    <extensionElements/>
+    <itemDefinition isCollection="false" name="urlaubsziele" id="id-2b2b742afb3db62c131efd2a819b5c7c" label="Urlaubsziele">
+        <typeRef>feel:string</typeRef>
+        <allowedValues>
+            <text>"Balkonien","Welness WE","Verlängeres WE","Strandurlaub","Backpacking","Urlaub in Australien"</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="urlaubsbedarfErmitteln" id="id-c114d27c0dad817cde376df1329a8a17" label="Urlaubsbedarf ermitteln">
+        <typeRef>feel:string</typeRef>
+        <allowedValues>
+            <text>"Balkonien","Welness WE","Verlängeres WE","Strandurlaub","Backpacking","Urlaub in Australien"</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="seelischerZustand" id="id-f24d002d8e3dc1b297bb5b8054d4151d" label="seelischer Zustand">
+        <typeRef>feel:string</typeRef>
+        <allowedValues>
+            <text>"ausgeruht","leicht gestresst","ausgepowert"</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="erschpfungsgrad2" id="id-e81f25fd3b01a4a11ac01327d17e6a92" label="Erschöpfungsgrad">
+        <typeRef>feel:string</typeRef>
+        <allowedValues>
+            <text>"hoch","gering","mittel"</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="letzterUrlaubVorXTagen" id="id-e7c8821a20e745d4a5f1de917f5de913" label="Letzter Urlaub vor x Tagen">
+        <typeRef>feel:number</typeRef>
+        <allowedValues>
+            <text>[0.0..365.0]</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="urlaubstage" id="id-3221359f240e1bc3871c1ba0da392fef" label="Urlaubstage">
+        <typeRef>feel:number</typeRef>
+        <allowedValues>
+            <text>[0.0..50.0]</text>
+        </allowedValues>
+    </itemDefinition>
+    <itemDefinition isCollection="false" name="erschpfungsgrad" id="id-c33127c2110e0721b22ce454d216cff4" label="Erschöpfungsgrad">
+        <typeRef>feel:string</typeRef>
+        <allowedValues>
+            <text>"hoch","gering","mittel"</text>
+        </allowedValues>
+    </itemDefinition>
+    <inputData name="seelischerZustand" id="id-83ce54666080dac9923dac260ab4bbe3" label="seelischer Zustand" sigExt:shapeId="sid-14EC96A4-F315-4EAA-8270-267DFCB60B15" sigExt:diagramId="1a81650b5d8a4e2aaf9acd25dc49b656">
+        <extensionElements/>
+        <variable typeRef="sig:seelischerZustand" name="seelischerZustand" id="id-83ce54666080dac9923dac260ab4bbe3_variable"/>
+    </inputData>
+    <inputData name="urlaubstage" id="id-f2a38a7f0bbbe2a547f35de2bbca750e" label="Urlaubstage" sigExt:shapeId="sid-F98D3EEF-B6DF-4FD5-8567-53CDCD2CE6B2" sigExt:diagramId="1a81650b5d8a4e2aaf9acd25dc49b656">
+        <extensionElements/>
+        <variable typeRef="sig:urlaubstage" name="urlaubstage" id="id-f2a38a7f0bbbe2a547f35de2bbca750e_variable"/>
+    </inputData>
+    <inputData name="letzterUrlaubVorXTagen" id="id-1f244f8b94518f90549af6d5d2272464" label="Letzter Urlaub vor x Tagen" sigExt:shapeId="sid-3989D26E-7CDA-49F3-9A82-52C5AC60F5CA" sigExt:diagramId="1a81650b5d8a4e2aaf9acd25dc49b656">
+        <extensionElements/>
+        <variable typeRef="sig:letzterUrlaubVorXTagen" name="letzterUrlaubVorXTagen" id="id-1f244f8b94518f90549af6d5d2272464_variable"/>
+    </inputData>
+    <businessKnowledgeModel name="urlaubsempfehlungen" id="id-bb1516e52af20818ca0846cde45270f6">
+        <extensionElements/>
+    </businessKnowledgeModel>
+    <decision name="urlaubsbedarfErmitteln" id="id-b0dcc52518fb2cf05874b1b0938b9e09" label="Urlaubsbedarf ermitteln" sigExt:shapeId="sid-0B165D4D-3171-492B-B41F-624DEFCCAF58" sigExt:diagramId="1a81650b5d8a4e2aaf9acd25dc49b656">
+        <extensionElements/>
+        <variable typeRef="sig:urlaubsbedarfErmitteln" name="urlaubsbedarfErmitteln" id="id-b0dcc52518fb2cf05874b1b0938b9e09_variable"/>
+        <informationRequirement>
+            <requiredInput href="#id-f2a38a7f0bbbe2a547f35de2bbca750e"/>
+        </informationRequirement>
+        <informationRequirement>
+            <requiredDecision href="#id-a5c8d12b220a1dc5caaaa0df1a07d96d"/>
+        </informationRequirement>
+        <decisionTable hitPolicy="UNIQUE">
+            <input id="id-f4654643f0f17ecf62a32cd600d5ec1f" label="Urlaubstage">
+                <inputExpression>
+                    <text>urlaubstage</text>
+                </inputExpression>
+            </input>
+            <input id="id-0caf060e1acb170eaf552bfc97640a10" label="Erschöpfungsgrad">
+                <inputExpression>
+                    <text>erschpfungsgrad</text>
+                </inputExpression>
+            </input>
+            <output name="urlaubsbedarfErmitteln" typeRef="sig:urlaubsziele" id="id-4ecaa0bec8a46a6b789a8b9f62094489" label="Urlaubsbedarf ermitteln"/>
+            <rule id="id-95703a0d303289293d52b375b0ddc786">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&lt;= 10</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"gering"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Balkonien"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-922cb2b7747bac4b676ae17448e7a61c">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>(10..19)</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"gering"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Welness WE"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-8b6431ef91e5f40b71901d73b78aecd8">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&gt;= 19</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"gering"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Verlängeres WE"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-f15a2cd1f3f2952fc5ed5eeb63700740">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&lt;= 5</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"mittel"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Verlängeres WE"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-a4f60f551056504be3150bdd09928b2e">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>(5..15)</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"mittel"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Strandurlaub"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-ade701f2bc044dbc990238d2335f5f17">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&gt;= 15</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"mittel"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Backpacking"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-4e4766d54160a135668a17b74142b9ea">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&lt;= 20</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"hoch"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Strandurlaub"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-189f3ae8ffc87f8224f28a1ad4b2679f">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>&gt; 20</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>"hoch"</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"Urlaub in Australien"</text>
+                </outputEntry>
+            </rule>
+        </decisionTable>
+    </decision>
+    <decision name="erschpfungsgrad" id="id-a5c8d12b220a1dc5caaaa0df1a07d96d" label="Erschöpfungsgrad" sigExt:shapeId="sid-3E7382F4-5B47-4112-B797-BA63723FE568" sigExt:diagramId="1a81650b5d8a4e2aaf9acd25dc49b656">
+        <extensionElements/>
+        <variable typeRef="sig:erschpfungsgrad" name="erschpfungsgrad" id="id-a5c8d12b220a1dc5caaaa0df1a07d96d_variable"/>
+        <informationRequirement>
+            <requiredInput href="#id-83ce54666080dac9923dac260ab4bbe3"/>
+        </informationRequirement>
+        <informationRequirement>
+            <requiredInput href="#id-1f244f8b94518f90549af6d5d2272464"/>
+        </informationRequirement>
+        <decisionTable hitPolicy="UNIQUE">
+            <input id="id-974f5f196b9f7217f38f3de3451e9498" label="seelischer Zustand">
+                <inputExpression>
+                    <text>seelischerZustand</text>
+                </inputExpression>
+            </input>
+            <input id="id-e5585bb32d308ed5141059b9f6250c75" label="Letzter Urlaub vor x Tagen">
+                <inputExpression>
+                    <text>letzterUrlaubVorXTagen</text>
+                </inputExpression>
+            </input>
+            <output name="erschpfungsgrad" typeRef="sig:erschpfungsgrad2" id="id-956ff924e55dfa045062fbd53c04dc56" label="Erschöpfungsgrad"/>
+            <rule id="id-53e333d61bf4d6fd6c7adc1ff96e2fc1">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>-</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>&gt; 200</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"hoch"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-4a5bf2a0e870c23718fea492726ddf1c">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>"ausgeruht"</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>&lt;= 200</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"hoch"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-e2f857f62d06d463a583da4675f1418c">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>"leicht gestresst"</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>&lt;= 200</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"gering"</text>
+                </outputEntry>
+            </rule>
+            <rule id="id-e707603c4b03da77d2cfbe7bb53578ab">
+                <description>string(-)</description>
+                <inputEntry>
+                    <text>"ausgepowert"</text>
+                </inputEntry>
+                <inputEntry>
+                    <text>&lt;= 200</text>
+                </inputEntry>
+                <outputEntry>
+                    <text>"mittel"</text>
+                </outputEntry>
+            </rule>
+        </decisionTable>
+    </decision>
+</definitions>

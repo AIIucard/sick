@@ -34,7 +34,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	private static SickMessageHandler instance = null;
 	Session userSession = null;
 	private JSONParser parser = new JSONParser();
-	private RuleHandler ruleHandler;
+	private DMNHandler dmnHandler;
 
 	public static SickMessageHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -52,8 +52,8 @@ public class SickMessageHandler extends WebSocketAdapter {
 		log.info("handle message: " + message);
 
 		try {
-			if (ruleHandler == null) {
-				ruleHandler = RuleHandler.getInstance();
+			if (dmnHandler == null) {
+				dmnHandler = DMNHandler.getInstance();
 			}
 
 			Object obj = parser.parse(message);
@@ -101,11 +101,11 @@ public class SickMessageHandler extends WebSocketAdapter {
 		switch (eventType) {
 		case "IN":
 			log.info("IN EVENT");
-			ruleHandler.handleGeofenceIn(geoFence);
+			dmnHandler.handleGeofenceIn(geoFence);
 			break;
 		case "OUT":
 			log.info("OUT EVENT");
-			ruleHandler.handleGeofenceOut(geoFence);
+			dmnHandler.handleGeofenceOut(geoFence);
 			break;
 		default:
 			log.error("UNKOWN EVENT TYPE: '" + eventType + "'");
