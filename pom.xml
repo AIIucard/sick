@@ -17,6 +17,19 @@
 		      </plugin>
 	    </plugins>
 	</build>
+	
+	<dependencyManagement>
+	    <dependencies>
+			<dependency>
+				<groupId>org.camunda.bpm</groupId>
+				<artifactId>camunda-bom</artifactId>
+				<version>7.8.0</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+	    </dependencies>
+  	</dependencyManagement>
+	
 	<dependencies>
 		<!-- Lockback -->
 		<dependency>
