@@ -14,7 +14,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
-import main.htw.handler.RTLSConnectionManager;
+import main.htw.handler.RTLSConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 
 public class EmulatorGUI extends FlowPane {
@@ -62,7 +62,7 @@ public class EmulatorGUI extends FlowPane {
 					areas.put(area3);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSConnectionManager.getInstance().getWebsocket(),
+					sickMessagehandler.onTextMessage(RTLSConnectionHandler.getInstance().getWebsocket(),
 							areas.toString());
 					log.info(areas.toString());
 
@@ -154,7 +154,7 @@ public class EmulatorGUI extends FlowPane {
 					devices.put(device2);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSConnectionManager.getInstance().getWebsocket(),
+					sickMessagehandler.onTextMessage(RTLSConnectionHandler.getInstance().getWebsocket(),
 							devices.toString());
 					log.info(devices.toString());
 
@@ -197,7 +197,7 @@ public class EmulatorGUI extends FlowPane {
 					notifyEvent.put("payload", geofencingEvent);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSConnectionManager.getInstance().getWebsocket(),
+					sickMessagehandler.onTextMessage(RTLSConnectionHandler.getInstance().getWebsocket(),
 							notifyEvent.toString());
 					log.info(notifyEvent.toString());
 				} catch (JSONException e) {

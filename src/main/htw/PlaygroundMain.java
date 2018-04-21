@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import main.htw.handler.RTLSConnectionManager;
+import main.htw.handler.RTLSConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -33,7 +33,7 @@ public class PlaygroundMain {
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
 
-			final RTLSConnectionManager connectionManager = RTLSConnectionManager.getInstance();
+			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
 			try {
 				// connectionManager.registerGeoFence();
 				// sickMessageHandler.onTextMessage(null, geoFenceEvent);

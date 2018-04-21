@@ -24,6 +24,7 @@ import main.htw.messages.MessageArea;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.xml.Area;
 
 /**
  * ChatServer Client
@@ -31,7 +32,7 @@ import main.htw.properties.PropertiesKeys;
  * @author Jiji_Sasidharan
  */
 @ClientEndpoint
-public class RTLSConnectionManager {
+public class RTLSConnectionHandler {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -45,17 +46,17 @@ public class RTLSConnectionManager {
 	private String registerPositionMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
 	private static Object lock = new Object();
-	private static RTLSConnectionManager instance = null;
+	private static RTLSConnectionHandler instance = null;
 
 	private static URI uri;
 
 	private JSONParser parser = new JSONParser();
 
-	public static RTLSConnectionManager getInstance() throws IOException {
+	public static RTLSConnectionHandler getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new RTLSConnectionManager();
+					instance = new RTLSConnectionHandler();
 					try {
 						if (propManager == null) {
 							propManager = CFGPropertyManager.getInstance();
@@ -116,12 +117,12 @@ public class RTLSConnectionManager {
 		websocket.sendText(registerPositionMsg);
 	}
 
-	public void addArea(MessageArea area) throws WebSocketException {
+	public void addArea(Area area) throws WebSocketException {
 		log.info("Adding new Area to Zigpos");
 		log.warn("NOT IMPLEMENTED");
 	}
 
-	public void removeArea(MessageArea area) throws WebSocketException {
+	public void removeArea(Area area) throws WebSocketException {
 		log.info("REMOVING Area from Zigpos");
 		log.warn("NOT IMPLEMENTED");
 	}

@@ -14,21 +14,29 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 public class AddFenceGUI extends Dialog<Pair<String, Double>> {
+
+	private static final String DIALOG_TITLE = "Add new Fence...";
+	private static final String TASK = "Enter the corresponding values:";
+	private static final String ADD_BUTTON = "Add";
+	private static final String FENCE_NAME_LABEL = "Fence Name:";
+	private static final String FENCE_NAME_PROMPT = "Name";
+	private static final String DISTANCE_LABEL = "Distance to Robot:";
+	private static final String DISTANCE_PROMPT = "Distance";
+
 	private ButtonType addButtonType;
 	private TextField fenceName;
 	private TextField distance;
 
 	public AddFenceGUI() {
-		this.setTitle("Add new Fence...");
-		this.setHeaderText("Enter the corresponding values:");
+		this.setTitle(DIALOG_TITLE);
+		this.setHeaderText(TASK);
 
 		createButtons();
 		createLayout();
-
 	}
 
 	private void createButtons() {
-		addButtonType = new ButtonType("Add", ButtonData.OK_DONE);
+		addButtonType = new ButtonType(ADD_BUTTON, ButtonData.OK_DONE);
 		this.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 	}
 
@@ -39,10 +47,10 @@ public class AddFenceGUI extends Dialog<Pair<String, Double>> {
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
 		fenceName = new TextField();
-		fenceName.setPromptText("Name");
+		fenceName.setPromptText(FENCE_NAME_PROMPT);
 
 		distance = new TextField();
-		distance.setPromptText("Distance");
+		distance.setPromptText(DISTANCE_PROMPT);
 
 		// Force the field to be numeric only
 		distance.textProperty().addListener(new ChangeListener<String>() {
@@ -54,12 +62,11 @@ public class AddFenceGUI extends Dialog<Pair<String, Double>> {
 			}
 		});
 
-		grid.add(new Label("Fence Name:"), 0, 0);
+		grid.add(new Label(FENCE_NAME_LABEL), 0, 0);
 		grid.add(fenceName, 1, 0);
-		grid.add(new Label("Distance to Robot:"), 0, 1);
+		grid.add(new Label(DISTANCE_LABEL), 0, 1);
 		grid.add(distance, 1, 1);
 
-		// Enable/Disable login button depending on whether a name was entered.
 		Node addButton = this.getDialogPane().lookupButton(addButtonType);
 		addButton.setDisable(true);
 

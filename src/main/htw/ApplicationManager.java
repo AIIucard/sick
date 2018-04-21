@@ -31,7 +31,7 @@ public class ApplicationManager {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new ApplicationManager();
-					database = new SickDatabase();
+					database = SickDatabase.getInstance();
 				}
 			}
 		}
@@ -41,7 +41,7 @@ public class ApplicationManager {
 	public void startApplication() {
 		if (!isRunning) {
 			isRunning = true;
-			logic = new BusinessLogicThread(getDatabase());
+			logic = new BusinessLogicThread(database);
 			t = new Thread(logic, "SickBusinessLogic");
 			t.start();
 		} else {
@@ -58,9 +58,5 @@ public class ApplicationManager {
 
 	public boolean isRunning() {
 		return isRunning;
-	}
-
-	public SickDatabase getDatabase() {
-		return database;
 	}
 }

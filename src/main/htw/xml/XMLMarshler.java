@@ -37,10 +37,10 @@ public class XMLMarshler {
 
 	public void marshalAreaList(AreaList areaList) throws JAXBException {
 
-		log.info("Initialize JAXB context...");
+		log.debug("Initialize JAXB context...");
 		JAXBContext jaxbContext = JAXBContext.newInstance(AreaList.class);
 
-		log.info("Create marshaller...");
+		log.debug("Create marshaller...");
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -50,10 +50,10 @@ public class XMLMarshler {
 
 	public AreaList unMarshalAreaList() throws JAXBException {
 
-		log.info("Initialize JAXB context...");
+		log.debug("Initialize JAXB context...");
 		JAXBContext jaxbContext = JAXBContext.newInstance(AreaList.class);
 
-		log.info("Create unmarshaller...");
+		log.debug("Create unmarshaller...");
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
 		log.info("Unmarshaling areas...");
