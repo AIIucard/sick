@@ -14,13 +14,18 @@ public class LightStripPUT {
 
 		try {
 
-			URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
+			URL url = new URL("http://192.168.8.1/api/C02773CB34/lights/1/state");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("PUT");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			String input = "{ \"on\": false}"; // on = true | off = false
+			// on = true | off = false
+			// xy = colore
+			// \"xy\": [0.734662, 0.265047] = rot
+			// \"xy\": [0.499226, 0.478163] = gelb
+			// \"xy\": [0.126289, 0.815775] = grün
+			String input = "{ \"on\": false, \"xy\": [0.734662, 0.265047]}";
 
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
