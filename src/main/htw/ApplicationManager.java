@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
+import main.htw.handler.RobotHandler;
 import main.htw.threads.BusinessLogicThread;
 
 public class ApplicationManager {
@@ -44,9 +45,24 @@ public class ApplicationManager {
 			logic = new BusinessLogicThread(database);
 			t = new Thread(logic, "SickBusinessLogic");
 			t.start();
+			log.info("started");
+			initializeConnections();
 		} else {
 			log.debug("Tried to start new thread but application is already running!");
 		}
+	}
+
+	private void initializeConnections() {
+		try {
+			log.info("Connecting to Robot...");
+			RobotHandler robotHandler = RobotHandler.getInstance();
+			log.info("Connected to Robot!");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TODO Auto-generated method stub
+
 	}
 
 	public void stopApplication() {
