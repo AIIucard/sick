@@ -29,4 +29,16 @@ public class LightHandler {
 	public static ConnectionStatusType getConnectionStatus() {
 		return connectionStatus;
 	}
+
+	public static void setStatusOK() {
+		connectionStatus = ConnectionStatusType.ALIVE;
+	}
+
+	public static void setStatusPending() {
+		connectionStatus = ConnectionStatusType.CONNECTING;
+	}
+
+	public static void setStatusError() {
+		connectionStatus = ConnectionStatusType.DEAD;
+	}
 }

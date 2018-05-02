@@ -7,6 +7,7 @@ public class PropertiesKeys {
 	public static final String ROBOT_X_COORDINATE = "robotXCoordinate";
 	public static final String ROBOT_Y_COORDINATE = "robotYCoordinate";
 	public static final String ZIGPOS_BASE_URL = "zigposBaseUrl";
+	public static final String ROBOT_BASE_URL = "robotBaseUrl";
 	public static final String WEBSOCKET_PROTOCOL = "websocketProtocol";
 	public static final String HTTP_PROTOCOL = "httpProtocol";
 	public static final String HTTPS_PROTOCOL = "httpsProtocol";

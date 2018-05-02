@@ -1,6 +1,7 @@
 package main.htw.handler;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
@@ -14,16 +15,21 @@ import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.UaClient;
 
+import main.htw.properties.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 
 public class RobotHandler {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	private static CFGPropertyManager propManager = null;
+
 	private static Object lock = new Object();
 	private static RobotHandler instance = null;
 	private static UaClient client;
 
+	private static URI uri;
 	private static ConnectionStatusType connectionStatus;
 
 	private RobotHandler() {
@@ -35,6 +41,15 @@ public class RobotHandler {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new RobotHandler();
+					try {
+						if (propManager == null) {
+							propManager = CFGPropertyManager.getInstance();
+						}
+						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
+					setStatusPending();
 					initializeConnection();
 				}
 			}
@@ -44,11 +59,10 @@ public class RobotHandler {
 	}
 
 	private static boolean initializeConnection() {
-		String uri = "opc.tcp://141.56.181.21:4840/";
-		log.info("Connecting to " + uri);
+		log.info("Connecting to Robot at" + uri + "...");
 
 		try {
-			client = new UaClient(uri);
+			client = new UaClient(uri.toString());
 			client.setSecurityMode(SecurityMode.NONE);
 			org.opcfoundation.ua.core.ApplicationDescription appDescription = new org.opcfoundation.ua.core.ApplicationDescription();
 			appDescription.setApplicationName(
@@ -105,5 +119,17 @@ public class RobotHandler {
 
 	public static ConnectionStatusType getConnectionStatus() {
 		return connectionStatus;
+	}
+
+	public static void setStatusOK() {
+		connectionStatus = ConnectionStatusType.ALIVE;
+	}
+
+	public static void setStatusPending() {
+		connectionStatus = ConnectionStatusType.CONNECTING;
+	}
+
+	public static void setStatusError() {
+		connectionStatus = ConnectionStatusType.DEAD;
 	}
 }

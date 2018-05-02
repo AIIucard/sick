@@ -41,7 +41,6 @@ public class RTLSConnectionHandler {
 	private static CFGPropertyManager propManager = null;
 
 	private WebSocket websocket;
-	private URI endpointURI;
 	private static final String REGISTER_GEO_FENCE_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
 	private static final String REGISTER_POSITION_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
@@ -49,7 +48,6 @@ public class RTLSConnectionHandler {
 	private static RTLSConnectionHandler instance = null;
 
 	private static URI uri;
-
 	private static ConnectionStatusType connectionStatus;
 
 	public static RTLSConnectionHandler getInstance() throws IOException {
@@ -68,18 +66,21 @@ public class RTLSConnectionHandler {
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
-					connectionStatus = ConnectionStatusType.DEAD;
-					log.info("Connecting to " + uri);
-					instance.createWebsocket(uri);
+					setStatusPending();
+					initializeConnection();
 				}
 			}
 		}
 		return (instance);
 	}
 
+	private static void initializeConnection() {
+		log.info("Connecting to RTLS at" + uri + "...");
+		instance.createWebsocket(uri);
+	}
+
 	public void createWebsocket(URI endpointURI) {
 		try {
-			this.endpointURI = endpointURI;
 			WebSocketFactory factory = new WebSocketFactory();
 			SSLContext context;
 			context = NaiveSSLContext.getInstance("TLS");
@@ -150,7 +151,7 @@ public class RTLSConnectionHandler {
 		context = NaiveSSLContext.getInstance("TLS");
 		factory.setSSLContext(context);
 		factory.setVerifyHostname(false);
-		websocket = factory.createSocket(this.endpointURI);
+		websocket = factory.createSocket(uri);
 
 		websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
 		websocket.connect();
@@ -163,5 +164,17 @@ public class RTLSConnectionHandler {
 
 	public static ConnectionStatusType getConnectionStatus() {
 		return connectionStatus;
+	}
+
+	public static void setStatusOK() {
+		connectionStatus = ConnectionStatusType.ALIVE;
+	}
+
+	public static void setStatusPending() {
+		connectionStatus = ConnectionStatusType.CONNECTING;
+	}
+
+	public static void setStatusError() {
+		connectionStatus = ConnectionStatusType.DEAD;
 	}
 }
