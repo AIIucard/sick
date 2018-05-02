@@ -7,8 +7,6 @@ import java.util.Locale;
 
 import org.opcfoundation.ua.core.ApplicationType;
 import org.opcfoundation.ua.transport.security.SecurityMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.SessionActivationException;
@@ -17,36 +15,34 @@ import com.prosysopc.ua.client.UaClient;
 
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
-import main.htw.utils.ConnectionStatusType;
 
-public class RobotHandler {
-
-	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-
-	private static CFGPropertyManager propManager = null;
+public class RobotConnectionHandler extends SickConnectionHandler {
 
 	private static Object lock = new Object();
-	private static RobotHandler instance = null;
+	private static RobotConnectionHandler instance = null;
 	private static UaClient client;
 
 	private static URI uri;
-	private static ConnectionStatusType connectionStatus;
 
-	private RobotHandler() {
+	private RobotConnectionHandler() {
 		// Use getInstance
 	}
 
-	public static RobotHandler getInstance() throws IOException {
+	public static RobotConnectionHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new RobotHandler();
+					instance = new RobotConnectionHandler();
 					try {
 						if (propManager == null) {
 							propManager = CFGPropertyManager.getInstance();
 						}
 						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
 					} catch (URISyntaxException e) {
+						// TODO: Log
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					setStatusPending();
@@ -58,7 +54,7 @@ public class RobotHandler {
 
 	}
 
-	private static boolean initializeConnection() {
+	private static void initializeConnection() {
 		log.info("Connecting to Robot at" + uri + "...");
 
 		try {
@@ -79,24 +75,22 @@ public class RobotHandler {
 			client.connect();
 
 			log.info("Connection succsessful");
-			return true;
-
 		} catch (ConnectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			setStatusError();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			setStatusError();
 		} catch (SessionActivationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			setStatusError();
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			setStatusError();
 		}
 	}
 	// protected static void initialize(UaClient client) throws IOException,
@@ -117,19 +111,4 @@ public class RobotHandler {
 	// client.setApplicationIdentity(identity);
 	// }
 
-	public static ConnectionStatusType getConnectionStatus() {
-		return connectionStatus;
-	}
-
-	public static void setStatusOK() {
-		connectionStatus = ConnectionStatusType.ALIVE;
-	}
-
-	public static void setStatusPending() {
-		connectionStatus = ConnectionStatusType.CONNECTING;
-	}
-
-	public static void setStatusError() {
-		connectionStatus = ConnectionStatusType.DEAD;
-	}
 }

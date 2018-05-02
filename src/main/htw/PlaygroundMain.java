@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.handler.RTLSConnectionHandler;
-import main.htw.handler.RobotHandler;
+import main.htw.handler.RobotConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -33,7 +33,7 @@ public class PlaygroundMain {
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
-			RobotHandler robbi = RobotHandler.getInstance();
+			RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
 
 			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
 			try {

@@ -8,45 +8,40 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
-import main.htw.utils.ConnectionStatusType;
 
-public class LightHandler {
-
-	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+public class LightConnectionHandler extends SickConnectionHandler {
 
 	private static final String RED = "\"xy\": [0.734662, 0.265047]";
 	private static final String YELLOW = "\"xy\": [0.499226, 0.478163]";
 	private static final String GREEN = "\"xy\": [0.126289, 0.815775]";
 	// TODO: Blue Colore
 
-	private static CFGPropertyManager propManager = null;
-
 	private static Object lock = new Object();
-	private static LightHandler instance = null;
+	private static LightConnectionHandler instance = null;
 
 	private static URL url;
-	private static ConnectionStatusType connectionStatus;
 
-	private LightHandler() {
+	private LightConnectionHandler() {
 		// Use getInstance
 	}
 
-	public static LightHandler getInstance() throws IOException {
+	public static LightConnectionHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new LightHandler();
+					instance = new LightConnectionHandler();
 
 					if (propManager == null) {
-						propManager = CFGPropertyManager.getInstance();
+						try {
+							propManager = CFGPropertyManager.getInstance();
+							url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
+						} catch (IOException e) {
+							// TODO: Log
+							e.printStackTrace();
+						}
 					}
-					url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
-
 					setStatusPending();
 					initializeConnection();
 				}
@@ -66,18 +61,21 @@ public class LightHandler {
 
 			if (conn.getResponseCode() != 200) {
 				setStatusError();
-				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+				throw new RuntimeException("Request failed! HTTP error code : " + conn.getResponseCode());
 			}
 
 			setStatusOK();
 			conn.disconnect();
 
 		} catch (MalformedURLException e) {
+			// TODO: Log
 			e.printStackTrace();
+			setStatusError();
 		} catch (IOException e) {
+			// TODO: Log
 			e.printStackTrace();
+			setStatusError();
 		}
-
 	}
 
 	public static void setLigthGreen(HttpURLConnection conn) throws IOException {
@@ -86,7 +84,7 @@ public class LightHandler {
 		conn.setRequestProperty("Content-Type", "application/json");
 
 		// on = true | off = false
-		String input = "{ \"on\": true, " + LightHandler.GREEN + "}";
+		String input = "{ \"on\": true, " + LightConnectionHandler.GREEN + "}";
 
 		OutputStream os = conn.getOutputStream();
 		os.write(input.getBytes());
@@ -99,21 +97,5 @@ public class LightHandler {
 		while ((output = br.readLine()) != null) {
 			log.info(output);
 		}
-	}
-
-	public static ConnectionStatusType getConnectionStatus() {
-		return connectionStatus;
-	}
-
-	public static void setStatusOK() {
-		connectionStatus = ConnectionStatusType.ALIVE;
-	}
-
-	public static void setStatusPending() {
-		connectionStatus = ConnectionStatusType.CONNECTING;
-	}
-
-	public static void setStatusError() {
-		connectionStatus = ConnectionStatusType.DEAD;
 	}
 }

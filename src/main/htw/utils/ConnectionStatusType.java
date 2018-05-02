@@ -2,7 +2,7 @@ package main.htw.utils;
 
 public enum ConnectionStatusType {
 
-	ALIVE("Connected"), CONNECTING("Connecting"), DEAD("Not Connected");
+	OK("Connected"), PENDING("Connecting"), NEW("Not Connected"), ERROR("Connection failed");
 
 	private final String displayName;
 

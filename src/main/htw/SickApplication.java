@@ -11,14 +11,15 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.neovisionaries.ws.client.WebSocketException;
-
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.When;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -49,12 +50,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.gui.AddFenceGUI;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EmulatorGUI;
+import main.htw.handler.LightConnectionHandler;
 import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.RobotConnectionHandler;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
@@ -99,9 +103,9 @@ public class SickApplication extends Application {
 	private static FlowPane areaButtonPane = null;
 
 	Map<String, Image> appIconSet = new LinkedHashMap<>();
-	ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
-	ObjectProperty<ConnectionStatusType> robotStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
-	ObjectProperty<ConnectionStatusType> lightStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
+	ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+	ObjectProperty<ConnectionStatusType> robotStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+	ObjectProperty<ConnectionStatusType> lightStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -192,9 +196,10 @@ public class SickApplication extends Application {
 		Label rtlsStatusLabel = new Label("");
 		rtlsStatusLabel.textProperty().bind(rtlsStatus.asString());
 		rtlsImageView.imageProperty()
-				.bind(new When(rtlsStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
-						.otherwise(new When(rtlsStatus.isEqualTo(ConnectionStatusType.ALIVE))
-								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+				.bind(new When(rtlsStatus.isEqualTo(ConnectionStatusType.NEW)).then(appIconSet.get("gray"))
+						.otherwise(new When(rtlsStatus.isEqualTo(ConnectionStatusType.OK)).then(appIconSet.get("green"))
+								.otherwise(new When(rtlsStatus.isEqualTo(ConnectionStatusType.ERROR))
+										.then(appIconSet.get("red")).otherwise(appIconSet.get("yellow")))));
 
 		rtlsStatusLabel.setGraphic(rtlsImageView);
 		rtlsStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
@@ -203,10 +208,11 @@ public class SickApplication extends Application {
 		ImageView robotImageView = new ImageView();
 		Label robotStatusLabel = new Label("");
 		robotStatusLabel.textProperty().bind(robotStatus.asString());
-		robotImageView.imageProperty()
-				.bind(new When(robotStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
-						.otherwise(new When(robotStatus.isEqualTo(ConnectionStatusType.ALIVE))
-								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+		robotImageView.imageProperty().bind(new When(robotStatus.isEqualTo(ConnectionStatusType.NEW))
+				.then(appIconSet.get("gray"))
+				.otherwise(new When(robotStatus.isEqualTo(ConnectionStatusType.OK)).then(appIconSet.get("green"))
+						.otherwise(new When(robotStatus.isEqualTo(ConnectionStatusType.ERROR))
+								.then(appIconSet.get("red")).otherwise(appIconSet.get("yellow")))));
 
 		robotStatusLabel.setGraphic(robotImageView);
 		robotStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
@@ -215,10 +221,11 @@ public class SickApplication extends Application {
 		ImageView lightImageView = new ImageView();
 		Label lightStatusLabel = new Label("");
 		lightStatusLabel.textProperty().bind(lightStatus.asString());
-		lightImageView.imageProperty()
-				.bind(new When(lightStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
-						.otherwise(new When(lightStatus.isEqualTo(ConnectionStatusType.ALIVE))
-								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+		lightImageView.imageProperty().bind(new When(lightStatus.isEqualTo(ConnectionStatusType.NEW))
+				.then(appIconSet.get("gray"))
+				.otherwise(new When(lightStatus.isEqualTo(ConnectionStatusType.OK)).then(appIconSet.get("green"))
+						.otherwise(new When(lightStatus.isEqualTo(ConnectionStatusType.ERROR))
+								.then(appIconSet.get("red")).otherwise(appIconSet.get("yellow")))));
 
 		lightStatusLabel.setGraphic(lightImageView);
 		lightStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
@@ -338,27 +345,33 @@ public class SickApplication extends Application {
 
 	private void initializeConnectionChecks() {
 
-		// ScheduledService<Boolean> serverCheck = new ScheduledService<Boolean>() {
-		// @Override
-		// protected Task<Boolean> createTask() {
-		// Task<Boolean> aliveTask = new Task<Boolean>() {
-		// @Override
-		// protected Boolean call() throws Exception {
-		// return isAlive();
-		// }
-		//
-		// @Override
-		// protected void succeeded() {
-		// if (getValue()) { // alive
-		// trayAppStatus.set(ConnectionStatusType.ALIVE);
-		// } else {
-		// trayAppStatus.set(ConnectionStatusType.DEAD);
-		// }
-		// return aliveTask;
-		// }
-		// };
-		// }
-		// };
+		ScheduledService<Boolean> serverCheck = new ScheduledService<Boolean>() {
+			@Override
+			protected Task<Boolean> createTask() {
+				Task<Boolean> checkConnectionTask = new Task<Boolean>() {
+
+					@Override
+					protected Boolean call() throws Exception {
+						Platform.runLater(new Runnable() {
+
+							@Override
+							public void run() {
+								if (isRunning()) {
+									rtlsStatus.set(RTLSConnectionHandler.getConnectionStatus());
+									robotStatus.set(RobotConnectionHandler.getConnectionStatus());
+									lightStatus.set(LightConnectionHandler.getConnectionStatus());
+									// TODO: End this task
+								}
+							}
+						});
+						return true;
+					}
+				};
+				return checkConnectionTask;
+			}
+		};
+		serverCheck.setPeriod(Duration.seconds(1));
+		serverCheck.start();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -472,12 +485,7 @@ public class SickApplication extends Application {
 				result.ifPresent(nameDistance -> {
 					Area newArea = SickUtils.addNewArea(nameDistance.getKey(), nameDistance.getValue());
 					tableData.add(newArea);
-					try {
-						RTLSConnectionHandler.getInstance().addArea(newArea);
-					} catch (WebSocketException | IOException e) {
-						log.debug("Can not add new area " + newArea.getName()
-								+ " to Zigpos! The following Exception Occured: " + e.getLocalizedMessage());
-					}
+					RTLSConnectionHandler.getInstance().addArea(newArea);
 				});
 			}
 		});
@@ -517,12 +525,7 @@ public class SickApplication extends Application {
 				if (result.get() == ButtonType.OK) {
 					SickUtils.removeArea(selectedItem);
 					tableData.remove(selectedItem);
-					try {
-						RTLSConnectionHandler.getInstance().removeArea(selectedItem);
-					} catch (WebSocketException | IOException e) {
-						log.debug("Can not remove area " + selectedItem.getName()
-								+ " to Zigpos! The following Exception Occured: " + e.getLocalizedMessage());
-					}
+					RTLSConnectionHandler.getInstance().removeArea(selectedItem);
 				}
 			}
 		});

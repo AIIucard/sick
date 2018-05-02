@@ -7,6 +7,7 @@ import main.htw.database.SickDatabase;
 
 public class BusinessLogicThread implements Runnable {
 
+	private boolean isStarted = true;
 	private volatile boolean running = true;
 	private static Thread t = null;
 	private static RTLSThread logic = null;
@@ -27,19 +28,26 @@ public class BusinessLogicThread implements Runnable {
 
 	@Override
 	public void run() {
-		// Establish Connection to Robot
-		// Check Status
-		// while (running) {
+		if (isStarted) {
+			initializeConnections();
+		}
+	}
+
+	private void initializeConnections() {
 		// try {
-		// Thread.sleep(100);
-		//
-		// log.trace("Running...");
-		// } catch (InterruptedException e) {
+		log.info("Connecting to RTLS...");
+		// RTLSConnectionHandler rtlsConnectionHandler =
+		// RTLSConnectionHandler.getInstance();
+		log.info("Connected to RTLS!");
+		log.info("Connecting to Robot...");
+		// RobotHandler robotHandler = RobotHandler.getInstance();
+		log.info("Connected to Robot!");
+		log.info("Connecting to Light...");
+		// LightHandler lightHandler = LightHandler.getInstance();
+		log.info("Connected to Light!");
+		// } catch (IOException e) {
 		// // TODO Auto-generated catch block
-		// log.error(e.getLocalizedMessage());
 		// e.printStackTrace();
-		// running = false;
-		// }
 		// }
 	}
 
