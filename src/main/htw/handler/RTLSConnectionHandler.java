@@ -11,7 +11,6 @@ import javax.websocket.ClientEndpoint;
 
 import org.json.JSONException;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +23,7 @@ import main.htw.messages.MessageArea;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.Area;
 
 /**
@@ -42,15 +42,15 @@ public class RTLSConnectionHandler {
 
 	private WebSocket websocket;
 	private URI endpointURI;
-	private String registerGeoFenceMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
-	private String registerPositionMsg = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
+	private static final String REGISTER_GEO_FENCE_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
+	private static final String REGISTER_POSITION_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
 	private static Object lock = new Object();
 	private static RTLSConnectionHandler instance = null;
 
 	private static URI uri;
 
-	private JSONParser parser = new JSONParser();
+	private static ConnectionStatusType connectionStatus;
 
 	public static RTLSConnectionHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -68,6 +68,7 @@ public class RTLSConnectionHandler {
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
+					connectionStatus = ConnectionStatusType.DEAD;
 					log.info("Connecting to " + uri);
 					instance.createWebsocket(uri);
 				}
@@ -78,8 +79,6 @@ public class RTLSConnectionHandler {
 
 	public void createWebsocket(URI endpointURI) {
 		try {
-			// WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			// container.connectToServer(this, endpointURI);
 			this.endpointURI = endpointURI;
 			WebSocketFactory factory = new WebSocketFactory();
 			SSLContext context;
@@ -104,7 +103,7 @@ public class RTLSConnectionHandler {
 		}
 		websocket.addListener(sickMessageHandler);
 		websocket.connect();
-		websocket.sendText(registerGeoFenceMsg);
+		websocket.sendText(RTLSConnectionHandler.REGISTER_GEO_FENCE_MSG);
 	}
 
 	public void registerPosition() throws WebSocketException {
@@ -114,7 +113,7 @@ public class RTLSConnectionHandler {
 		}
 		websocket.addListener(sickMessageHandler);
 		websocket.connect();
-		websocket.sendText(registerPositionMsg);
+		websocket.sendText(RTLSConnectionHandler.REGISTER_POSITION_MSG);
 	}
 
 	public void addArea(Area area) throws WebSocketException {

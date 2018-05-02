@@ -2,6 +2,8 @@ package main.htw;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.xml.bind.JAXBException;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import com.neovisionaries.ws.client.WebSocketException;
 
 import javafx.application.Application;
+import javafx.beans.binding.When;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +28,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -37,6 +43,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -50,6 +57,7 @@ import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSConnectionHandler;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.ConnectionStatusType;
 import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.AreaList;
@@ -90,6 +98,11 @@ public class SickApplication extends Application {
 	private static ObservableList<Area> tableData = null;
 	private static FlowPane areaButtonPane = null;
 
+	Map<String, Image> appIconSet = new LinkedHashMap<>();
+	ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
+	ObjectProperty<ConnectionStatusType> robotStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
+	ObjectProperty<ConnectionStatusType> lightStatus = new SimpleObjectProperty<>(ConnectionStatusType.DEAD);
+
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	public static void main(String[] args) {
@@ -120,6 +133,8 @@ public class SickApplication extends Application {
 			} else {
 				log.info("Continue without loaded areas...");
 			}
+
+			loadAppIconSet();
 		} catch (IOException e) {
 			log.error("IOException thrown: " + e);
 		}
@@ -147,12 +162,14 @@ public class SickApplication extends Application {
 		sickMenuBar = createMenuBar();
 
 		HBox startStopButtons = createStartStopButtons();
+		GridPane statusArea = createConnectionStatusArea();
 		VBox areaTable = createAreaTable();
 
 		borderPane.setTop(sickMenuBar);
 
 		centerVBox.setAlignment(Pos.CENTER);
 		centerVBox.getChildren().add(startStopButtons);
+		centerVBox.getChildren().add(statusArea);
 
 		BorderPane.setAlignment(centerVBox, Pos.CENTER);
 		borderPane.setCenter(centerVBox);
@@ -162,6 +179,57 @@ public class SickApplication extends Application {
 		borderPane.setBottom(emulatorGUI);
 
 		primaryStage.setScene(new Scene(borderPane, width, height));
+	}
+
+	private GridPane createConnectionStatusArea() {
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(12);
+		grid.setAlignment(Pos.CENTER);
+
+		Label rtlsLabel = new Label("RTLS Connection Status: ");
+		ImageView rtlsImageView = new ImageView();
+		Label rtlsStatusLabel = new Label("");
+		rtlsStatusLabel.textProperty().bind(rtlsStatus.asString());
+		rtlsImageView.imageProperty()
+				.bind(new When(rtlsStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
+						.otherwise(new When(rtlsStatus.isEqualTo(ConnectionStatusType.ALIVE))
+								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+
+		rtlsStatusLabel.setGraphic(rtlsImageView);
+		rtlsStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
+
+		Label robotLabel = new Label("Robot Connection Status: ");
+		ImageView robotImageView = new ImageView();
+		Label robotStatusLabel = new Label("");
+		robotStatusLabel.textProperty().bind(robotStatus.asString());
+		robotImageView.imageProperty()
+				.bind(new When(robotStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
+						.otherwise(new When(robotStatus.isEqualTo(ConnectionStatusType.ALIVE))
+								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+
+		robotStatusLabel.setGraphic(robotImageView);
+		robotStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
+
+		Label lightLabel = new Label("Light Connection Status: ");
+		ImageView lightImageView = new ImageView();
+		Label lightStatusLabel = new Label("");
+		lightStatusLabel.textProperty().bind(lightStatus.asString());
+		lightImageView.imageProperty()
+				.bind(new When(lightStatus.isEqualTo(ConnectionStatusType.DEAD)).then(appIconSet.get("gray"))
+						.otherwise(new When(lightStatus.isEqualTo(ConnectionStatusType.ALIVE))
+								.then(appIconSet.get("green")).otherwise(appIconSet.get("yellow"))));
+
+		lightStatusLabel.setGraphic(lightImageView);
+		lightStatusLabel.setContentDisplay(ContentDisplay.RIGHT);
+
+		grid.add(rtlsLabel, 0, 0);
+		grid.add(rtlsStatusLabel, 1, 0);
+		grid.add(robotLabel, 0, 1);
+		grid.add(robotStatusLabel, 1, 1);
+		grid.add(lightLabel, 0, 2);
+		grid.add(lightStatusLabel, 1, 2);
+		return grid;
 	}
 
 	private MenuBar createMenuBar() {
@@ -232,6 +300,7 @@ public class SickApplication extends Application {
 					appManager.startApplication();
 					startButton.setDisable(true);
 					stopButton.setDisable(false);
+					initializeConnectionChecks();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -265,6 +334,31 @@ public class SickApplication extends Application {
 		hBox.getChildren().addAll(startButton, stopButton);
 
 		return hBox;
+	}
+
+	private void initializeConnectionChecks() {
+
+		// ScheduledService<Boolean> serverCheck = new ScheduledService<Boolean>() {
+		// @Override
+		// protected Task<Boolean> createTask() {
+		// Task<Boolean> aliveTask = new Task<Boolean>() {
+		// @Override
+		// protected Boolean call() throws Exception {
+		// return isAlive();
+		// }
+		//
+		// @Override
+		// protected void succeeded() {
+		// if (getValue()) { // alive
+		// trayAppStatus.set(ConnectionStatusType.ALIVE);
+		// } else {
+		// trayAppStatus.set(ConnectionStatusType.DEAD);
+		// }
+		// return aliveTask;
+		// }
+		// };
+		// }
+		// };
 	}
 
 	@SuppressWarnings("unchecked")
@@ -474,5 +568,17 @@ public class SickApplication extends Application {
 		} catch (JAXBException e) {
 			log.error("Cannot store areas! JAXBException thrown: " + e);
 		}
+	}
+
+	private void loadAppIconSet() {
+		appIconSet.put("red", new Image(new File("icons" + File.separator + "status_error.png").toURI().toString()));
+		appIconSet.put("yellow",
+				new Image(new File("icons" + File.separator + "status_pending.png").toURI().toString()));
+		appIconSet.put("green", new Image(new File("icons" + File.separator + "status_ok.png").toURI().toString()));
+		appIconSet.put("gray", new Image(new File("icons" + File.separator + "status_new.png").toURI().toString()));
+	}
+
+	protected static Image createFXImage(String path, String description) {
+		return new Image(path);
 	}
 }
