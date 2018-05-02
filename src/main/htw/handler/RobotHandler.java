@@ -14,13 +14,21 @@ import com.prosysopc.ua.SessionActivationException;
 import com.prosysopc.ua.client.ConnectException;
 import com.prosysopc.ua.client.UaClient;
 
-public class RobotHandler implements IHandler {
+import main.htw.utils.ConnectionStatusType;
+
+public class RobotHandler {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private static Object lock = new Object();
 	private static RobotHandler instance = null;
 	private static UaClient client;
+
+	private static ConnectionStatusType connectionStatus;
+
+	private RobotHandler() {
+		// Use getInstance
+	}
 
 	public static RobotHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -95,25 +103,7 @@ public class RobotHandler implements IHandler {
 	// client.setApplicationIdentity(identity);
 	// }
 
-	private RobotHandler() {
-		// Use getInstance
+	public static ConnectionStatusType getConnectionStatus() {
+		return connectionStatus;
 	}
-
-	@Override
-	public void handleConnection() {
-		// TODO
-	}
-
-	@Override
-	public void handleRequest() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void handleReply() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

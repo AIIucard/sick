@@ -160,4 +160,8 @@ public class RTLSConnectionHandler {
 	public WebSocket getWebsocket() {
 		return websocket;
 	}
+
+	public static ConnectionStatusType getConnectionStatus() {
+		return connectionStatus;
+	}
 }

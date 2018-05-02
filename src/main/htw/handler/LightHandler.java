@@ -2,10 +2,18 @@ package main.htw.handler;
 
 import java.io.IOException;
 
-public class LightHandler implements IHandler {
+import main.htw.utils.ConnectionStatusType;
+
+public class LightHandler {
 
 	private static Object lock = new Object();
 	private static LightHandler instance = null;
+
+	private static ConnectionStatusType connectionStatus;
+
+	private LightHandler() {
+		// Use getInstance
+	}
 
 	public static LightHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -18,26 +26,7 @@ public class LightHandler implements IHandler {
 		return (instance);
 	}
 
-	private LightHandler() {
-		// TODO Auto-generated constructor stub
+	public static ConnectionStatusType getConnectionStatus() {
+		return connectionStatus;
 	}
-
-	@Override
-	public void handleConnection() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void handleRequest() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void handleReply() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
