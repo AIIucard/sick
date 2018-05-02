@@ -14,7 +14,9 @@ public class LightStripPUT {
 
 		try {
 
-			URL url = new URL("http://192.168.8.1/api/C02773CB34/lights/1/state");
+			// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
+			// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
+			URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("PUT");
