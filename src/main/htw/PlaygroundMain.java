@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import main.htw.handler.LightConnectionHandler;
 import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.RobotConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -33,7 +34,7 @@ public class PlaygroundMain {
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
-			// RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
+			RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
 			robbi.sendSecurityLevel(4);
 
 			// final RTLSConnectionHandler connectionManager =
