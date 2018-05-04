@@ -6,7 +6,8 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import main.htw.handler.RobotConnectionHandler;
+import main.htw.handler.LightConnectionHandler;
+import main.htw.handler.RTLSConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -32,7 +33,7 @@ public class PlaygroundMain {
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
-			RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
+			// RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
 			robbi.sendSecurityLevel(4);
 
 			// final RTLSConnectionHandler connectionManager =
@@ -45,6 +46,26 @@ public class PlaygroundMain {
 			// log.error("Error");
 			// e.printStackTrace();
 			// }
+			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
+			try {
+				// connectionManager.registerGeoFence();
+				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
+				// connectionManager.getAllAreas();
+				log.info("Connecting to Light...");
+				LightConnectionHandler lightHandler = LightConnectionHandler.getInstance();
+				for (int i = 0; i <= 3; i++) {
+					lightHandler.setLigthGreen();
+					Thread.sleep(1000);
+					lightHandler.setLigthYellow();
+					Thread.sleep(1000);
+					lightHandler.setLigthRed();
+					Thread.sleep(1000);
+				}
+				log.info("Connected to Light!");
+			} catch (Exception e) {
+				log.error("Error");
+				e.printStackTrace();
+			}
 
 			Thread.sleep(10);
 
