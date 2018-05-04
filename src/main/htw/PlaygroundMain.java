@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import main.htw.handler.RTLSConnectionHandler;
 import main.htw.handler.RobotConnectionHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
@@ -34,16 +33,18 @@ public class PlaygroundMain {
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
 			RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
+			robbi.sendSecurityLevel(4);
 
-			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
-			try {
-				// connectionManager.registerGeoFence();
-				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
-				// connectionManager.getAllAreas();
-			} catch (Exception e) {
-				log.error("Error");
-				e.printStackTrace();
-			}
+			// final RTLSConnectionHandler connectionManager =
+			// RTLSConnectionHandler.getInstance();
+			// try {
+			// // connectionManager.registerGeoFence();
+			// // sickMessageHandler.onTextMessage(null, geoFenceEvent);
+			// // connectionManager.getAllAreas();
+			// } catch (Exception e) {
+			// log.error("Error");
+			// e.printStackTrace();
+			// }
 
 			Thread.sleep(10);
 
