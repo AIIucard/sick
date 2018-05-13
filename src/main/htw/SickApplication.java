@@ -134,8 +134,10 @@ public class SickApplication extends Application implements Observer {
 			xmlMarshaller = XMLMarshler.getInstance();
 			if (xmlMarshaller != null) {
 				database.setAreaList(xmlMarshaller.unMarshalAreaList());
+				database.setBadgeList(xmlMarshaller.unMarshalBadgeList());
 			} else {
 				log.info("Continue without loaded areas...");
+				log.info("Continue without loaded badges...");
 			}
 
 			loadAppIconSet();

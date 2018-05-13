@@ -1,10 +1,8 @@
 package main.htw.database;
 
-import java.util.Observable;
-
-import main.htw.utils.ConnectionStatusType;
 import java.io.IOException;
 import java.util.List;
+import java.util.Observable;
 
 import javax.xml.bind.JAXBException;
 
@@ -13,15 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.datamodell.ActiveBadge;
+import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
 import main.htw.xml.XMLMarshler;
 
 public class SickDatabase extends Observable {
-	public static final String ROLE_VISITOR = "Visitor";
-	public static final String ROLE_LABORANT = "Laborant";
-	public static final String ROLE_PROFESSOR = "Professor";
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 	private int currentGeoFenceLevel = -1;
@@ -54,16 +50,6 @@ public class SickDatabase extends Observable {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new SickDatabase();
-					try {
-						xmlMarshaller = XMLMarshler.getInstance();
-						badgeList = xmlMarshaller.unMarshalBadgeList();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (JAXBException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 				}
 			}
 		}

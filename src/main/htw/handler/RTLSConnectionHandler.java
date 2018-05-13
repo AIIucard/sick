@@ -21,6 +21,7 @@ import com.neovisionaries.ws.client.WebSocketListener;
 
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
+import main.htw.datamodell.RoleType;
 import main.htw.messages.MessageArea;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
@@ -187,7 +188,7 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 				// no => add to DB
 				BadgeList badgeList = sickDatabase.getBadgeList();
 				if (!badgeList.isBadgeInDataBase(address)) {
-					sickDatabase.addToBadgeList(new Badge(address, sickDatabase.ROLE_VISITOR));
+					sickDatabase.addToBadgeList(new Badge(address, RoleType.ROLE_VISITOR));
 					log.info("Badge added! ");
 				}
 
