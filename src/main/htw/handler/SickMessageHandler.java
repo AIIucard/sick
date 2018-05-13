@@ -91,25 +91,25 @@ public class SickMessageHandler extends WebSocketAdapter {
 			geoFence.setEventType(eventType);
 			geoFence.setMessage((String) payload.get("message"));
 			geoFence.setTimestamp((Long) payload.get("timestamp"));
+
+			geoFence.printObjectInformation();
+
+			switch (eventType) {
+			case "IN":
+				log.info("IN EVENT");
+				dmnHandler.handleGeofenceIn(geoFence);
+				break;
+			case "OUT":
+				log.info("OUT EVENT");
+				dmnHandler.handleGeofenceOut(geoFence);
+				break;
+			default:
+				log.error("UNKOWN EVENT TYPE: '" + eventType + "'");
+				break;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		geoFence.printObjectInformation();
-
-		switch (eventType) {
-		case "IN":
-			log.info("IN EVENT");
-			dmnHandler.handleGeofenceIn(geoFence);
-			break;
-		case "OUT":
-			log.info("OUT EVENT");
-			dmnHandler.handleGeofenceOut(geoFence);
-			break;
-		default:
-			log.error("UNKOWN EVENT TYPE: '" + eventType + "'");
-			break;
 		}
 
 	}
