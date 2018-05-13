@@ -10,6 +10,8 @@ import java.util.List;
 import org.camunda.bpm.dmn.engine.DmnDecision;
 import org.camunda.bpm.dmn.engine.DmnEngine;
 import org.camunda.bpm.dmn.engine.DmnEngineConfiguration;
+import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,5 +69,38 @@ public class DMNHandler {
 	public void handleGeofenceOut(MessageGeoFence geoFence) {
 		// TODO handle OUT event
 		log.warn("NOT IMPLEMENTED");
+	}
+
+	public void evaluateDecision(String role, int geofence) {
+
+		// Create Input Variables
+		VariableMap variables = Variables.createVariables().putValue("role", role).putValue("geofence", geofence);
+
+		int decisionTableSize = decisionList.size();
+
+		log.info("Try to find decision");
+		log.info("Tablesize=" + decisionTableSize + "Entry:" + decisionList.toString());
+
+		// Evaluate Decision
+		// DmnDecisionTableResult decisionTableResult = null;
+		//
+		// for (int i = 0; i <= decisionTableSize; i++) {
+		// DmnDecision decision = decisionList.get(i);
+		// decisionTableResult = dmnEngine.evaluateDecisionTable(decision, variables);
+		// int resultSize = decisionTableResult.size();
+		//
+		// if (resultSize != 0) {
+		// log.info("Found Decision at rule=" + i);
+		// break;
+		// }
+		// }
+		//
+		// if (decisionTableResult != null) {
+		// DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
+		// log.info("That result is =" + dmnDecisionRuleResult);
+		// }
+		//
+		// log.info("I did nothing at all");
+
 	}
 }
