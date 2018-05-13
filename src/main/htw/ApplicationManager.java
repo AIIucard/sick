@@ -9,9 +9,9 @@ import main.htw.database.SickDatabase;
 import main.htw.handler.LightConnectionHandler;
 import main.htw.handler.RTLSConnectionHandler;
 import main.htw.handler.RobotConnectionHandler;
-import main.htw.tasks.LightConnectionService;
-import main.htw.tasks.RTLSConnectionService;
-import main.htw.tasks.RobotConnectionService;
+import main.htw.services.LightConnectionService;
+import main.htw.services.RTLSConnectionService;
+import main.htw.services.RobotConnectionService;
 import main.htw.threads.BusinessLogicThread;
 
 public class ApplicationManager {

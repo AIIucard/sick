@@ -1,4 +1,4 @@
-package main.htw.tasks;
+package main.htw.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
+import main.htw.handler.RTLSConnectionHandler;
 import main.htw.utils.ConnectionStatusType;
 
 public class RTLSConnectionService extends Service<Void> {
@@ -16,21 +17,6 @@ public class RTLSConnectionService extends Service<Void> {
 
 	public RTLSConnectionService(SickDatabase database) {
 		this.database = database;
-
-		// if succeeded
-		setOnSucceeded(s -> {
-			// code if Service succeeds
-		});
-
-		// if failed
-		setOnFailed(fail -> {
-			// code it Service fails
-		});
-
-		// if cancelled
-		setOnCancelled(cancelled -> {
-			log.info("RTLSService canceled!");
-		});
 	}
 
 	public void startTheService() {
@@ -52,10 +38,14 @@ public class RTLSConnectionService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-
-				while (isRunning()) {
-					log.info("RTLS Service Alive");
-					Thread.sleep(1000);
+				database.setRTLSConnectionStatus(ConnectionStatusType.PENDING);
+				RTLSConnectionHandler rtlsConnectionHandler = RTLSConnectionHandler.getInstance();
+				try {
+					rtlsConnectionHandler.initializeConnection();
+					database.setRTLSConnectionStatus(ConnectionStatusType.OK);
+				} catch (Exception ex) {
+					log.error("Exception thrown: " + ex.getLocalizedMessage());
+					database.setRTLSConnectionStatus(ConnectionStatusType.ERROR);
 				}
 				return null;
 			}

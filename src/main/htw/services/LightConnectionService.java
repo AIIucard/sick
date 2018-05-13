@@ -1,4 +1,4 @@
-package main.htw.tasks;
+package main.htw.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,16 +6,16 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
-import main.htw.handler.RobotConnectionHandler;
+import main.htw.handler.LightConnectionHandler;
 import main.htw.utils.ConnectionStatusType;
 
-public class RobotConnectionService extends Service<Void> {
+public class LightConnectionService extends Service<Void> {
 
 	private SickDatabase database = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	public RobotConnectionService(SickDatabase database) {
+	public LightConnectionService(SickDatabase database) {
 		this.database = database;
 	}
 
@@ -29,7 +29,7 @@ public class RobotConnectionService extends Service<Void> {
 	@Override
 	public void reset() {
 		super.reset();
-		database.setRobotConnectionStatus(ConnectionStatusType.NEW);
+		database.setLightConnectionStatus(ConnectionStatusType.NEW);
 	}
 
 	@Override
@@ -38,14 +38,14 @@ public class RobotConnectionService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-				database.setRobotConnectionStatus(ConnectionStatusType.PENDING);
-				RobotConnectionHandler robotConnectionHandler = RobotConnectionHandler.getInstance();
+				database.setLightConnectionStatus(ConnectionStatusType.PENDING);
+				LightConnectionHandler lightConnectionHandler = LightConnectionHandler.getInstance();
 				try {
-					robotConnectionHandler.initializeConnection();
-					database.setRobotConnectionStatus(ConnectionStatusType.OK);
+					lightConnectionHandler.initializeConnection();
+					database.setLightConnectionStatus(ConnectionStatusType.OK);
 				} catch (Exception ex) {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());
-					database.setRobotConnectionStatus(ConnectionStatusType.ERROR);
+					database.setLightConnectionStatus(ConnectionStatusType.ERROR);
 				}
 				return null;
 			}

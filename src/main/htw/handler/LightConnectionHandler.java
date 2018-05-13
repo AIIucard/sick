@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import main.htw.properties.CFGPropertyManager;
@@ -45,39 +44,25 @@ public class LightConnectionHandler extends SickConnectionHandler {
 							e.printStackTrace();
 						}
 					}
-
-					setStatusPending();
-					initializeConnection();
 				}
 			}
 		}
 		return (instance);
 	}
 
-	private static void initializeConnection() {
-		try {
-			// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
-			// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
+	public void initializeConnection() throws Exception {
+		// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
+		// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
 
-			URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
-			log.info("Opening Connection");
-			Connection = (HttpURLConnection) url.openConnection();// (HttpURLConnection)
-																	// url.openConnection();
-			Connection.setDoOutput(true);
-			setRequestSettings();
+		URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
+		log.info("Opening Connection");
+		Connection = (HttpURLConnection) url.openConnection();// (HttpURLConnection)
+																// url.openConnection();
+		Connection.setDoOutput(true);
+		setRequestSettings();
 
-			setStatusOK();
-			Connection.disconnect();
-
-		} catch (MalformedURLException e) {
-			// TODO: Log
-			e.printStackTrace();
-			setStatusError();
-		} catch (IOException e) {
-			// TODO: Log
-			e.printStackTrace();
-			setStatusError();
-		}
+		setStatusOK();
+		Connection.disconnect();
 	}
 
 	private static void setRequestSettings() throws IOException {

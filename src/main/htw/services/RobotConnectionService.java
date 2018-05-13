@@ -1,4 +1,4 @@
-package main.htw.tasks;
+package main.htw.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,31 +6,17 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
+import main.htw.handler.RobotConnectionHandler;
 import main.htw.utils.ConnectionStatusType;
 
-public class LightConnectionService extends Service<Void> {
+public class RobotConnectionService extends Service<Void> {
 
 	private SickDatabase database = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	public LightConnectionService(SickDatabase database) {
+	public RobotConnectionService(SickDatabase database) {
 		this.database = database;
-
-		// if succeeded
-		setOnSucceeded(s -> {
-			// code if Service succeeds
-		});
-
-		// if failed
-		setOnFailed(fail -> {
-			// code it Service fails
-		});
-
-		// if cancelled
-		setOnCancelled(cancelled -> {
-			log.info("LightService canceled!");
-		});
 	}
 
 	public void startTheService() {
@@ -43,7 +29,7 @@ public class LightConnectionService extends Service<Void> {
 	@Override
 	public void reset() {
 		super.reset();
-		database.setLightConnectionStatus(ConnectionStatusType.NEW);
+		database.setRobotConnectionStatus(ConnectionStatusType.NEW);
 	}
 
 	@Override
@@ -52,11 +38,14 @@ public class LightConnectionService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-
-				// create other variables here
-				while (isRunning()) {
-					log.info("Light Service Alive");
-					Thread.sleep(1000);
+				database.setRobotConnectionStatus(ConnectionStatusType.PENDING);
+				RobotConnectionHandler robotConnectionHandler = RobotConnectionHandler.getInstance();
+				try {
+					robotConnectionHandler.initializeConnection();
+					database.setRobotConnectionStatus(ConnectionStatusType.OK);
+				} catch (Exception ex) {
+					log.error("Exception thrown: " + ex.getLocalizedMessage());
+					database.setRobotConnectionStatus(ConnectionStatusType.ERROR);
 				}
 				return null;
 			}

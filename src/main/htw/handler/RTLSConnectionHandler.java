@@ -62,39 +62,23 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 						// TODO: Log
 						e.printStackTrace();
 					}
-					setStatusPending();
-					initializeConnection();
 				}
 			}
 		}
 		return (instance);
 	}
 
-	private static void initializeConnection() {
+	public void initializeConnection() throws Exception {
 		log.info("Connecting to RTLS at" + uri + "...");
-		instance.createWebsocket(uri);
-	}
-
-	public void createWebsocket(URI endpointURI) {
 		WebSocketFactory factory = new WebSocketFactory();
 		SSLContext context;
-		try {
-			context = NaiveSSLContext.getInstance("TLS");
-			factory.setSSLContext(context);
-			factory.setVerifyHostname(false);
-			websocket = factory.createSocket(endpointURI);
-			if (sickMessageHandler == null) {
-				log.info("Initializing Message Handler");
-				sickMessageHandler = SickMessageHandler.getInstance();
-			}
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			setStatusError();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			setStatusError();
+		context = NaiveSSLContext.getInstance("TLS");
+		factory.setSSLContext(context);
+		factory.setVerifyHostname(false);
+		websocket = factory.createSocket(uri);
+		if (sickMessageHandler == null) {
+			log.info("Initializing Message Handler");
+			sickMessageHandler = SickMessageHandler.getInstance();
 		}
 	}
 
