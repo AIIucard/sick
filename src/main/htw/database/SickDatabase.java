@@ -42,6 +42,10 @@ public class SickDatabase {
 		this.currentGeoFenceLevel = currentGeoFenceLevel;
 	}
 
+	public Badge getBadgeByAddress(String address) {
+		return SickDatabase.badgeList.getBadgeByAddress(address);
+	}
+
 	public BadgeList getBadgeList() {
 		return badgeList;
 	}

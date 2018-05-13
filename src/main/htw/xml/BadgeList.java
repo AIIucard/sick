@@ -38,4 +38,15 @@ public class BadgeList {
 	public void removeBadge(Badge badge) {
 		this.badges.remove(badge);
 	}
+
+	public Badge getBadgeByAddress(String address) {
+		Badge badge = null;
+
+		for (Badge b : this.badges) {
+			if (b.getAddress().equalsIgnoreCase(address))
+				badge = b;
+		}
+
+		return badge;
+	}
 }
