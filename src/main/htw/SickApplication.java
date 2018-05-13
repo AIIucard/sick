@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Optional;
 
 import javax.xml.bind.JAXBException;
@@ -18,8 +20,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -50,15 +50,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.gui.AddFenceGUI;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EmulatorGUI;
-import main.htw.handler.LightConnectionHandler;
 import main.htw.handler.RTLSConnectionHandler;
-import main.htw.handler.RobotConnectionHandler;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
@@ -67,7 +64,7 @@ import main.htw.xml.Area;
 import main.htw.xml.AreaList;
 import main.htw.xml.XMLMarshler;
 
-public class SickApplication extends Application {
+public class SickApplication extends Application implements Observer {
 
 	private static final String APP_TITLE = "This is S!ck";
 	private static final String MENU_FILE = "File";
@@ -102,10 +99,12 @@ public class SickApplication extends Application {
 	private static ObservableList<Area> tableData = null;
 	private static FlowPane areaButtonPane = null;
 
-	Map<String, Image> appIconSet = new LinkedHashMap<>();
-	ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
-	ObjectProperty<ConnectionStatusType> robotStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
-	ObjectProperty<ConnectionStatusType> lightStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+	private Map<String, Image> appIconSet = new LinkedHashMap<>();
+	private ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+	private ObjectProperty<ConnectionStatusType> robotStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+	private ObjectProperty<ConnectionStatusType> lightStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
+
+	private SickDatabase database;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -117,7 +116,8 @@ public class SickApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		try {
-			SickDatabase database = SickDatabase.getInstance();
+			database = SickDatabase.getInstance();
+			database.addObserver(this);
 			propManager = CFGPropertyManager.getInstance();
 			if (propManager != null) {
 				width = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_WIDTH));
@@ -155,6 +155,19 @@ public class SickApplication extends Application {
 	public void stop() throws Exception {
 		super.stop();
 		saveData();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				rtlsStatus.set(database.getRTLSConnectionStatus());
+				robotStatus.set(database.getRobotConnectionStatus());
+				lightStatus.set(database.getLightConnectionStatus());
+			}
+		});
 	}
 
 	public void createPrimaryStage(Stage primaryStage) {
@@ -307,7 +320,6 @@ public class SickApplication extends Application {
 					appManager.startApplication();
 					startButton.setDisable(true);
 					stopButton.setDisable(false);
-					initializeConnectionChecks();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -325,6 +337,7 @@ public class SickApplication extends Application {
 					appManager.stopApplication();
 					startButton.setDisable(false);
 					stopButton.setDisable(true);
+					resetConnectionStatus();
 					log.info("Stopped Application...");
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -343,35 +356,10 @@ public class SickApplication extends Application {
 		return hBox;
 	}
 
-	private void initializeConnectionChecks() {
-
-		ScheduledService<Boolean> serverCheck = new ScheduledService<Boolean>() {
-			@Override
-			protected Task<Boolean> createTask() {
-				Task<Boolean> checkConnectionTask = new Task<Boolean>() {
-
-					@Override
-					protected Boolean call() throws Exception {
-						Platform.runLater(new Runnable() {
-
-							@Override
-							public void run() {
-								if (isRunning()) {
-									rtlsStatus.set(RTLSConnectionHandler.getConnectionStatus());
-									robotStatus.set(RobotConnectionHandler.getConnectionStatus());
-									lightStatus.set(LightConnectionHandler.getConnectionStatus());
-									// TODO: End this task
-								}
-							}
-						});
-						return true;
-					}
-				};
-				return checkConnectionTask;
-			}
-		};
-		serverCheck.setPeriod(Duration.seconds(1));
-		serverCheck.start();
+	private void resetConnectionStatus() {
+		database.setRTLSConnectionStatus(ConnectionStatusType.NEW);
+		database.setRobotConnectionStatus(ConnectionStatusType.NEW);
+		database.setLightConnectionStatus(ConnectionStatusType.NEW);
 	}
 
 	@SuppressWarnings("unchecked")

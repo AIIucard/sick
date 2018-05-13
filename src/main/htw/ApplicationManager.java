@@ -1,14 +1,14 @@
 package main.htw;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
-import main.htw.handler.LightConnectionHandler;
-import main.htw.handler.RTLSConnectionHandler;
-import main.htw.handler.RobotConnectionHandler;
 import main.htw.services.LightConnectionService;
 import main.htw.services.RTLSConnectionService;
 import main.htw.services.RobotConnectionService;
@@ -50,14 +50,36 @@ public class ApplicationManager {
 	public void startApplication() {
 		if (!isRunning) {
 			isRunning = true;
+
+			ExecutorService executorService = Executors.newCachedThreadPool();
 			robotService = new RobotConnectionService(database);
+			robotService.setExecutor(executorService);
 			robotService.startTheService();
 
-			// rtlsService = new RTLSConnectionService(database);
-			// rtlsService.startTheService();
-			//
-			// lightService = new LightConnectionService(database);
-			// lightService.startTheService();
+			rtlsService = new RTLSConnectionService(database);
+			rtlsService.setExecutor(executorService);
+			rtlsService.startTheService();
+
+			lightService = new LightConnectionService(database);
+			lightService.setExecutor(executorService);
+			lightService.startTheService();
+			executorService.shutdown();
+
+			try {
+				boolean finshed = executorService.awaitTermination(1, TimeUnit.MINUTES);
+				// if() {
+				//
+				// }
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// getAllActiveBadges
+
+			// getAllAreas
+
+			// BusinessLogic
 
 			logic = new BusinessLogicThread(database);
 			t = new Thread(logic, "SickBusinessLogic");
@@ -72,14 +94,7 @@ public class ApplicationManager {
 	public void stopApplication() {
 		isRunning = false;
 		if (t != null && logic != null) {
-
-			robotService.cancel();
-			rtlsService.cancel();
-			lightService.cancel();
 			logic.terminate();
-			RTLSConnectionHandler.setStatusNew();
-			RobotConnectionHandler.setStatusNew();
-			LightConnectionHandler.setStatusNew();
 		}
 	}
 

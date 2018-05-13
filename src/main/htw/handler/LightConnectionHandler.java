@@ -60,8 +60,6 @@ public class LightConnectionHandler extends SickConnectionHandler {
 																// url.openConnection();
 		Connection.setDoOutput(true);
 		setRequestSettings();
-
-		setStatusOK();
 		Connection.disconnect();
 	}
 
@@ -97,7 +95,6 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 
 		if (Connection.getResponseCode() != 200) {
-			setStatusError();
 			throw new RuntimeException("Request failed! HTTP error code : " + Connection.getResponseCode());
 		}
 

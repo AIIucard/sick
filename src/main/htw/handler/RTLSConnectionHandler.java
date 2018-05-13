@@ -101,7 +101,6 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		}
 	}
 
@@ -117,7 +116,6 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		}
 	}
 
@@ -141,11 +139,9 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		}
 
 		return null;
@@ -165,15 +161,12 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setStatusError();
 		}
 	}
 

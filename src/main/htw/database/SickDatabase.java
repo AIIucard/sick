@@ -1,5 +1,7 @@
 package main.htw.database;
 
+import java.util.Observable;
+
 import main.htw.utils.ConnectionStatusType;
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +18,7 @@ import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
 import main.htw.xml.XMLMarshler;
 
-public class SickDatabase {
+public class SickDatabase extends Observable {
 	public static final String ROLE_VISITOR = "Visitor";
 	public static final String ROLE_LABORANT = "Laborant";
 	public static final String ROLE_PROFESSOR = "Professor";
@@ -158,7 +160,9 @@ public class SickDatabase {
 	}
 
 	public void setRobotConnectionStatus(ConnectionStatusType robotConnectionStatus) {
+		setChanged();
 		this.robotConnectionStatus = robotConnectionStatus;
+		notifyObservers();
 	}
 
 	public ConnectionStatusType getRTLSConnectionStatus() {
@@ -166,7 +170,9 @@ public class SickDatabase {
 	}
 
 	public void setRTLSConnectionStatus(ConnectionStatusType rtlsConnectionStatus) {
+		setChanged();
 		this.rtlsConnectionStatus = rtlsConnectionStatus;
+		notifyObservers();
 	}
 
 	public ConnectionStatusType getLightConnectionStatus() {
@@ -174,6 +180,8 @@ public class SickDatabase {
 	}
 
 	public void setLightConnectionStatus(ConnectionStatusType lightConnectionStatus) {
+		setChanged();
 		this.lightConnectionStatus = lightConnectionStatus;
+		notifyObservers();
 	}
 }
