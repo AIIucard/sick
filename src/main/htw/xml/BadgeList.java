@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class BadgeList {
 
 	@XmlElement(name = "badge")
-	private List<Badge> badges = null;
+	private List<Badge> badges = new ArrayList<Badge>();
 
 	public BadgeList() {
 		// Default constructor
@@ -32,6 +32,9 @@ public class BadgeList {
 	}
 
 	public void addBadge(Badge badge) {
+		if (badges == null) {
+			badges = new ArrayList<Badge>();
+		}
 		this.badges.add(badge);
 	}
 
@@ -41,12 +44,23 @@ public class BadgeList {
 
 	public Badge getBadgeByAddress(String address) {
 		Badge badge = null;
-
 		for (Badge b : this.badges) {
 			if (b.getAddress().equalsIgnoreCase(address))
 				badge = b;
 		}
 
 		return badge;
+	}
+
+	public Boolean isBadgeInDataBase(String address) {
+		if (this.badges.isEmpty())
+			return false;
+
+		for (Badge b : this.badges) {
+			if (b.getAddress().equalsIgnoreCase(address))
+				return true;
+		}
+
+		return false;
 	}
 }

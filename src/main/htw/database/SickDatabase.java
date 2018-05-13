@@ -1,17 +1,33 @@
 package main.htw.database;
 
 import main.htw.utils.ConnectionStatusType;
+import java.io.IOException;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
+
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import main.htw.datamodell.ActiveBadge;
 import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
-import main.htw.xml.RoleList;
+import main.htw.xml.XMLMarshler;
 
 public class SickDatabase {
+	public static final String ROLE_VISITOR = "Visitor";
+	public static final String ROLE_LABORANT = "Laborant";
+	public static final String ROLE_PROFESSOR = "Professor";
 
+	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 	private int currentGeoFenceLevel = -1;
 	private static AreaList areaList = null;
-	private static RoleList roleList = null;
-	private static BadgeList badgeList = null;
+	private static BadgeList badgeList = new BadgeList();
+	private List<ActiveBadge> activeBadges;
+	private static boolean godModeActive = false;
+	private static XMLMarshler xmlMarshaller = null;
 
 	private double robotPositionX = 0;
 	private double robotPositionY = 0;
@@ -27,16 +43,38 @@ public class SickDatabase {
 		// Use getInstance
 	}
 
+	public void createActiveBadges(JSONObject jsonObject) {
+
+	}
+
 	public static SickDatabase getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new SickDatabase();
+					try {
+						xmlMarshaller = XMLMarshler.getInstance();
+						badgeList = xmlMarshaller.unMarshalBadgeList();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 
 		return (instance);
+	}
+
+	public boolean isGodModeSet() {
+		return godModeActive;
+	}
+
+	public void setGodMode(boolean godModeActive) {
+		SickDatabase.godModeActive = godModeActive;
 	}
 
 	public int getCurrentGeoFenceLevel() {
@@ -48,7 +86,13 @@ public class SickDatabase {
 	}
 
 	public Badge getBadgeByAddress(String address) {
-		return SickDatabase.badgeList.getBadgeByAddress(address);
+		try {
+			Badge badge = SickDatabase.badgeList.getBadgeByAddress(address);
+			return badge;
+		} catch (Exception e) {
+			log.error("No such badge registered in Database!");
+			return null;
+		}
 	}
 
 	public BadgeList getBadgeList() {
@@ -60,19 +104,29 @@ public class SickDatabase {
 	}
 
 	public void addToBadgeList(Badge badge) {
+		if (badgeList == null) {
+			badgeList = new BadgeList();
+		}
+
 		SickDatabase.badgeList.addBadge(badge);
+
+		try {
+			xmlMarshaller = XMLMarshler.getInstance();
+			if (xmlMarshaller != null && badgeList != null) {
+				xmlMarshaller.marshalBadgeList(badgeList);
+			} else {
+				log.error("Cannot store badges!");
+			}
+		} catch (JAXBException e) {
+			log.error("Cannot store badges! JAXBException thrown: " + e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void removeFromBadgeList(Badge badge) {
 		SickDatabase.badgeList.removeBadge(badge);
-	}
-
-	public RoleList getRoleList() {
-		return roleList;
-	}
-
-	public void setRoleList(RoleList roleList) {
-		SickDatabase.roleList = roleList;
 	}
 
 	public AreaList getAreaList() {

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 public class XMLMarshler {
 
 	private final static String AREAS_XML_FILE = "cfg" + File.separator + "areas.xml";
+	private final static String BADGES_XML_FILE = "cfg" + File.separator + "badges.xml";
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -60,30 +61,28 @@ public class XMLMarshler {
 		return (AreaList) jaxbUnmarshaller.unmarshal(new File(AREAS_XML_FILE));
 	}
 
-	// public void loadProperties() throws IOException {
-	//
-	// // create and load fence properties
-	// FileInputStream in = new FileInputStream(VIRTUAL_FENCE_PROPERTIES_FILE);
-	//
-	// try {
-	// log.info("Load virtual fence properties file...");
-	// prop.loadFromXML(in);
-	// in.close();
-	// log.info("Virtual fence properties loaded.");
-	// } catch (Throwable th) {
-	// log.error("Cannot load virtual fence properties!\n" +
-	// th.getLocalizedMessage());
-	// }
-	// }
+	public void marshalBadgeList(BadgeList badgeList) throws JAXBException {
 
-	// public void storeProperties() throws IOException {
-	// FileOutputStream out = new FileOutputStream(VIRTUAL_FENCE_PROPERTIES_FILE);
-	// prop.storeToXML(out, "");
-	// out.close();
-	// log.info("Stored virtual fence properties.");
-	// }
-	//
-	// public String getProperty(String key) {
-	// return prop.getProperty(key);
-	// }
+		log.debug("Initialize JAXB context...");
+		JAXBContext jaxbContext = JAXBContext.newInstance(BadgeList.class);
+
+		log.debug("Create marshaller...");
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		log.info("Marshaling badges...");
+		jaxbMarshaller.marshal(badgeList, new File(BADGES_XML_FILE));
+	}
+
+	public BadgeList unMarshalBadgeList() throws JAXBException {
+
+		log.debug("Initialize JAXB context...");
+		JAXBContext jaxbContext = JAXBContext.newInstance(BadgeList.class);
+
+		log.debug("Create unmarshaller...");
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+		log.info("Unmarshaling badges...");
+		return (BadgeList) jaxbUnmarshaller.unmarshal(new File(BADGES_XML_FILE));
+	}
 }

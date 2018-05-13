@@ -21,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
+import main.htw.database.SickDatabase;
 import main.htw.messages.MessageGeoFence;
+import main.htw.xml.Badge;
 
 /**
  *
@@ -35,6 +37,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	Session userSession = null;
 	private JSONParser parser = new JSONParser();
 	private DMNHandler dmnHandler;
+	private SickDatabase sickDatabase = SickDatabase.getInstance();
 
 	public static SickMessageHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -93,6 +96,13 @@ public class SickMessageHandler extends WebSocketAdapter {
 			geoFence.setTimestamp((Long) payload.get("timestamp"));
 
 			geoFence.printObjectInformation();
+
+			Badge badge = sickDatabase.getBadgeByAddress(geoFence.getAddress());
+			if (badge == null) {
+				throw new Exception("Badge not found!\nBadge Address: " + geoFence.getAddress());
+			}
+
+			log.info("badge: " + badge.getAddress() + ", role: " + badge.getRole());
 
 			switch (eventType) {
 			case "IN":

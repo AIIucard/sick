@@ -1,5 +1,6 @@
 package main.htw.handler;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,18 +10,24 @@ import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
 
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
+import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveBadge;
 import main.htw.messages.MessageArea;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.xml.Area;
+import main.htw.xml.Badge;
+import main.htw.xml.BadgeList;
 
 /**
  * ChatServer Client
@@ -168,6 +175,56 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 			e.printStackTrace();
 			setStatusError();
 		}
+	}
+
+	public void getActiveBadges() {
+		SickDatabase sickDatabase = SickDatabase.getInstance();
+		// get JSON with badges
+		// WORKAROUND: read from sample file
+		JSONArray jsonArray;
+		try {
+			jsonArray = JsonReader.readJsonFromFile("C:/Users/richter/git/sick/cfg/sampledevices.json");
+
+			for (Object o : jsonArray) {
+				JSONObject jBadge = (JSONObject) o;
+
+				String address = (String) jBadge.get("address");
+				// Is Badge Address in XMLS Badges?
+				// yes => do nothing
+				// no => add to DB
+				BadgeList badgeList = sickDatabase.getBadgeList();
+				if (!badgeList.isBadgeInDataBase(address)) {
+					sickDatabase.addToBadgeList(new Badge(address, sickDatabase.ROLE_VISITOR));
+					log.info("Badge added! ");
+				}
+
+				Boolean connected = (Boolean) jBadge.get("connected");
+
+				// Is connected == true?
+				// yes => get role from XML Badge
+				// && create ActiveBadge
+				// no => ignore
+				if (connected) {
+					Badge badge = sickDatabase.getBadgeByAddress(address);
+					ActiveBadge activeBadge = new ActiveBadge(badge);
+					log.info("Badge connected! ");
+
+				}
+			}
+
+			log.info("Devices found: " + jsonArray.size());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// sickDatabase.createActiveBadges(jsonObject);
 	}
 
 	public WebSocket getWebsocket() {
