@@ -8,9 +8,9 @@ import main.htw.database.SickDatabase;
 public class BusinessLogicThread implements Runnable {
 
 	private boolean isStarted = true;
-	private volatile boolean running = true;
 	private static Thread t = null;
 	private SickDatabase database = null;
+	private volatile boolean running;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

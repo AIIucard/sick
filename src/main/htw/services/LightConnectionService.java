@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
-import main.htw.handler.LightConnectionHandler;
+import main.htw.handler.LightHandler;
 import main.htw.utils.ConnectionStatusType;
 
 public class LightConnectionService extends Service<Void> {
@@ -39,7 +39,7 @@ public class LightConnectionService extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				database.setLightConnectionStatus(ConnectionStatusType.PENDING);
-				LightConnectionHandler lightConnectionHandler = LightConnectionHandler.getInstance();
+				LightHandler lightConnectionHandler = LightHandler.getInstance();
 				try {
 					lightConnectionHandler.initializeConnection();
 					database.setLightConnectionStatus(ConnectionStatusType.OK);

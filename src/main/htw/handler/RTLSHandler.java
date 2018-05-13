@@ -36,7 +36,7 @@ import main.htw.xml.BadgeList;
  * @author Jiji_Sasidharan
  */
 @ClientEndpoint
-public class RTLSConnectionHandler extends SickConnectionHandler {
+public class RTLSHandler extends SickHandler {
 
 	private SickMessageHandler sickMessageHandler = null;
 
@@ -45,15 +45,15 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 	private static final String REGISTER_POSITION_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
 	private static Object lock = new Object();
-	private static RTLSConnectionHandler instance = null;
+	private static RTLSHandler instance = null;
 
 	private static URI uri;
 
-	public static RTLSConnectionHandler getInstance() {
+	public static RTLSHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new RTLSConnectionHandler();
+					instance = new RTLSHandler();
 					try {
 						if (propManager == null) {
 							try {
@@ -98,7 +98,7 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		websocket.addListener(sickMessageHandler);
 		try {
 			websocket.connect();
-			websocket.sendText(RTLSConnectionHandler.REGISTER_GEO_FENCE_MSG);
+			websocket.sendText(RTLSHandler.REGISTER_GEO_FENCE_MSG);
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -113,7 +113,7 @@ public class RTLSConnectionHandler extends SickConnectionHandler {
 		websocket.addListener(sickMessageHandler);
 		try {
 			websocket.connect();
-			websocket.sendText(RTLSConnectionHandler.REGISTER_POSITION_MSG);
+			websocket.sendText(RTLSHandler.REGISTER_POSITION_MSG);
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

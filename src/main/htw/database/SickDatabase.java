@@ -19,6 +19,7 @@ import main.htw.xml.XMLMarshler;
 
 public class SickDatabase extends Observable {
 
+	// TODO Remove logger
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 	private int currentGeoFenceLevel = -1;
 	private static AreaList areaList = null;
@@ -73,6 +74,7 @@ public class SickDatabase extends Observable {
 		this.currentGeoFenceLevel = currentGeoFenceLevel;
 	}
 
+	// TODO Remove try catch + logger
 	public Badge getBadgeByAddress(String address) {
 		try {
 			Badge badge = SickDatabase.badgeList.getBadgeByAddress(address);
@@ -91,6 +93,7 @@ public class SickDatabase extends Observable {
 		SickDatabase.badgeList = badgeList;
 	}
 
+	// TODO Remove try catch + logger
 	public void addToBadgeList(Badge badge) {
 		if (badgeList == null) {
 			badgeList = new BadgeList();

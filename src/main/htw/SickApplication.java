@@ -55,7 +55,7 @@ import main.htw.database.SickDatabase;
 import main.htw.gui.AddFenceGUI;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EmulatorGUI;
-import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.RTLSHandler;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
@@ -475,7 +475,7 @@ public class SickApplication extends Application implements Observer {
 				result.ifPresent(nameDistance -> {
 					Area newArea = SickUtils.addNewArea(nameDistance.getKey(), nameDistance.getValue());
 					tableData.add(newArea);
-					RTLSConnectionHandler.getInstance().addArea(newArea);
+					RTLSHandler.getInstance().addArea(newArea);
 				});
 			}
 		});
@@ -515,7 +515,7 @@ public class SickApplication extends Application implements Observer {
 				if (result.get() == ButtonType.OK) {
 					SickUtils.removeArea(selectedItem);
 					tableData.remove(selectedItem);
-					RTLSConnectionHandler.getInstance().removeArea(selectedItem);
+					RTLSHandler.getInstance().removeArea(selectedItem);
 				}
 			}
 		});

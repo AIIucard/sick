@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
-import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.RTLSHandler;
 import main.htw.utils.ConnectionStatusType;
 
 public class RTLSConnectionService extends Service<Void> {
@@ -39,7 +39,7 @@ public class RTLSConnectionService extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				database.setRTLSConnectionStatus(ConnectionStatusType.PENDING);
-				RTLSConnectionHandler rtlsConnectionHandler = RTLSConnectionHandler.getInstance();
+				RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
 				try {
 					rtlsConnectionHandler.initializeConnection();
 					database.setRTLSConnectionStatus(ConnectionStatusType.OK);

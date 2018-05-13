@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
-import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -37,7 +37,7 @@ public class PlaygroundFabe {
 			// RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
 			// robbi.sendSecurityLevel(4);
 
-			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
+			final RTLSHandler connectionManager = RTLSHandler.getInstance();
 			try {
 				// connectionManager.registerGeoFence();
 				// Badge badge = new Badge(1, "8121069331292357553", null);

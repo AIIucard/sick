@@ -11,7 +11,7 @@ import java.net.URL;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 
-public class LightConnectionHandler extends SickConnectionHandler {
+public class LightHandler extends SickHandler {
 
 	private static final String RED = "\"xy\": [0.734662, 0.265047]";
 	private static final String YELLOW = "\"xy\": [0.499226, 0.478163]";
@@ -21,19 +21,19 @@ public class LightConnectionHandler extends SickConnectionHandler {
 	private static HttpURLConnection Connection;
 
 	private static Object lock = new Object();
-	private static LightConnectionHandler instance = null;
+	private static LightHandler instance = null;
 
 	private static URL url;
 
-	private LightConnectionHandler() {
+	private LightHandler() {
 		// Use getInstance
 	}
 
-	public static LightConnectionHandler getInstance() {
+	public static LightHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new LightConnectionHandler();
+					instance = new LightHandler();
 
 					if (propManager == null) {
 						try {
@@ -101,7 +101,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		Connection.disconnect();
 	}
 
-	public static void setLigthGreen() {
+	public void setLigthGreen() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -109,7 +109,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 
 		try {
-			setLight(LightConnectionHandler.GREEN);
+			setLight(LightHandler.GREEN);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to green!");
@@ -117,7 +117,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 	}
 
-	public static void setLigthRed() {
+	public void setLigthRed() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -125,7 +125,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 
 		try {
-			setLight(LightConnectionHandler.RED);
+			setLight(LightHandler.RED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to red!");
@@ -133,7 +133,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 	}
 
-	public static void setLigthYellow() {
+	public void setLigthYellow() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -141,7 +141,7 @@ public class LightConnectionHandler extends SickConnectionHandler {
 		}
 
 		try {
-			setLight(LightConnectionHandler.YELLOW);
+			setLight(LightHandler.YELLOW);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to yellow!");

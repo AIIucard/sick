@@ -8,7 +8,10 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
+import main.htw.handler.RTLSHandler;
 import main.htw.services.LightConnectionService;
 import main.htw.services.RTLSConnectionService;
 import main.htw.services.RobotConnectionService;
@@ -65,15 +68,29 @@ public class ApplicationManager {
 			lightService.startTheService();
 			executorService.shutdown();
 
-			try {
-				boolean finshed = executorService.awaitTermination(1, TimeUnit.MINUTES);
-				// if() {
-				//
-				// }
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			log.info("Create service to get all active badges...");
+			Service<Void> getAllActiveBadgesService = new Service<Void>() {
+				@Override
+				protected Task<Void> createTask() {
+					return new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							try {
+								boolean finshed = executorService.awaitTermination(1, TimeUnit.MINUTES);
+								if (finshed) {
+									RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
+									rtlsConnectionHandler.getActiveBadges();
+								}
+							} catch (InterruptedException e) {
+								log.error("Cannot load active Badges! InterruptedException thrown: "
+										+ e.getLocalizedMessage());
+							}
+							return null;
+						}
+					};
+				}
+			};
+			getAllActiveBadgesService.start();
 
 			// getAllActiveBadges
 

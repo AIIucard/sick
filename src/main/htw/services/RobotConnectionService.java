@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
-import main.htw.handler.RobotConnectionHandler;
+import main.htw.handler.RobotHandler;
 import main.htw.utils.ConnectionStatusType;
 
 public class RobotConnectionService extends Service<Void> {
@@ -39,7 +39,7 @@ public class RobotConnectionService extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				database.setRobotConnectionStatus(ConnectionStatusType.PENDING);
-				RobotConnectionHandler robotConnectionHandler = RobotConnectionHandler.getInstance();
+				RobotHandler robotConnectionHandler = RobotHandler.getInstance();
 				try {
 					robotConnectionHandler.initializeConnection();
 					database.setRobotConnectionStatus(ConnectionStatusType.OK);

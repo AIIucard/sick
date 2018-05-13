@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.handler.DMNHandler;
-import main.htw.handler.LightConnectionHandler;
-import main.htw.handler.RTLSConnectionHandler;
+import main.htw.handler.LightHandler;
+import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -49,13 +49,13 @@ public class PlaygroundMain {
 			// log.error("Error");
 			// e.printStackTrace();
 			// }
-			final RTLSConnectionHandler connectionManager = RTLSConnectionHandler.getInstance();
+			final RTLSHandler connectionManager = RTLSHandler.getInstance();
 			try {
 				// connectionManager.registerGeoFence();
 				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
 				// connectionManager.getAllAreas();
 				log.info("Connecting to Light...");
-				LightConnectionHandler lightHandler = LightConnectionHandler.getInstance();
+				LightHandler lightHandler = LightHandler.getInstance();
 				for (int i = 0; i <= 3; i++) {
 					lightHandler.setLigthGreen();
 					Thread.sleep(1000);

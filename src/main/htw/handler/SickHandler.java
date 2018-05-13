@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import main.htw.properties.CFGPropertyManager;
 
-public class SickConnectionHandler {
+public class SickHandler {
 
 	protected static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

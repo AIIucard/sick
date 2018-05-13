@@ -17,23 +17,23 @@ import com.prosysopc.ua.client.UaClient;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 
-public class RobotConnectionHandler extends SickConnectionHandler {
+public class RobotHandler extends SickHandler {
 
 	private static Object lock = new Object();
-	private static RobotConnectionHandler instance = null;
+	private static RobotHandler instance = null;
 	private static UaClient client;
 
 	private static URI uri;
 
-	private RobotConnectionHandler() {
+	private RobotHandler() {
 		// Use getInstance
 	}
 
-	public static RobotConnectionHandler getInstance() {
+	public static RobotHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
-					instance = new RobotConnectionHandler();
+					instance = new RobotHandler();
 					try {
 						if (propManager == null) {
 							propManager = CFGPropertyManager.getInstance();
