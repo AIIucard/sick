@@ -1,5 +1,6 @@
 package main.htw.database;
 
+import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
@@ -12,8 +13,12 @@ public class SickDatabase {
 	private static RoleList roleList = null;
 	private static BadgeList badgeList = null;
 
-	private static double robotPositionX = 0;
-	private static double robotPositionY = 0;
+	private double robotPositionX = 0;
+	private double robotPositionY = 0;
+
+	private ConnectionStatusType robotConnectionStatus = ConnectionStatusType.NEW;
+	private ConnectionStatusType rtlsConnectionStatus = ConnectionStatusType.NEW;
+	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
 
 	private static Object lock = new Object();
 	private static SickDatabase instance = null;
@@ -83,7 +88,7 @@ public class SickDatabase {
 	}
 
 	public void setRobotPositionX(double robotPositionX) {
-		SickDatabase.robotPositionX = robotPositionX;
+		this.robotPositionX = robotPositionX;
 	}
 
 	public double getRobotPositionY() {
@@ -91,6 +96,30 @@ public class SickDatabase {
 	}
 
 	public void setRobotPositionY(double robotPositionY) {
-		SickDatabase.robotPositionY = robotPositionY;
+		this.robotPositionY = robotPositionY;
+	}
+
+	public ConnectionStatusType getRobotConnectionStatus() {
+		return robotConnectionStatus;
+	}
+
+	public void setRobotConnectionStatus(ConnectionStatusType robotConnectionStatus) {
+		this.robotConnectionStatus = robotConnectionStatus;
+	}
+
+	public ConnectionStatusType getRTLSConnectionStatus() {
+		return rtlsConnectionStatus;
+	}
+
+	public void setRTLSConnectionStatus(ConnectionStatusType rtlsConnectionStatus) {
+		this.rtlsConnectionStatus = rtlsConnectionStatus;
+	}
+
+	public ConnectionStatusType getLightConnectionStatus() {
+		return lightConnectionStatus;
+	}
+
+	public void setLightConnectionStatus(ConnectionStatusType lightConnectionStatus) {
+		this.lightConnectionStatus = lightConnectionStatus;
 	}
 }

@@ -140,7 +140,7 @@ public class SickApplication extends Application {
 
 			loadAppIconSet();
 		} catch (IOException e) {
-			log.error("IOException thrown: " + e);
+			log.error("IOException thrown: " + e.getLocalizedMessage());
 		}
 	}
 
