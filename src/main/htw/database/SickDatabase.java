@@ -89,6 +89,17 @@ public class SickDatabase extends Observable {
 		}
 	}
 
+	public ActiveBadge getActiveBadgeByAddress(String address) {
+
+		// List<ActiveBadges>
+		for (ActiveBadge a : activeBadges) {
+			if (a.getAddress().equals(address))
+				return a;
+		}
+
+		return null;
+	}
+
 	public BadgeList getBadgeList() {
 		return badgeList;
 	}
