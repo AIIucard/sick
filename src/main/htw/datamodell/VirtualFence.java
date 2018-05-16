@@ -13,35 +13,41 @@ public class VirtualFence {
 
 	// TODO: Check if this is needed (Area XML Object in xml package)
 
-	private Integer id;
-	private Integer layer;
-	private String label;
+	private Long id;
+	private Long layer;
+	private String name;
 	// the area range defines the distance from the light gate to the outer border
 	// of the virtual fence so that the coordinates can be calculated
 	private Float areaRange;
 
-	public Integer getId() {
+	public VirtualFence(Long id, Long layer, String name) {
+		this.id = id;
+		this.layer = layer;
+		this.name = name;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getLayer() {
+	public Long getLayer() {
 		return layer;
 	}
 
-	public void setLayer(Integer layer) {
+	public void setLayer(Long layer) {
 		this.layer = layer;
 	}
 
-	public String getLabel() {
-		return label;
+	public String getName() {
+		return name;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Float getAreaRange() {

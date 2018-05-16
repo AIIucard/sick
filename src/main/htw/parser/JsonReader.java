@@ -81,21 +81,15 @@ public class JsonReader {
 	}
 
 	public static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
+		// InputStream is = null;
 		try {
 			InputStream is = getContent(url);
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 			Object obj = parser.parse(jsonText);
 			JSONArray json = (JSONArray) obj;
-			is.close();
 			return json;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NoSuchAlgorithmException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -109,13 +103,12 @@ public class JsonReader {
 			Object obj = parser.parse(jsonText);
 			JSONObject json = (JSONObject) obj;
 			return json;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		} finally {
-			is.close();
 		}
+
 	}
 
 	public static JSONArray readJsonFromFile(String filepath)

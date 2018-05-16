@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
@@ -21,7 +23,7 @@ import com.neovisionaries.ws.client.WebSocketListener;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
-import main.htw.messages.MessageArea;
+import main.htw.datamodell.VirtualFence;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
@@ -129,22 +131,41 @@ public class RTLSHandler extends SickHandler {
 		log.warn("NOT IMPLEMENTED");
 	}
 
-	public MessageArea[] getAllAreas() {
-		log.info("Getting All Areas");
-		String urlString = propManager.getProperty(PropertiesKeys.HTTP_PROTOCOL)
+	public List<VirtualFence> getAllAreas() {
+		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
+		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
+		JSONArray jsonArray;
+
+		log.info("Getting All Areas");
+
 		try {
-			JSONObject jsonObject = JsonReader.readJsonObjectFromUrl(urlString);
-			System.out.println(jsonObject.toString());
-		} catch (JSONException e) {
+			jsonArray = JsonReader.readJsonArrayFromUrl(urlString);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 
-		return null;
+		List<VirtualFence> areas = new ArrayList();
+
+		for (Object o : jsonArray) {
+			JSONObject jArea = (JSONObject) o;
+
+			Long id = (Long) jArea.get("id");
+			Long layer = (Long) jArea.get("layer");
+			String name = (String) jArea.get("name");
+			JSONObject shape = (JSONObject) jArea.get("shape");
+			JSONArray coordinates = (JSONArray) shape.get("coordinates");
+
+			if (layer == sickLayer) {
+				log.info("OUR AREA DETECTED!!! " + name);
+				VirtualFence area = new VirtualFence(id, layer, name);
+				areas.add(area);
+			}
+		}
+
+		return areas;
 	}
 
 	public void tryReconnect() {
