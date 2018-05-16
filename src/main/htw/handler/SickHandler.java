@@ -9,5 +9,5 @@ public class SickHandler {
 
 	protected static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	protected static CFGPropertyManager propManager = null;
+	protected static CFGPropertyManager propManager;
 }

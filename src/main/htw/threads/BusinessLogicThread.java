@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.messages.MessageGeoFence;
+import main.htw.utils.SickUtils;
 
 public class BusinessLogicThread implements Runnable {
 
@@ -60,7 +61,7 @@ public class BusinessLogicThread implements Runnable {
 	public void computeRTLSMessage(MessageGeoFence messageGeoFence) {
 		//
 		// ermittle den betroffenen Badge und hole ihn dir aus der Datenbank
-		ActiveBadge activeBadge = database.getActiveBadgeByAddress(messageGeoFence.getAddress());
+		ActiveBadge activeBadge = SickUtils.getActiveBadgeByAddress(messageGeoFence.getAddress());
 		//
 
 		// setze den aktuellen Geofence

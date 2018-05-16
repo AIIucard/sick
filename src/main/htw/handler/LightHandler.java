@@ -34,15 +34,12 @@ public class LightHandler extends SickHandler {
 			synchronized (lock) {
 				if (instance == null) {
 					instance = new LightHandler();
-
-					if (propManager == null) {
-						try {
-							propManager = CFGPropertyManager.getInstance();
-							url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
-						} catch (IOException e) {
-							// TODO: Log
-							e.printStackTrace();
-						}
+					try {
+						propManager = CFGPropertyManager.getInstance();
+						url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
+					} catch (IOException e) {
+						// TODO: Log
+						e.printStackTrace();
 					}
 				}
 			}
@@ -54,6 +51,7 @@ public class LightHandler extends SickHandler {
 		// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
 		// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
 
+		// TODO: Change this to static url from above which is initialized by cfg file!
 		URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
 		log.info("Opening Connection");
 		Connection = (HttpURLConnection) url.openConnection();// (HttpURLConnection)

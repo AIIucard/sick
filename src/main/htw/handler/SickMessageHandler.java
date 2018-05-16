@@ -23,6 +23,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 
 import main.htw.database.SickDatabase;
 import main.htw.messages.MessageGeoFence;
+import main.htw.utils.SickUtils;
 import main.htw.xml.Badge;
 
 /**
@@ -97,7 +98,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 
 			geoFence.printObjectInformation();
 
-			Badge badge = sickDatabase.getBadgeByAddress(geoFence.getAddress());
+			Badge badge = SickUtils.getBadgeByAddress(geoFence.getAddress());
 			if (badge == null) {
 				throw new Exception("Badge not found!\nBadge Address: " + geoFence.getAddress());
 			}

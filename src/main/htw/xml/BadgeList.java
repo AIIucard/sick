@@ -51,16 +51,4 @@ public class BadgeList {
 
 		return badge;
 	}
-
-	public Boolean isBadgeInDataBase(String address) {
-		if (this.badges.isEmpty())
-			return false;
-
-		for (Badge b : this.badges) {
-			if (b.getAddress().equalsIgnoreCase(address))
-				return true;
-		}
-
-		return false;
-	}
 }

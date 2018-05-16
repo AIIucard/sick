@@ -26,6 +26,7 @@ import main.htw.datamodell.RoleType;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
@@ -55,17 +56,14 @@ public class RTLSHandler extends SickHandler {
 				if (instance == null) {
 					instance = new RTLSHandler();
 					try {
-						if (propManager == null) {
-							try {
-								propManager = CFGPropertyManager.getInstance();
-								String websocketString = propManager.getProperty(PropertiesKeys.WEBSOCKET_PROTOCOL)
-										+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
-								uri = new URI(websocketString);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+						propManager = CFGPropertyManager.getInstance();
+						String websocketString = propManager.getProperty(PropertiesKeys.WEBSOCKET_PROTOCOL)
+								+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
+						uri = new URI(websocketString);
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					} catch (URISyntaxException e) {
 						// TODO: Log
 						e.printStackTrace();
@@ -74,10 +72,11 @@ public class RTLSHandler extends SickHandler {
 			}
 		}
 		return (instance);
+
 	}
 
 	public void initializeConnection() throws Exception {
-		log.info("Connecting to RTLS at" + uri + "...");
+		log.info("Connecting to RTLS at " + uri + "...");
 		WebSocketFactory factory = new WebSocketFactory();
 		SSLContext context;
 		context = NaiveSSLContext.getInstance("TLS");
@@ -199,40 +198,42 @@ public class RTLSHandler extends SickHandler {
 		SickDatabase sickDatabase = SickDatabase.getInstance();
 		// get JSON with badges
 		// WORKAROUND: read from sample file
-		JSONArray jsonArray;
+		JSONArray jsonBadgeArray;
 		try {
 			// read JSON from UR
 			String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
-			jsonArray = JsonReader.readJsonArrayFromUrl(urlString);
+			jsonBadgeArray = JsonReader.readJsonArrayFromUrl(urlString);
 
-			for (Object o : jsonArray) {
-				JSONObject jBadge = (JSONObject) o;
+			for (Object badgeObj : jsonBadgeArray) {
+				JSONObject jsonBadge = (JSONObject) badgeObj;
 
-				String address = (String) jBadge.get("address");
+				String address = (String) jsonBadge.get("address");
 				// Is Badge Address in XMLS Badges?
 				// yes => do nothing
 				// no => add to DB
 				BadgeList badgeList = sickDatabase.getBadgeList();
-				if (!badgeList.isBadgeInDataBase(address)) {
-					sickDatabase.addToBadgeList(new Badge(address, RoleType.ROLE_VISITOR));
+				if (!SickUtils.isBadgeInDataBase(address)) {
+					badgeList.addBadge(new Badge(address, RoleType.ROLE_VISITOR));
 					log.info("Badge added! ");
 				}
 
-				Boolean connected = (Boolean) jBadge.get("connected");
+				Boolean connected = (Boolean) jsonBadge.get("connected");
 
 				// Is connected == true?
 				// yes => get role from XML Badge
 				// && create ActiveBadge
 				// no => ignore
 				if (connected) {
-					Badge badge = sickDatabase.getBadgeByAddress(address);
+					Badge badge = SickUtils.getBadgeByAddress(address);
 					ActiveBadge activeBadge = new ActiveBadge(badge);
-					log.info("Badge connected! ");
+					if (!SickUtils.isActiveBadgeInDataBase(activeBadge.getAddress())) {
+						sickDatabase.getActiveBadgesList().add(activeBadge);
+						log.info("Badge connected! ");
+					}
 				}
 			}
-
-			log.info("Devices found: " + jsonArray.size());
+			log.info("Devices found: " + jsonBadgeArray.size());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -243,8 +244,6 @@ public class RTLSHandler extends SickHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// sickDatabase.createActiveBadges(jsonObject);
 	}
 
 	public WebSocket getWebsocket() {

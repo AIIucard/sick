@@ -35,9 +35,7 @@ public class RobotHandler extends SickHandler {
 				if (instance == null) {
 					instance = new RobotHandler();
 					try {
-						if (propManager == null) {
-							propManager = CFGPropertyManager.getInstance();
-						}
+						propManager = CFGPropertyManager.getInstance();
 						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
 					} catch (URISyntaxException e) {
 						// TODO: Log
