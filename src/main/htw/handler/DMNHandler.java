@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.camunda.bpm.dmn.engine.DmnDecision;
+import org.camunda.bpm.dmn.engine.DmnDecisionRuleResult;
+import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
 import org.camunda.bpm.dmn.engine.DmnEngine;
 import org.camunda.bpm.dmn.engine.DmnEngineConfiguration;
 import org.camunda.bpm.engine.variable.VariableMap;
@@ -82,25 +84,25 @@ public class DMNHandler {
 		log.info("Tablesize=" + decisionTableSize + "Entry:" + decisionList.toString());
 
 		// Evaluate Decision
-		// DmnDecisionTableResult decisionTableResult = null;
+		DmnDecisionTableResult decisionTableResult = null;
 		//
-		// for (int i = 0; i <= decisionTableSize; i++) {
-		// DmnDecision decision = decisionList.get(i);
-		// decisionTableResult = dmnEngine.evaluateDecisionTable(decision, variables);
-		// int resultSize = decisionTableResult.size();
-		//
-		// if (resultSize != 0) {
-		// log.info("Found Decision at rule=" + i);
-		// break;
-		// }
-		// }
-		//
-		// if (decisionTableResult != null) {
-		// DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
-		// log.info("That result is =" + dmnDecisionRuleResult);
-		// }
-		//
-		// log.info("I did nothing at all");
+		for (int i = 0; i <= decisionTableSize; i++) {
+			DmnDecision decision = decisionList.get(i);
+			decisionTableResult = dmnEngine.evaluateDecisionTable(decision, variables);
+			int resultSize = decisionTableResult.size();
+
+			if (resultSize != 0) {
+				// log.info("Found Decision at rule=" + i);
+				break;
+			}
+		}
+
+		if (decisionTableResult != null) {
+			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
+			log.info("The result is =" + dmnDecisionRuleResult.values());
+		} else {
+			log.info("I did nothing at all");
+		}
 
 	}
 }

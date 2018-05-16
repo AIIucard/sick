@@ -1,173 +1,131 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<definitions namespace="http://www.signavio.com/dmn/1.1/diagram/5850424ce3594a6ebc9d0ad97af086d6.xml" exporterVersion="11.13.0" name="Calculate robot safety level" id="id-3fe5a3d9fb23407888e9f3e12d4a407a" sigExt:revisionId="e3917f261b2d4dcb96418ce6cae00db8" sigExt:revisionNumber="2" xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:sig="http://www.signavio.com/dmn/1.1/diagram/5850424ce3594a6ebc9d0ad97af086d6.xml" xmlns:sigExt="http://www.signavio.com/schema/dmn/1.1/" xmlns:feel="http://www.omg.org/spec/FEEL/20140401">
-    <extensionElements/>
-    <itemDefinition isCollection="false" name="safetyLevel" id="id-522e856260ea7e323eb7b2ae4815ec14" label="safety level">
-        <typeRef>feel:string</typeRef>
-    </itemDefinition>
-    <itemDefinition isCollection="false" name="robotSafetyLevel" id="id-8a736433fa1cccdb4f6da7a2a2515e45" label="robot safety level">
-        <typeRef>feel:string</typeRef>
-    </itemDefinition>
-    <itemDefinition isCollection="false" name="role" id="id-28f7dbb707c9a8227e991c79c191c1a7" label="role">
-        <typeRef>feel:string</typeRef>
-        <allowedValues>
-            <text>"Professor","Laborant","Visitor"</text>
-        </allowedValues>
-    </itemDefinition>
-    <itemDefinition isCollection="false" name="geofence" id="id-8b079e9b29b04bc4b7802b6603598286" label="geofence">
-        <typeRef>feel:string</typeRef>
-        <allowedValues>
-            <text>"1","2","3","0"</text>
-        </allowedValues>
-    </itemDefinition>
-    <inputData name="role" id="id-3529d8a98b73ddca9c3a84876de53fb1" label="role" sigExt:shapeId="sid-CE01FC14-D0B0-4A6F-96B2-277A7B307A58" sigExt:diagramId="5850424ce3594a6ebc9d0ad97af086d6">
-        <extensionElements/>
-        <variable typeRef="sig:role" name="role" id="id-3529d8a98b73ddca9c3a84876de53fb1_variable"/>
-    </inputData>
-    <inputData name="geofence" id="id-a55e59f0782a94dfbf98f9b113ed7c1a" label="geofence" sigExt:shapeId="sid-EDEE2792-C3B3-4197-9D68-FF0C85CF58C9" sigExt:diagramId="5850424ce3594a6ebc9d0ad97af086d6">
-        <extensionElements/>
-        <variable typeRef="sig:geofence" name="geofence" id="id-a55e59f0782a94dfbf98f9b113ed7c1a_variable"/>
-    </inputData>
-    <decision name="robotSafetyLevel" id="id-07485fbd30fca149e8c638574dfb8b50" label="robot safety level" sigExt:shapeId="sid-AE989A02-7DCF-4626-93AF-D5684967584E" sigExt:diagramId="5850424ce3594a6ebc9d0ad97af086d6">
-        <extensionElements/>
-        <variable typeRef="sig:robotSafetyLevel" name="robotSafetyLevel" id="id-07485fbd30fca149e8c638574dfb8b50_variable"/>
-        <informationRequirement>
-            <requiredInput href="#id-a55e59f0782a94dfbf98f9b113ed7c1a"/>
-        </informationRequirement>
-        <informationRequirement>
-            <requiredInput href="#id-3529d8a98b73ddca9c3a84876de53fb1"/>
-        </informationRequirement>
-        <decisionTable hitPolicy="UNIQUE">
-            <input id="id-f4a8bc33ac0c1fab2b83e6699c9bda31" label="role">
-                <inputExpression>
-                    <text>role</text>
-                </inputExpression>
-            </input>
-            <input id="id-4895ddd97965fec476c9fa1769c2031a" label="geofence">
-                <inputExpression>
-                    <text>geofence</text>
-                </inputExpression>
-            </input>
-            <output name="robotSafetyLevel" typeRef="sig:safetyLevel" id="id-7ac5f6e339ea3192ab095e115d374150" label="robot safety level"/>
-            <rule id="id-39c671104b0659c4837d939cbb38fed5">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>-</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"0"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"0,rot"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-cf8485c01f6c407e019e78d7433ab7e2">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Laborant"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"1"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"1,rot"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-4f46361cab5c1354c992c849d99931e2">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Professor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"1"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"2,blau"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-d9311d91f567e1ed2b3d6341fb4f7ecf">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Professor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"2"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"5,gelb"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-a9df3ece116df1472d387c26c72112fd">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Laborant"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"2"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"4,gelb"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-7eae64f905aa395fe007e8f11583b8d6">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Laborant"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"3"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"7,grün"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-2500e5c1af704d9bda0290180f4bb19f">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Visitor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"1"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"0,rot"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-8667e234d70e3b59f290f21048b9b33c">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Professor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"3"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"8,grün"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-6b2122a13328a9f3839dfbc638600c22">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Visitor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"2"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"3,gelb"</text>
-                </outputEntry>
-            </rule>
-            <rule id="id-5463a36ab1b78dc3f89861adb7ec4e4a">
-                <description>string(-)</description>
-                <inputEntry>
-                    <text>"Visitor"</text>
-                </inputEntry>
-                <inputEntry>
-                    <text>"3"</text>
-                </inputEntry>
-                <outputEntry>
-                    <text>"6,grün"</text>
-                </outputEntry>
-            </rule>
-        </decisionTable>
-    </decision>
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_044gd4w" name="DRD" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="Decision_13nychf" name="robotSafetyLevel">
+    <extensionElements>
+      <biodi:bounds x="200" y="200" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable_1">
+      <input id="input_1">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text>role</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0w0ovay">
+        <inputExpression id="LiteralExpression_1272de1" typeRef="integer">
+          <text>geofence</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" name="robot safety level" typeRef="string" />
+      <rule id="DecisionRule_15pyjsh">
+        <inputEntry id="UnaryTests_1q1wgs8">
+          <text>"Professor","Laborant","Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vh6tqc">
+          <text>0</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0lqya99">
+          <text>"0,rot"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1vp3qvq">
+        <inputEntry id="UnaryTests_0olpocw">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04jxcqn">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ijaqva">
+          <text>"2,blau"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_01nbwoo">
+        <inputEntry id="UnaryTests_1f3o7cq">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01mzrxb">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_091t8w7">
+          <text>"5,gelb"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1c6vnx3">
+        <inputEntry id="UnaryTests_1gwfy7z">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_09io6vv">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0u38kav">
+          <text>"8,grün"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0vh4uun">
+        <inputEntry id="UnaryTests_12itubk">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1j1tw8p">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0vwkeym">
+          <text>"1,rot"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1snx7m7">
+        <inputEntry id="UnaryTests_0ua62q9">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0t1c5zx">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_19no5ag">
+          <text>"4,gelb"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_12u57lp">
+        <inputEntry id="UnaryTests_08wmy6t">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1cxd675">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0qjocio">
+          <text>"7,grün"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_137tfbx">
+        <inputEntry id="UnaryTests_1xgbxnn">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04hntbl">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gf1t3f">
+          <text>"0,rot"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_198dz0j">
+        <inputEntry id="UnaryTests_095ya2g">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mwb74e">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ydtzhj">
+          <text>"3,gelb"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1q6s0p3">
+        <inputEntry id="UnaryTests_0c641jo">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0p4zyo9">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_164gt5z">
+          <text>"6,grün"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
 </definitions>

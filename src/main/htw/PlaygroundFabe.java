@@ -50,8 +50,8 @@ public class PlaygroundFabe {
 				// Badge badge = new Badge(1, "8121069331292357553", null);
 				// sickDatabase.addToBadgeList(badge);
 				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
-				List<VirtualFence> areas = connectionManager.getAllAreas();
-				for (VirtualFence a : areas) {
+				List<ActiveArea> areas = connectionManager.getAllAreas();
+				for (ActiveArea a : areas) {
 					log.info("AREA");
 					log.info("id  : " + a.getId());
 					log.info("name: " + a.getName());

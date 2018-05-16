@@ -1,9 +1,9 @@
 package main.htw;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import main.htw.services.LightConnectionService;
 import main.htw.services.RTLSConnectionService;
 import main.htw.services.RobotConnectionService;
 import main.htw.threads.BusinessLogicThread;
+import main.htw.utils.ConnectionStatusType;
 
 public class ApplicationManager {
 
@@ -29,6 +30,7 @@ public class ApplicationManager {
 	private static RobotConnectionService robotService = null;
 	private static RTLSConnectionService rtlsService = null;
 	private static LightConnectionService lightService = null;
+	private SickApplication app = null;
 
 	private static SickDatabase database = null;
 
@@ -50,20 +52,23 @@ public class ApplicationManager {
 		return (instance);
 	}
 
-	public void startApplication() {
+	public void startApplication(SickApplication app) {
+		this.app = app;
 		if (!isRunning) {
 			isRunning = true;
 
 			ExecutorService executorService = Executors.newCachedThreadPool();
-			robotService = new RobotConnectionService(database);
+			CountDownLatch latch = new CountDownLatch(3);
+
+			robotService = new RobotConnectionService(database, latch);
 			robotService.setExecutor(executorService);
 			robotService.startTheService();
 
-			rtlsService = new RTLSConnectionService(database);
+			rtlsService = new RTLSConnectionService(database, latch);
 			rtlsService.setExecutor(executorService);
 			rtlsService.startTheService();
 
-			lightService = new LightConnectionService(database);
+			lightService = new LightConnectionService(database, latch);
 			lightService.setExecutor(executorService);
 			lightService.startTheService();
 			executorService.shutdown();
@@ -76,10 +81,15 @@ public class ApplicationManager {
 						@Override
 						protected Void call() throws Exception {
 							try {
-								boolean finshed = executorService.awaitTermination(1, TimeUnit.MINUTES);
-								if (finshed) {
+								latch.await();
+								if (database.getRTLSConnectionStatus() == ConnectionStatusType.OK) {
 									RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
 									rtlsConnectionHandler.getActiveBadges();
+								} else {
+									log.info("Can not get active badges from RTLS system! Connection not available!");
+									if (isRunning) {
+										stopApplication();
+									}
 								}
 							} catch (InterruptedException e) {
 								log.error("Cannot load active Badges! InterruptedException thrown: "
@@ -92,9 +102,35 @@ public class ApplicationManager {
 			};
 			getAllActiveBadgesService.start();
 
-			// getAllActiveBadges
-
-			// getAllAreas
+			log.info("Create service to update Areas...");
+			Service<Void> getAllAreasService = new Service<Void>() {
+				@Override
+				protected Task<Void> createTask() {
+					return new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							try {
+								latch.await();
+								if (database.getRTLSConnectionStatus() == ConnectionStatusType.OK) {
+									RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
+									rtlsConnectionHandler.updateAreas();
+									// TODO Continue
+								} else {
+									log.info("Can not get active badges from RTLS system! Connection not available!");
+									if (isRunning) {
+										stopApplication();
+									}
+								}
+							} catch (InterruptedException e) {
+								log.error("Cannot load active Badges! InterruptedException thrown: "
+										+ e.getLocalizedMessage());
+							}
+							return null;
+						}
+					};
+				}
+			};
+			getAllAreasService.start();
 
 			// BusinessLogic
 
@@ -113,6 +149,8 @@ public class ApplicationManager {
 		if (t != null && logic != null) {
 			logic.terminate();
 		}
+		app.getStartButton().setDisable(false);
+		app.getStopButton().setDisable(true);
 	}
 
 	public boolean isRunning() {

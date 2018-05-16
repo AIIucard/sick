@@ -1,5 +1,7 @@
 package main.htw.services;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,11 +14,13 @@ import main.htw.utils.ConnectionStatusType;
 public class RTLSConnectionService extends Service<Void> {
 
 	private SickDatabase database = null;
+	private CountDownLatch countDownLatch;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	public RTLSConnectionService(SickDatabase database) {
+	public RTLSConnectionService(SickDatabase database, CountDownLatch countDownLatch) {
 		this.database = database;
+		this.countDownLatch = countDownLatch;
 	}
 
 	public void startTheService() {
@@ -47,6 +51,7 @@ public class RTLSConnectionService extends Service<Void> {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());
 					database.setRTLSConnectionStatus(ConnectionStatusType.ERROR);
 				}
+				countDownLatch.countDown();
 				return null;
 			}
 		};

@@ -96,6 +96,32 @@ public class SickUtils {
 		return newArea;
 	}
 
+	public static Area editArea(Area oldArea, String areaName, Double distanceToRobot) {
+		log.info("Edit Area...");
+		SickDatabase database = SickDatabase.getInstance();
+		double robotPositionX = database.getRobotPositionX();
+		double robotPositionY = database.getRobotPositionY();
+		List<Area> areaList = database.getAreaList().getAreas();
+
+		List<Coordinate> coordinates = calculateCoordinates(robotPositionX, robotPositionY, distanceToRobot);
+		Shape newShape = new Shape("Polygon", coordinates);
+
+		int pos = 0;
+
+		for (int i = 0; i < areaList.size(); i++) {
+			Area areaToCheck = areaList.get(i);
+			if (areaToCheck.getName().equals(areaName) && areaToCheck.getDistanceToRobot().equals(distanceToRobot)) {
+				pos = i;
+				Area updatedArea = new Area(areaList.get(pos).getId(), areaName, 1337, newShape, distanceToRobot);
+				areaList.set(pos, updatedArea);
+				database.getAreaList().setAreas(areaList);
+				log.info("Updated Area " + areaName + " with distance to Robot " + distanceToRobot);
+				return updatedArea;
+			}
+		}
+		return oldArea;
+	}
+
 	private static Integer getNextId() {
 		int highestID = -1;
 		SickDatabase database = SickDatabase.getInstance();

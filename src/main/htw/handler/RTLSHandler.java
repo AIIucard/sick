@@ -23,7 +23,6 @@ import com.neovisionaries.ws.client.WebSocketListener;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
-import main.htw.datamodell.VirtualFence;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
@@ -122,16 +121,21 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void addArea(Area area) {
-		log.info("Adding new Area to Zigpos");
+		log.info("Adding new Area to Zigpos...");
+		log.warn("NOT IMPLEMENTED");
+	}
+
+	public void editArea(Area editArea) {
+		log.info("Editing Area in Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
 	public void removeArea(Area area) {
-		log.info("REMOVING Area from Zigpos");
+		log.info("REMOVING Area from Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
-	public List<VirtualFence> getAllAreas() {
+	public List<Area> getAllAreas() {
 		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
 		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
@@ -147,7 +151,7 @@ public class RTLSHandler extends SickHandler {
 			return null;
 		}
 
-		List<VirtualFence> areas = new ArrayList();
+		List<Area> areaList = new ArrayList<Area>();
 
 		for (Object o : jsonArray) {
 			JSONObject jArea = (JSONObject) o;
@@ -155,17 +159,17 @@ public class RTLSHandler extends SickHandler {
 			Long id = (Long) jArea.get("id");
 			Long layer = (Long) jArea.get("layer");
 			String name = (String) jArea.get("name");
-			JSONObject shape = (JSONObject) jArea.get("shape");
-			JSONArray coordinates = (JSONArray) shape.get("coordinates");
+			// JSONObject shape = (JSONObject) jArea.get("shape");
+			// JSONArray coordinates = (JSONArray) shape.get("coordinates");
 
 			if (layer == sickLayer) {
 				log.info("OUR AREA DETECTED!!! " + name);
-				VirtualFence area = new VirtualFence(id, layer, name);
-				areas.add(area);
+				Area area = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
+				areaList.add(area);
 			}
 		}
 
-		return areas;
+		return areaList;
 	}
 
 	public void tryReconnect() {
@@ -245,5 +249,10 @@ public class RTLSHandler extends SickHandler {
 
 	public WebSocket getWebsocket() {
 		return websocket;
+	}
+
+	public void updateAreas() {
+		// TODO Auto-generated method stub
+
 	}
 }

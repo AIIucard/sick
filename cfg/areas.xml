@@ -3,7 +3,7 @@
     <area>
         <id>1</id>
         <name>Room A</name>
-        <layer>1337</layer>
+        <layer>2</layer>
         <shape>
             <type>Polygon</type>
             <coordinates>
@@ -27,8 +27,8 @@
     </area>
     <area>
         <id>2</id>
-        <name>Room 2</name>
-        <layer>1337</layer>
+        <name>Room X</name>
+        <layer>2</layer>
         <shape>
             <type>Polygon</type>
             <coordinates>

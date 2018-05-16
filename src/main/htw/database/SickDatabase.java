@@ -1,6 +1,7 @@
 package main.htw.database;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -10,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.AreaList;
@@ -24,7 +26,7 @@ public class SickDatabase extends Observable {
 	private int currentGeoFenceLevel = -1;
 	private static AreaList areaList = null;
 	private static BadgeList badgeList = new BadgeList();
-	private List<ActiveBadge> activeBadges;
+	private List<ActiveBadge> activeBadges = new ArrayList<ActiveBadge>();
 	private static boolean godModeActive = false;
 	private static XMLMarshler xmlMarshaller = null;
 
@@ -34,6 +36,8 @@ public class SickDatabase extends Observable {
 	private ConnectionStatusType robotConnectionStatus = ConnectionStatusType.NEW;
 	private ConnectionStatusType rtlsConnectionStatus = ConnectionStatusType.NEW;
 	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
+
+	private ArrayList<ActiveArea> activeAreaList = new ArrayList<ActiveArea>();
 
 	private static Object lock = new Object();
 	private static SickDatabase instance = null;
@@ -83,6 +87,17 @@ public class SickDatabase extends Observable {
 			log.error("No such badge registered in Database!");
 			return null;
 		}
+	}
+
+	public ActiveBadge getActiveBadgeByAddress(String address) {
+
+		// List<ActiveBadges>
+		for (ActiveBadge a : activeBadges) {
+			if (a.getAddress().equals(address))
+				return a;
+		}
+
+		return null;
 	}
 
 	public BadgeList getBadgeList() {

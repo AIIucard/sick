@@ -1,5 +1,7 @@
 package main.htw.services;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,11 +14,13 @@ import main.htw.utils.ConnectionStatusType;
 public class RobotConnectionService extends Service<Void> {
 
 	private SickDatabase database = null;
+	private CountDownLatch countDownLatch;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	public RobotConnectionService(SickDatabase database) {
+	public RobotConnectionService(SickDatabase database, CountDownLatch countDownLatch) {
 		this.database = database;
+		this.countDownLatch = countDownLatch;
 	}
 
 	public void startTheService() {
@@ -47,6 +51,7 @@ public class RobotConnectionService extends Service<Void> {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());
 					database.setRobotConnectionStatus(ConnectionStatusType.ERROR);
 				}
+				countDownLatch.countDown();
 				return null;
 			}
 		};
