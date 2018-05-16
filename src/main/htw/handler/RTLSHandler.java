@@ -12,7 +12,6 @@ import javax.websocket.ClientEndpoint;
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -135,7 +134,7 @@ public class RTLSHandler extends SickHandler {
 		String urlString = propManager.getProperty(PropertiesKeys.HTTP_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 		try {
-			JSONObject jsonObject = JsonReader.readJsonFromUrl(urlString);
+			JSONObject jsonObject = JsonReader.readJsonObjectFromUrl(urlString);
 			System.out.println(jsonObject.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -177,7 +176,10 @@ public class RTLSHandler extends SickHandler {
 		// WORKAROUND: read from sample file
 		JSONArray jsonArray;
 		try {
-			jsonArray = JsonReader.readJsonFromFile("C:/Users/richter/git/sick/cfg/sampledevices.json");
+			// read JSON from UR
+			String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
+			jsonArray = JsonReader.readJsonArrayFromUrl(urlString);
 
 			for (Object o : jsonArray) {
 				JSONObject jBadge = (JSONObject) o;
@@ -202,7 +204,6 @@ public class RTLSHandler extends SickHandler {
 					Badge badge = sickDatabase.getBadgeByAddress(address);
 					ActiveBadge activeBadge = new ActiveBadge(badge);
 					log.info("Badge connected! ");
-
 				}
 			}
 
@@ -213,7 +214,7 @@ public class RTLSHandler extends SickHandler {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

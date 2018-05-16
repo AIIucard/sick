@@ -8,7 +8,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -20,6 +31,46 @@ public class JsonReader {
 
 	private static JSONParser parser = new JSONParser();
 
+	public static InputStream getContent(final String args)
+			throws IOException, NoSuchAlgorithmException, KeyManagementException {
+
+		// Create a trust manager that does not validate certificate chains
+		final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+
+			@Override
+			public void checkClientTrusted(final X509Certificate[] chain, final String authType) {
+
+			}
+
+			@Override
+			public void checkServerTrusted(final X509Certificate[] chain, final String authType) {
+
+			}
+
+			@Override
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+		} };
+
+		// Install the all-trusting trust manager
+		final SSLContext sslContext = SSLContext.getInstance("SSL");
+		sslContext.init(null, trustAllCerts, null);
+
+		// Create an ssl socket factory with our all-trusting manager
+		HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+			public boolean verify(String urlHostName, SSLSession session) {
+				return true;
+			}
+		});
+
+		// All set up, we can get a resource through https now:
+		final URL url = new URL(args);
+		URLConnection connection = url.openConnection();
+		return (InputStream) connection.getContent();
+	}
+
 	private static String readAll(Reader rd) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		int cp;
@@ -29,7 +80,28 @@ public class JsonReader {
 		return sb.toString();
 	}
 
-	public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+	public static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
+		try {
+			InputStream is = getContent(url);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			Object obj = parser.parse(jsonText);
+			JSONArray json = (JSONArray) obj;
+			is.close();
+			return json;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+			return null;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static JSONObject readJsonObjectFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
