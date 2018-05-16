@@ -38,6 +38,7 @@ public class SickDatabase extends Observable {
 	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
 
 	private ArrayList<ActiveArea> activeAreaList = new ArrayList<ActiveArea>();
+	private ActiveArea nearestActiveArea = null;
 
 	private static Object lock = new Object();
 	private static SickDatabase instance = null;
@@ -187,5 +188,13 @@ public class SickDatabase extends Observable {
 		setChanged();
 		this.lightConnectionStatus = lightConnectionStatus;
 		notifyObservers();
+	}
+
+	public ActiveArea getNearestActiveArea() {
+		return nearestActiveArea;
+	}
+
+	public void setNearestActiveArea(ActiveArea nearestActiveArea) {
+		this.nearestActiveArea = nearestActiveArea;
 	}
 }
