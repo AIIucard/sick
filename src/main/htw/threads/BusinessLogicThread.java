@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveBadge;
+import main.htw.messages.MessageGeoFence;
 
 public class BusinessLogicThread implements Runnable {
 
@@ -45,6 +47,26 @@ public class BusinessLogicThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void sortAreas() {
+		// hole dir aus database get areaList
+
+		// sortiere Liste nach distance to Robot und schreibe das in ein Keyvalue
+		// Store(ID,geofence
+
+	}
+
+	public void computeRTLSMessage(MessageGeoFence messageGeoFence) {
+		//
+		// ermittle den betroffenen Badge und hole ihn dir aus der Datenbank
+		ActiveBadge activeBadge = database.getActiveBadgeByAddress(messageGeoFence.getAddress());
+		//
+
+		// setze den aktuellen Geofence
+		activeBadge.setCurrentGeoFence(messageGeoFence.getAreasId());
+
+		// call die Funktion die prüft ob der Badge gerade am nächsten dran ist
 	}
 
 	public void terminate() {
