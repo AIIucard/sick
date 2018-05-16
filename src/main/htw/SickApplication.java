@@ -25,10 +25,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -52,8 +49,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import main.htw.database.SickDatabase;
-import main.htw.gui.AddFenceGUI;
 import main.htw.gui.ConfigureRobotPositionGUI;
+import main.htw.gui.EditAreaGUI;
 import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
 import main.htw.properties.CFGPropertyManager;
@@ -77,9 +74,7 @@ public class SickApplication extends Application implements Observer {
 	private static final String NAME_COLUMN = "Name";
 	private static final String LAYER_COLUMN = "Layer";
 	private static final String DISTANCE_COLUMN = "Distance to Robot";
-	private static final String ADD_AREA_BUTTON = "Add";
 	private static final String EDIT_AREA_BUTTON = "Edit";
-	private static final String REMOVE_AREA_BUTTON = "Remove";
 
 	private static CFGPropertyManager propManager = null;
 	private static XMLMarshler xmlMarshaller = null;
@@ -87,9 +82,7 @@ public class SickApplication extends Application implements Observer {
 
 	private Button startButton;
 	private Button stopButton;
-	private Button addAreaButton;
 	private Button editAreaButton;
-	private Button removeAreaButton;
 
 	private static double width = 200;
 	private static double height = 200;
@@ -180,7 +173,7 @@ public class SickApplication extends Application implements Observer {
 
 		sickMenuBar = createMenuBar();
 
-		HBox startStopButtons = createStartStopButtons();
+		HBox startStopButtons = createStartStopButtons(this);
 		GridPane statusArea = createConnectionStatusArea();
 		VBox areaTable = createAreaTable();
 
@@ -308,7 +301,7 @@ public class SickApplication extends Application implements Observer {
 		return menuBar;
 	}
 
-	private HBox createStartStopButtons() {
+	private HBox createStartStopButtons(SickApplication app) {
 
 		startButton = new Button();
 		startButton.setText(START_BUTTON);
@@ -319,7 +312,7 @@ public class SickApplication extends Application implements Observer {
 				log.info("Started Application...");
 				try {
 					appManager = ApplicationManager.getInstance();
-					appManager.startApplication();
+					appManager.startApplication(app);
 					startButton.setDisable(true);
 					stopButton.setDisable(false);
 				} catch (IOException e) {
@@ -366,7 +359,6 @@ public class SickApplication extends Application implements Observer {
 
 	@SuppressWarnings("unchecked")
 	private VBox createAreaTable() {
-		areaButtonPane = createAreaButtonPane();
 
 		table = new TableView<Area>();
 		tableData = FXCollections.observableArrayList(SickDatabase.getInstance().getAreaList().getAreas());
@@ -418,6 +410,8 @@ public class SickApplication extends Application implements Observer {
 
 		table.getColumns().addAll(idColumn, nameColumn, layerColumn, distanceColumn);
 
+		areaButtonPane = createAreaButtonPane(table);
+
 		final VBox vbox = new VBox();
 		vbox.setSpacing(5);
 		vbox.setPadding(new Insets(10, 0, 0, 10));
@@ -426,7 +420,7 @@ public class SickApplication extends Application implements Observer {
 		return vbox;
 	}
 
-	private FlowPane createAreaButtonPane() {
+	private FlowPane createAreaButtonPane(TableView<Area> table) {
 		FlowPane areaButtonPane = new FlowPane();
 		areaButtonPane.setPadding(new Insets(5, 0, 5, 0));
 		areaButtonPane.setVgap(4);
@@ -437,13 +431,10 @@ public class SickApplication extends Application implements Observer {
 		Label label = new Label(AREAS_TITLE);
 		label.setFont(new Font("Source Sans Pro", 20));
 
-		addAreaButton = createAddAreaButton();
-		editAreaButton = createEditAreaButton();
+		editAreaButton = createEditAreaButton(table);
 		editAreaButton.setDisable(true);
-		removeAreaButton = createRemoveAreaButton();
-		removeAreaButton.setDisable(true);
 
-		areaButtonPane.getChildren().addAll(label, addAreaButton, editAreaButton, removeAreaButton);
+		areaButtonPane.getChildren().addAll(label, editAreaButton);
 
 		return areaButtonPane;
 	}
@@ -451,38 +442,14 @@ public class SickApplication extends Application implements Observer {
 	private void handleTableSelection(ObservableList<Area> selectedItems) {
 		if (selectedItems.size() > 1) {
 			editAreaButton.setDisable(true);
-			removeAreaButton.setDisable(false);
 		} else if (selectedItems.size() == 1) {
 			editAreaButton.setDisable(false);
-			removeAreaButton.setDisable(false);
 		} else {
 			editAreaButton.setDisable(true);
-			removeAreaButton.setDisable(true);
 		}
 	}
 
-	private Button createAddAreaButton() {
-		Button button = new Button();
-		button.setText(ADD_AREA_BUTTON);
-		button.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				log.debug("Add Area button hitted...");
-				Dialog<Pair<String, Double>> dialog = new AddFenceGUI();
-				Optional<Pair<String, Double>> result = dialog.showAndWait();
-
-				result.ifPresent(nameDistance -> {
-					Area newArea = SickUtils.addNewArea(nameDistance.getKey(), nameDistance.getValue());
-					tableData.add(newArea);
-					RTLSHandler.getInstance().addArea(newArea);
-				});
-			}
-		});
-		return button;
-	}
-
-	private Button createEditAreaButton() {
+	private Button createEditAreaButton(TableView<Area> table) {
 		Button button = new Button();
 		button.setText(EDIT_AREA_BUTTON);
 		button.setOnAction(new EventHandler<ActionEvent>() {
@@ -490,33 +457,28 @@ public class SickApplication extends Application implements Observer {
 			@Override
 			public void handle(ActionEvent event) {
 				log.debug("Edit Area button hitted...");
-				// TODO: Edit Button Function
-			}
-		});
-		return button;
-	}
+				Dialog<Pair<String, Double>> dialog = new EditAreaGUI(table);
+				Optional<Pair<String, Double>> result = dialog.showAndWait();
 
-	private Button createRemoveAreaButton() {
-		Button button = new Button();
-		button.setText(REMOVE_AREA_BUTTON);
-		button.setOnAction(new EventHandler<ActionEvent>() {
+				result.ifPresent(nameDistance -> {
+					ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
+					Area selectedArea = selectedItems.get(0);
 
-			@Override
-			public void handle(ActionEvent event) {
-				log.debug("Remove Area button hitted...");
-				Area selectedItem = table.getSelectionModel().getSelectedItem();
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Confirmation Dialog");
-				alert.setHeaderText("Delete " + selectedItem.getName() + " with distance to Robot "
-						+ selectedItem.getDistanceToRobot());
-				alert.setContentText("Do you realy want delete this area?");
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					SickUtils.removeArea(selectedItem);
-					tableData.remove(selectedItem);
-					RTLSHandler.getInstance().removeArea(selectedItem);
-				}
+					Area editArea = SickUtils.editArea(selectedArea, nameDistance.getKey(), nameDistance.getValue());
+					int pos = 0;
+					for (int i = 0; i < tableData.size(); ++i) {
+						Area currentArea = tableData.get(i);
+						if (currentArea.getName().equals(selectedArea.getName())
+								&& currentArea.getDistanceToRobot().equals(selectedArea.getDistanceToRobot())) {
+							currentArea.setName(nameDistance.getKey());
+							currentArea.setDistanceToRobot(nameDistance.getValue());
+							pos = i;
+							break;
+						}
+					}
+					tableData.set(pos, editArea);
+					RTLSHandler.getInstance().editArea(editArea);
+				});
 			}
 		});
 		return button;
@@ -573,5 +535,21 @@ public class SickApplication extends Application implements Observer {
 
 	protected static Image createFXImage(String path, String description) {
 		return new Image(path);
+	}
+
+	public Button getStartButton() {
+		return startButton;
+	}
+
+	public void setStartButton(Button startButton) {
+		this.startButton = startButton;
+	}
+
+	public Button getStopButton() {
+		return stopButton;
+	}
+
+	public void setStopButton(Button stopButton) {
+		this.stopButton = stopButton;
 	}
 }

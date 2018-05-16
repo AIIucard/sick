@@ -122,12 +122,17 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void addArea(Area area) {
-		log.info("Adding new Area to Zigpos");
+		log.info("Adding new Area to Zigpos...");
+		log.warn("NOT IMPLEMENTED");
+	}
+
+	public void editArea(Area editArea) {
+		log.info("Editing Area in Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
 	public void removeArea(Area area) {
-		log.info("REMOVING Area from Zigpos");
+		log.info("REMOVING Area from Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
