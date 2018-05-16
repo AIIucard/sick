@@ -36,7 +36,7 @@ public class SickUtils {
 		log.info("Area Shapes Updated");
 	}
 
-	private static List<Coordinate> calculateCoordinates(double robotPositionX, double robotPositionY,
+	public static List<Coordinate> calculateCoordinates(double robotPositionX, double robotPositionY,
 			double distanceToRobot) {
 
 		// 1. left border: (x-distance/2,y)

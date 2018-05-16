@@ -12,6 +12,11 @@ import main.htw.datamodell.VirtualFence;
 import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
+import main.htw.utils.SickUtils;
+import main.htw.xml.Area;
+import main.htw.xml.Coordinate;
+import main.htw.xml.Shape;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -51,6 +56,18 @@ public class PlaygroundFabe {
 					log.info("id  : " + a.getId());
 					log.info("name: " + a.getName());
 				}
+
+				Shape shape = new Shape();
+				shape.setType("Polygon");
+
+				double robotPositionX = Double.parseDouble(propManager.getProperty(PropertiesKeys.ROBOT_X_COORDINATE));
+				double robotPositionY = Double.parseDouble(propManager.getProperty(PropertiesKeys.ROBOT_Y_COORDINATE));
+				List<Coordinate> coordinates = SickUtils.calculateCoordinates(robotPositionX, robotPositionY, 2);
+				shape.setCoordinates(coordinates);
+
+				Area testArea = new Area(null, "Sick Test Area", 2, shape, (double) 1);
+				// TODO: send Area to zigpos
+
 				// connectionManager.getActiveBadges();
 			} catch (Exception e) {
 				log.error("Error");
