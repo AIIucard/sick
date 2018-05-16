@@ -143,13 +143,17 @@ public class SickUtils {
 		log.info("Removed Area " + area.getName() + " with distance to Robot " + area.getDistanceToRobot());
 	}
 
-	public static boolean isDublicatedArea(String name, Double distance) {
+	public static boolean isDublicatedArea(String oldName, Double oldDistance, String name, Double distance) {
 		SickDatabase database = SickDatabase.getInstance();
-		AreaList areaList = database.getAreaList();
-		for (Area area : areaList.getAreas()) {
-			if (area.getDistanceToRobot().equals(distance)) {
-				return true;
-			} else if (area.getName().equals(name) && area.getDistanceToRobot().equals(distance)) {
+		ArrayList<Area> areaList = new ArrayList<Area>();
+		for (Area area : database.getAreaList().getAreas()) {
+			if (!(area.getName().equals(oldName) && area.getDistanceToRobot().equals(oldDistance))) {
+				areaList.add(area);
+			}
+		}
+
+		for (Area area : areaList) {
+			if (area.getName().equals(name) || area.getDistanceToRobot().equals(distance)) {
 				return true;
 			}
 		}

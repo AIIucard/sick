@@ -95,7 +95,9 @@ public class EditAreaGUI extends Dialog<Pair<String, Double>> {
 
 		this.setResultConverter(dialogButton -> {
 			if (dialogButton == editButtonType) {
-				if (SickUtils.isDublicatedArea(areaName.getText(), new Double(distance.getText()))) {
+				if (SickUtils.isDublicatedArea(selectedItems.get(0).getName(),
+						selectedItems.get(0).getDistanceToRobot(), areaName.getText(),
+						new Double(distance.getText()))) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error!");
 					alert.setHeaderText("Dublicate Name or Distance to Robot!");
