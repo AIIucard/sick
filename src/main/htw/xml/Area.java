@@ -11,8 +11,8 @@ public class Area {
 	private Integer id;
 	private String name;
 	private Integer layer;
-	private Shape shape;
-	private Double distanceToRobot;
+	private Shape shape = null;
+	private Double distanceToRobot = 0.0;
 
 	public Area() {
 		// Default constructor
@@ -24,6 +24,12 @@ public class Area {
 		this.layer = layer;
 		this.shape = shape;
 		this.distanceToRobot = distanceToRobot;
+	}
+
+	public Area(Integer id, String name, Integer layer) {
+		this.id = id;
+		this.name = name;
+		this.layer = layer;
 	}
 
 	public Integer getId() {

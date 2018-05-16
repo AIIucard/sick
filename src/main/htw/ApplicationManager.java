@@ -102,7 +102,7 @@ public class ApplicationManager {
 			};
 			getAllActiveBadgesService.start();
 
-			log.info("Create service to get all Areas...");
+			log.info("Create service to update Areas...");
 			Service<Void> getAllAreasService = new Service<Void>() {
 				@Override
 				protected Task<Void> createTask() {
@@ -113,7 +113,7 @@ public class ApplicationManager {
 								latch.await();
 								if (database.getRTLSConnectionStatus() == ConnectionStatusType.OK) {
 									RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
-									rtlsConnectionHandler.getAllAreas();
+									rtlsConnectionHandler.updateAreas();
 									// TODO Continue
 								} else {
 									log.info("Can not get active badges from RTLS system! Connection not available!");

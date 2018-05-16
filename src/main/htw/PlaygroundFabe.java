@@ -1,14 +1,12 @@
 package main.htw;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
-import main.htw.datamodell.VirtualFence;
 import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
@@ -45,12 +43,12 @@ public class PlaygroundFabe {
 				// Badge badge = new Badge(1, "8121069331292357553", null);
 				// sickDatabase.addToBadgeList(badge);
 				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
-				List<VirtualFence> areas = connectionManager.getAllAreas();
-				for (VirtualFence a : areas) {
-					log.info("AREA");
-					log.info("id  : " + a.getId());
-					log.info("name: " + a.getName());
-				}
+				// List<ActiveArea> areas = connectionManager.getAllAreas();
+				// for (ActiveArea a : areas) {
+				// log.info("AREA");
+				// log.info("id : " + a.getId());
+				// log.info("name: " + a.getName());
+				// }
 				// connectionManager.getActiveBadges();
 			} catch (Exception e) {
 				log.error("Error");

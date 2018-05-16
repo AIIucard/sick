@@ -83,6 +83,7 @@ public class SickApplication extends Application implements Observer {
 	private Button startButton;
 	private Button stopButton;
 	private Button editAreaButton;
+	private boolean isEditDisabled = false;
 
 	private static double width = 200;
 	private static double height = 200;
@@ -315,6 +316,8 @@ public class SickApplication extends Application implements Observer {
 					appManager.startApplication(app);
 					startButton.setDisable(true);
 					stopButton.setDisable(false);
+					editAreaButton.setDisable(true);
+					isEditDisabled = true;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -332,6 +335,7 @@ public class SickApplication extends Application implements Observer {
 					appManager.stopApplication();
 					startButton.setDisable(false);
 					stopButton.setDisable(true);
+					isEditDisabled = false;
 					resetConnectionStatus();
 					log.info("Stopped Application...");
 				} catch (IOException e) {
@@ -442,7 +446,7 @@ public class SickApplication extends Application implements Observer {
 	private void handleTableSelection(ObservableList<Area> selectedItems) {
 		if (selectedItems.size() > 1) {
 			editAreaButton.setDisable(true);
-		} else if (selectedItems.size() == 1) {
+		} else if (selectedItems.size() == 1 && !isEditDisabled) {
 			editAreaButton.setDisable(false);
 		} else {
 			editAreaButton.setDisable(true);
