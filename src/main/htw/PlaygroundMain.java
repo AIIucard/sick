@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
 import main.htw.handler.RTLSHandler;
+import main.htw.handler.RobotHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
 
@@ -34,10 +34,12 @@ public class PlaygroundMain {
 			System.out.println("Hi");
 			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 			SickMessageHandler sickMessageHandler = SickMessageHandler.getInstance();
-			// RobotConnectionHandler robbi = RobotConnectionHandler.getInstance();
-			// robbi.sendSecurityLevel(4);
-			DMNHandler dmnHandler = DMNHandler.getInstance();
-			dmnHandler.evaluateDecision("Professor", 1);
+			RobotHandler robbi = RobotHandler.getInstance();
+			robbi.initializeConnection();
+			// robbi.postSecurityLevel();
+			robbi.sendSecurityLevel(4);
+			// DMNHandler dmnHandler = DMNHandler.getInstance();
+			// dmnHandler.evaluateDecision("Professor", 1);
 
 			// final RTLSConnectionHandler connectionManager =
 			// RTLSConnectionHandler.getInstance();
@@ -76,6 +78,9 @@ public class PlaygroundMain {
 			System.err.println("InterruptedException exception: " + ex.getMessage());
 		} catch (IOException ex) {
 			Logger.getLogger(PlaygroundMain.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }

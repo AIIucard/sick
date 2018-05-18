@@ -5,9 +5,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
-import org.opcfoundation.ua.builtintypes.DataValue;
 import org.opcfoundation.ua.builtintypes.NodeId;
 import org.opcfoundation.ua.core.ApplicationType;
+import org.opcfoundation.ua.core.Attributes;
 import org.opcfoundation.ua.transport.security.SecurityMode;
 
 import com.prosysopc.ua.ServiceException;
@@ -72,27 +72,31 @@ public class RobotHandler extends SickHandler {
 		log.info("Connection succsessful");
 	}
 
-	public void postSecurityLevel() {
-
-		try {
-			NodeId nodeId = new NodeId(3, "\"dbAppPar\".\"Par1\".\"iOgr\"");
-			DataValue value = client.readValue(nodeId);
-			log.info("Test:" + value.getValue().toString());
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// public void postSecurityLevel() {
+	//
+	// try {
+	// NodeId nodeId = new NodeId(3,
+	// "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
+	// DataValue value = client.readValue(nodeId);
+	// log.info("Test:" + value.getValue().toString());
+	// } catch (ServiceException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (StatusException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
 
 	public void sendSecurityLevel(int securityLevel) {
-
 		try {
-			NodeId nodeId = new NodeId(3, "\"dbAppPar\".\"Par1\".\"iOgr\"");
-			// TODO: Int16 Datatype
-			client.writeValue(nodeId, new Integer(securityLevel));
+
+			NodeId nodeId = new NodeId(3, "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
+
+			if (client.writeAttribute(nodeId, Attributes.Value, new Short(new Integer(securityLevel).toString()))) {
+				log.info("Write attribute check" + securityLevel);
+			}
+
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,12 +106,4 @@ public class RobotHandler extends SickHandler {
 		}
 	}
 
-	// public void sendSecurityLevel(int Securitylevel) {
-	// NodeId nodeId = new NodeId(0, 131072);
-	// DataValue value = client.readAttribute(nodeId, attributeId);
-	// log.info(value.getValue().toString());
-	// }
-	// boolean status = client.writeAttribute(arg0, arg1, arg2)
-	// }
-	//
 }
