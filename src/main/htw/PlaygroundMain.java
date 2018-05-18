@@ -11,6 +11,7 @@ import main.htw.handler.RTLSHandler;
 import main.htw.handler.RobotHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
+import main.htw.utils.SickColor;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -59,11 +60,11 @@ public class PlaygroundMain {
 				log.info("Connecting to Light...");
 				LightHandler lightHandler = LightHandler.getInstance();
 				for (int i = 0; i <= 3; i++) {
-					lightHandler.setLigthGreen();
+					lightHandler.setLight(SickColor.GREEN.toString());
 					Thread.sleep(1000);
-					lightHandler.setLigthYellow();
+					lightHandler.setLight(SickColor.YELLOW.toString());
 					Thread.sleep(1000);
-					lightHandler.setLigthRed();
+					lightHandler.setLight(SickColor.RED.toString());
 					Thread.sleep(1000);
 				}
 				log.info("Connected to Light!");

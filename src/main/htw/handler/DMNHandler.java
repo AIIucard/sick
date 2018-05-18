@@ -17,8 +17,6 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.htw.messages.MessageGeoFence;
-
 public class DMNHandler {
 	private static Object lock = new Object();
 	private static DMNHandler instance = null;
@@ -28,6 +26,10 @@ public class DMNHandler {
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private final static String DECISION_MODEL = "cfg" + File.separator + "sick.dmn";
+
+	private DMNHandler() {
+		// Use getInstance
+	}
 
 	public static DMNHandler getInstance() throws IOException {
 		if (instance == null) {
@@ -39,10 +41,6 @@ public class DMNHandler {
 			}
 		}
 		return (instance);
-	}
-
-	private DMNHandler() {
-		// TODO Auto-generated constructor stub
 	}
 
 	private static void createDMNEngine() {
@@ -63,17 +61,7 @@ public class DMNHandler {
 		}
 	}
 
-	public void handleGeofenceIn(MessageGeoFence geoFence) {
-		// TODO handle IN event
-		log.warn("NOT IMPLEMENTED");
-	}
-
-	public void handleGeofenceOut(MessageGeoFence geoFence) {
-		// TODO handle OUT event
-		log.warn("NOT IMPLEMENTED");
-	}
-
-	public void evaluateDecision(String role, int geofence) {
+	public DmnDecisionRuleResult evaluateDecision(String role, int geofence) {
 
 		// Create Input Variables
 		VariableMap variables = Variables.createVariables().putValue("role", role).putValue("geofence", geofence);
@@ -92,6 +80,7 @@ public class DMNHandler {
 			int resultSize = decisionTableResult.size();
 
 			if (resultSize != 0) {
+				// TODO: Make nice log message KAY!
 				// log.info("Found Decision at rule=" + i);
 				break;
 			}
@@ -100,9 +89,10 @@ public class DMNHandler {
 		if (decisionTableResult != null) {
 			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
 			log.info("The result is =" + dmnDecisionRuleResult.values());
+			return dmnDecisionRuleResult;
 		} else {
-			log.info("I did nothing at all");
+			log.error("No result found!");
+			return null;
 		}
-
 	}
 }

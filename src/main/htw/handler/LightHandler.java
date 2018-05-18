@@ -68,7 +68,7 @@ public class LightHandler extends SickHandler {
 		Connection.setRequestProperty("Content-Type", "application/json");
 	}
 
-	private static void setLight(String color) throws IOException {
+	private static void sendLight(String color) throws IOException {
 		Connection.connect();
 
 		// on = true | off = false
@@ -99,7 +99,7 @@ public class LightHandler extends SickHandler {
 		Connection.disconnect();
 	}
 
-	public void setLigthGreen() {
+	private void setLightGreen() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -107,7 +107,7 @@ public class LightHandler extends SickHandler {
 		}
 
 		try {
-			setLight(LightHandler.GREEN);
+			sendLight(LightHandler.GREEN);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to green!");
@@ -115,7 +115,7 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
-	public void setLigthRed() {
+	private void setLightRed() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -123,7 +123,7 @@ public class LightHandler extends SickHandler {
 		}
 
 		try {
-			setLight(LightHandler.RED);
+			sendLight(LightHandler.RED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to red!");
@@ -131,7 +131,7 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
-	public void setLigthYellow() {
+	private void setLightYellow() {
 
 		if (instance == null) {
 			log.error("Light Handler not initialized!");
@@ -139,11 +139,32 @@ public class LightHandler extends SickHandler {
 		}
 
 		try {
-			setLight(LightHandler.YELLOW);
+			sendLight(LightHandler.YELLOW);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.error("Could not set light to yellow!");
 			e.printStackTrace();
+		}
+	}
+
+	private void setLightBlue() {
+		// TODO: Implement me
+	}
+
+	public void setLight(String color) {
+		switch (color) {
+		case "BLUE":
+			setLightBlue();
+			break;
+		case "GREEN":
+			setLightGreen();
+			break;
+		case "YELLOW":
+			setLightYellow();
+			break;
+		case "RED":
+			setLightRed();
+			break;
 		}
 	}
 

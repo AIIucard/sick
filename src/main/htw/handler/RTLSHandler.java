@@ -56,6 +56,10 @@ public class RTLSHandler extends SickHandler {
 
 	private static URI uri;
 
+	private RTLSHandler() {
+		// Use getInstance
+	}
+
 	public static RTLSHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {

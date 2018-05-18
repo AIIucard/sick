@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
+import main.htw.services.BusinessLogicService;
 import main.htw.services.InitializationService;
 import main.htw.services.LightConnectionService;
 import main.htw.services.RTLSConnectionService;
@@ -21,7 +22,6 @@ public class ApplicationManager {
 	private static Object lock = new Object();
 	private static ApplicationManager instance = null;
 
-	private static Thread t = null;
 	private static RobotConnectionService robotService = null;
 	private static RTLSConnectionService rtlsService = null;
 	private static LightConnectionService lightService = null;
@@ -90,13 +90,8 @@ public class ApplicationManager {
 		return isRunning;
 	}
 
-	public void handleINEvent(JSONObject payload) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void handleOUTINEvent(JSONObject payload) {
-		// TODO Auto-generated method stub
-
+	public void handleGeofenceEvent(JSONObject payload) {
+		BusinessLogicService businessLogicService = new BusinessLogicService(SickDatabase.getInstance(), payload);
+		businessLogicService.start();
 	}
 }

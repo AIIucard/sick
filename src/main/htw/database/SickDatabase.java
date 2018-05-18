@@ -21,8 +21,11 @@ public class SickDatabase extends Observable {
 	private double robotPositionY = 0;
 
 	private ConnectionStatusType robotConnectionStatus = ConnectionStatusType.NEW;
+	private boolean isRobotReconnected = false;
 	private ConnectionStatusType rtlsConnectionStatus = ConnectionStatusType.NEW;
+	private boolean isRTLSReconnected = false;
 	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
+	private boolean isLightReconnected = false;
 
 	private ArrayList<ActiveArea> activeAreasList = new ArrayList<ActiveArea>();
 	private List<ActiveBadge> activeBadgesList = new ArrayList<ActiveBadge>();
@@ -46,33 +49,6 @@ public class SickDatabase extends Observable {
 
 		return (instance);
 	}
-
-	// // TODO Remove try catch + logger
-	// public void addToBadgeList(Badge badge) {
-	// if (badgeList == null) {
-	// badgeList = new BadgeList();
-	// }
-	//
-	// SickDatabase.badgeList.addBadge(badge);
-	//
-	// try {
-	// xmlMarshaller = XMLMarshler.getInstance();
-	// if (xmlMarshaller != null && badgeList != null) {
-	// xmlMarshaller.marshalBadgeList(badgeList);
-	// } else {
-	// log.error("Cannot store badges!");
-	// }
-	// } catch (JAXBException e) {
-	// log.error("Cannot store badges! JAXBException thrown: " + e);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-
-	// public void removeFromBadgeList(Badge badge) {
-	// SickDatabase.badgeList.removeBadge(badge);
-	// }
 
 	public int getCurrentGeoFenceLevel() {
 		return currentGeoFenceLevel;
@@ -174,5 +150,29 @@ public class SickDatabase extends Observable {
 		setChanged();
 		this.lightConnectionStatus = lightConnectionStatus;
 		notifyObservers();
+	}
+
+	public boolean isRobotReconnected() {
+		return isRobotReconnected;
+	}
+
+	public void setRobotReconnected(boolean isRobotReconnected) {
+		this.isRobotReconnected = isRobotReconnected;
+	}
+
+	public boolean isRTLSReconnected() {
+		return isRTLSReconnected;
+	}
+
+	public void setRTLSReconnected(boolean isRTLSReconnected) {
+		this.isRTLSReconnected = isRTLSReconnected;
+	}
+
+	public boolean isLightReconnected() {
+		return isLightReconnected;
+	}
+
+	public void setLightReconnected(boolean isLightReconnected) {
+		this.isLightReconnected = isLightReconnected;
 	}
 }

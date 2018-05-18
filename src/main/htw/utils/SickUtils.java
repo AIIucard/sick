@@ -182,7 +182,7 @@ public class SickUtils {
 				return badge;
 			}
 		}
-		log.error("No such active badge registered in Database!");
+		log.warn("No such active badge registered in Database!");
 		return null;
 	}
 

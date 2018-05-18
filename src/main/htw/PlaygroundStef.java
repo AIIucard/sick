@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import main.htw.handler.LightHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
+import main.htw.utils.SickColor;
 
 public class PlaygroundStef {
 
@@ -47,11 +48,11 @@ public class PlaygroundStef {
 				LightHandler lightHandler = LightHandler.getInstance();
 				lightHandler.initializeConnection();
 				for (int i = 0; i <= 3; i++) {
-					lightHandler.setLigthGreen();
+					lightHandler.setLight(SickColor.GREEN.toString());
 					Thread.sleep(5000);
-					lightHandler.setLigthYellow();
+					lightHandler.setLight(SickColor.YELLOW.toString());
 					Thread.sleep(5000);
-					lightHandler.setLigthRed();
+					lightHandler.setLight(SickColor.RED.toString());
 					Thread.sleep(5000);
 				}
 				log.info("Connected to Light!");
