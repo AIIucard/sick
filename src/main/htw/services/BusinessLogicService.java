@@ -8,17 +8,16 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
-import main.htw.handler.RTLSHandler;
 import main.htw.utils.ConnectionStatusType;
 
-public class RTLSConnectionService extends Service<Void> {
+public class BusinessLogicService extends Service<Void> {
 
 	private SickDatabase database = null;
 	private CountDownLatch countDownLatch;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	public RTLSConnectionService(SickDatabase database, CountDownLatch countDownLatch) {
+	public BusinessLogicService(SickDatabase database, CountDownLatch countDownLatch) {
 		this.database = database;
 		this.countDownLatch = countDownLatch;
 	}
@@ -33,7 +32,7 @@ public class RTLSConnectionService extends Service<Void> {
 	@Override
 	public void reset() {
 		super.reset();
-		database.setRTLSConnectionStatus(ConnectionStatusType.NEW);
+		database.setLightConnectionStatus(ConnectionStatusType.NEW);
 	}
 
 	@Override
@@ -42,17 +41,16 @@ public class RTLSConnectionService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-				database.setRTLSConnectionStatus(ConnectionStatusType.PENDING);
-				RTLSHandler rtlsConnectionHandler = RTLSHandler.getInstance();
-				try {
-					rtlsConnectionHandler.initializeConnection();
-					database.setRTLSConnectionStatus(ConnectionStatusType.OK);
-					database.setRobotConnectionStatus(ConnectionStatusType.OK); // TODO: Remove this!
-				} catch (Exception ex) {
-					log.error("Exception thrown: " + ex.getLocalizedMessage());
-					database.setRTLSConnectionStatus(ConnectionStatusType.ERROR);
-				}
-				countDownLatch.countDown();
+				// database.setLightConnectionStatus(ConnectionStatusType.PENDING);
+				// LightHandler lightConnectionHandler = LightHandler.getInstance();
+				// try {
+				// lightConnectionHandler.initializeConnection();
+				// database.setLightConnectionStatus(ConnectionStatusType.OK);
+				// } catch (Exception ex) {
+				// log.error("Exception thrown: " + ex.getLocalizedMessage());
+				// database.setLightConnectionStatus(ConnectionStatusType.ERROR);
+				// }
+				// countDownLatch.countDown();
 				return null;
 			}
 		};

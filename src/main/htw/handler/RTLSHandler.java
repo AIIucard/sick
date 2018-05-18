@@ -90,7 +90,7 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void registerGeoFence() {
-		log.info("Registering to topic GEOFENCEING_EVENT");
+		log.info("Registering to topic GEOFENCEING_EVENT...");
 		if (sickMessageHandler == null) {
 			log.warn("sickMessagehandler is not initiliazed!");
 		}
@@ -104,33 +104,8 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
-	public void registerPosition() {
-		log.info("Registering to topic POSITION");
-		if (sickMessageHandler == null) {
-			log.warn("sickMessagehandler is not initiliazed!");
-		}
-		websocket.addListener(sickMessageHandler);
-		try {
-			websocket.connect();
-			websocket.sendText(RTLSHandler.REGISTER_POSITION_MSG);
-		} catch (WebSocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void addArea(Area area) {
-		log.info("Adding new Area to Zigpos...");
-		log.warn("NOT IMPLEMENTED");
-	}
-
 	public void editArea(Area editArea) {
 		log.info("Editing Area in Zigpos...");
-		log.warn("NOT IMPLEMENTED");
-	}
-
-	public void removeArea(Area area) {
-		log.info("REMOVING Area from Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
@@ -196,11 +171,9 @@ public class RTLSHandler extends SickHandler {
 
 	public void getActiveBadges() {
 		SickDatabase sickDatabase = SickDatabase.getInstance();
-		// get JSON with badges
-		// WORKAROUND: read from sample file
 		JSONArray jsonBadgeArray;
 		try {
-			// read JSON from UR
+			// Read JSON from URL
 			String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
 			jsonBadgeArray = JsonReader.readJsonArrayFromUrl(urlString);

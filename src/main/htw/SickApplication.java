@@ -311,16 +311,13 @@ public class SickApplication extends Application implements Observer {
 			@Override
 			public void handle(ActionEvent event) {
 				log.info("Started Application...");
-				try {
-					appManager = ApplicationManager.getInstance();
-					appManager.startApplication(app);
-					startButton.setDisable(true);
-					stopButton.setDisable(false);
-					editAreaButton.setDisable(true);
-					isEditDisabled = true;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+
+				appManager = ApplicationManager.getInstance();
+				appManager.startApplication(app);
+				startButton.setDisable(true);
+				stopButton.setDisable(false);
+				editAreaButton.setDisable(true);
+				isEditDisabled = true;
 			}
 		});
 
@@ -330,17 +327,13 @@ public class SickApplication extends Application implements Observer {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					appManager = ApplicationManager.getInstance();
-					appManager.stopApplication();
-					startButton.setDisable(false);
-					stopButton.setDisable(true);
-					isEditDisabled = false;
-					resetConnectionStatus();
-					log.info("Stopped Application...");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				appManager = ApplicationManager.getInstance();
+				appManager.stopApplication();
+				startButton.setDisable(false);
+				stopButton.setDisable(true);
+				isEditDisabled = false;
+				resetConnectionStatus();
+				log.info("Stopped Application...");
 			}
 		});
 
