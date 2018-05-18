@@ -2,8 +2,12 @@ package main.htw.handler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ import com.neovisionaries.ws.client.WebSocketListener;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
+import main.htw.parser.JavaToJson;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
@@ -41,6 +46,7 @@ public class RTLSHandler extends SickHandler {
 
 	private SickMessageHandler sickMessageHandler = null;
 
+	private WebSocketFactory factory = new WebSocketFactory();
 	private WebSocket websocket;
 	private static final String REGISTER_GEO_FENCE_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
 	private static final String REGISTER_POSITION_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
@@ -100,6 +106,44 @@ public class RTLSHandler extends SickHandler {
 			websocket.sendText(RTLSHandler.REGISTER_GEO_FENCE_MSG);
 		} catch (WebSocketException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void addArea(Area area) {
+		log.info("Adding new Area to Zigpos...");
+		String jsonFormattedString = JavaToJson.getAreaJson(area);
+		log.info("Our fine litte json Text IS: " + jsonFormattedString);
+
+		try {
+			String websocketString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
+
+			URL url = new URL(websocketString);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("PUT");
+			conn.setRequestProperty("Content-Type", "application/json");
+			String input = jsonFormattedString;
+
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTPS error code : " + conn.getResponseCode());
+			}
+
+			conn.disconnect();
+
+			log.info("magic happened here i guess");
+			// websocket.sendText("");
+
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
 	}

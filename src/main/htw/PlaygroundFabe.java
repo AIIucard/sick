@@ -44,6 +44,7 @@ public class PlaygroundFabe {
 			// robbi.sendSecurityLevel(4);
 
 			final RTLSHandler connectionManager = RTLSHandler.getInstance();
+			connectionManager.initializeConnection();
 			try {
 				// connectionManager.registerGeoFence();
 				// Badge badge = new Badge(1, "8121069331292357553", null);
@@ -64,8 +65,9 @@ public class PlaygroundFabe {
 				List<Coordinate> coordinates = SickUtils.calculateCoordinates(robotPositionX, robotPositionY, 2);
 				shape.setCoordinates(coordinates);
 
-				Area testArea = new Area(null, "Sick Test Area", 2, shape, (double) 1);
+				Area testArea = new Area(5, "Sick Test Area", 2, shape, (double) 1);
 				// TODO: send Area to zigpos
+				connectionManager.addArea(testArea);
 
 				// connectionManager.getActiveBadges();
 			} catch (Exception e) {
@@ -79,6 +81,9 @@ public class PlaygroundFabe {
 			System.err.println("InterruptedException exception: " + ex.getMessage());
 		} catch (IOException ex) {
 			Logger.getLogger(PlaygroundFabe.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }
