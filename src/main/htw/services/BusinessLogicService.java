@@ -13,6 +13,7 @@ import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.handler.LightHandler;
 import main.htw.handler.RobotHandler;
+import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.utils.SickColor;
@@ -51,6 +52,8 @@ public class BusinessLogicService extends Service<Void> {
 				boolean isChanged = false;
 				String eventType = (String) payload.get("eventType");
 				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("adress"));
+				ActiveArea activeAreaToChange = AreaManager
+						.getActiveAreaByID(Integer.parseInt((String) payload.get("areaId")));
 
 				switch (eventType) {
 				case "IN":
@@ -132,11 +135,12 @@ public class BusinessLogicService extends Service<Void> {
 
 	private boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
 		ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
-		if (database.getNearestActiveArea() == null) {
+		ActiveArea nearestActiveArea = database.getNearestActiveArea();
+		if (nearestActiveArea == null) {
 			database.setNearestActiveArea(activeAreaWithBadge);
 			return true;
 		} else {
-
+			if(nearestActiveArea == 
 		}
 
 		// Check for role!
