@@ -118,11 +118,11 @@ public class BusinessLogicService extends Service<Void> {
 	}
 
 	private void addBadgeToActiveArea(ActiveBadge badge) {
-
+		// Area Manager add
 	}
 
 	private void removeBadgeFromActiveArea(ActiveBadge badge) {
-
+		// Area Manager add
 	}
 
 	private boolean updateNearestActiveAreaIN(ActiveBadge badge) {
