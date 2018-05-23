@@ -1,5 +1,7 @@
 package main.htw.services;
 
+import java.util.ArrayList;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +9,13 @@ import org.slf4j.LoggerFactory;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.handler.LightHandler;
 import main.htw.handler.RobotHandler;
+import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.utils.SickColor;
-import main.htw.utils.SickUtils;
 
 public class BusinessLogicService extends Service<Void> {
 
@@ -47,15 +50,15 @@ public class BusinessLogicService extends Service<Void> {
 			protected Void call() throws Exception {
 				boolean isChanged = false;
 				String eventType = (String) payload.get("eventType");
-				ActiveBadge activeBadge = SickUtils.getActiveBadgeByAddress((String) payload.get("adress"));
+				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("adress"));
 
 				switch (eventType) {
 				case "IN":
 
 					// Check if badge is registered in SickDatabase
 					if (activeBadge != null) {
-						addBadgeToActiveArea(activeBadge);
-						isChanged = updateNearestActiveAreaIN(activeBadge);
+						ActiveArea activeAreaWithBadge = addBadgeToActiveArea(activeBadge);
+						isChanged = updateNearestActiveAreaIN(activeBadge, activeAreaWithBadge);
 					} else {
 						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
 								+ payload.get("adress"));
@@ -67,8 +70,8 @@ public class BusinessLogicService extends Service<Void> {
 
 					// Check if badge is registered in SickDatabase
 					if (activeBadge != null) {
-						removeBadgeFromActiveArea(activeBadge);
-						isChanged = updateNearestActiveAreaOUT(activeBadge);
+						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge);
+						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
 					} else {
 						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
 								+ payload.get("adress"));
@@ -117,21 +120,30 @@ public class BusinessLogicService extends Service<Void> {
 		log.warn("Not implemented! Fabe?");
 	}
 
-	private void addBadgeToActiveArea(ActiveBadge badge) {
+	private ActiveArea addBadgeToActiveArea(ActiveBadge badge) {
 		// Area Manager add
+		return null;
 	}
 
-	private void removeBadgeFromActiveArea(ActiveBadge badge) {
+	private ActiveArea removeBadgeFromActiveArea(ActiveBadge badge) {
 		// Area Manager add
+		return null;
 	}
 
-	private boolean updateNearestActiveAreaIN(ActiveBadge badge) {
+	private boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
+		ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
+		if (database.getNearestActiveArea() == null) {
+			database.setNearestActiveArea(activeAreaWithBadge);
+			return true;
+		} else {
+
+		}
+
 		// Check for role!
-		// TODO: Implement
 		return false;
 	}
 
-	private boolean updateNearestActiveAreaOUT(ActiveBadge badge) {
+	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
 		// Check for role!
 		// TODO: Implement
 		return false;

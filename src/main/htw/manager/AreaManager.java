@@ -1,6 +1,5 @@
 package main.htw.manager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,15 +23,8 @@ public class AreaManager {
 
 	private static int getSickArea() {
 		int sickPosArea = -1;
-		try {
-			CFGPropertyManager propManager = CFGPropertyManager.getInstance();
-			sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
-			return sickPosArea;
-		} catch (IOException e) {
-			log.error("Cannot determine Layer!");
-			e.printStackTrace();
-		}
-
+		CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+		sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 		return sickPosArea;
 	}
 

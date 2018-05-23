@@ -29,11 +29,11 @@ import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
+import main.htw.manager.BadgeManager;
 import main.htw.parser.JavaToJson;
 import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
-import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
@@ -73,9 +73,6 @@ public class RTLSHandler extends SickHandler {
 								+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
 						uri = new URI(websocketString);
 
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					} catch (URISyntaxException e) {
 						// TODO: Log
 						e.printStackTrace();
@@ -160,7 +157,7 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public List<Area> getAllAreas() {
-		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
+		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 		JSONArray jsonArray;
@@ -236,7 +233,7 @@ public class RTLSHandler extends SickHandler {
 				// yes => do nothing
 				// no => add to DB
 				BadgeList badgeList = sickDatabase.getBadgeList();
-				if (!SickUtils.isBadgeInDataBase(address)) {
+				if (!BadgeManager.isBadgeInDataBase(address)) {
 					badgeList.addBadge(new Badge(address, RoleType.ROLE_VISITOR));
 					log.info("Badge added! ");
 				}
@@ -248,9 +245,9 @@ public class RTLSHandler extends SickHandler {
 				// && create ActiveBadge
 				// no => ignore
 				if (connected) {
-					Badge badge = SickUtils.getBadgeByAddress(address);
+					Badge badge = BadgeManager.getBadgeByAddress(address);
 					ActiveBadge activeBadge = new ActiveBadge(badge);
-					if (!SickUtils.isActiveBadgeInDataBase(activeBadge.getAddress())) {
+					if (!BadgeManager.isActiveBadgeInDataBase(activeBadge.getAddress())) {
 						sickDatabase.getActiveBadgesList().add(activeBadge);
 						log.info("Badge connected! ");
 					}
@@ -282,16 +279,8 @@ public class RTLSHandler extends SickHandler {
 		List<Area> areas = getAllAreas();
 		List<ActiveArea> activeAreas = new ArrayList<>();
 		CFGPropertyManager propManager = null;
-		try {
-			propManager = CFGPropertyManager.getInstance();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.error("Cannot instanciate Property Manager!");
-			e.printStackTrace();
-			return null;
-		}
-
-		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
+		propManager = CFGPropertyManager.getInstance();
+		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 
 		// iterate all areas and add them to active area
 		for (Area a : areas) {
