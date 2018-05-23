@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -25,6 +26,7 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
 import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.parser.JavaToJson;
@@ -274,5 +276,50 @@ public class RTLSHandler extends SickHandler {
 	public void updateAreas() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public List<ActiveArea> getActiveAreasFromZigpos() {
+		List<Area> areas = getAllAreas();
+		List<ActiveArea> activeAreas = new ArrayList<>();
+		CFGPropertyManager propManager = null;
+		try {
+			propManager = CFGPropertyManager.getInstance();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			log.error("Cannot instanciate Property Manager!");
+			e.printStackTrace();
+			return null;
+		}
+
+		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.ZIGPOS_SICK_LAYER));
+
+		// iterate all areas and add them to active area
+		for (Area a : areas) {
+			if (a.getLayer() == sickPosArea) {
+				ActiveArea activeArea = new ActiveArea(a, -1);
+				switch (a.getId()) {
+				case 4:
+					activeArea.setLevel(0);
+					break;
+				case 5:
+					activeArea.setLevel(1);
+					break;
+				case 6:
+					activeArea.setLevel(2);
+					break;
+				case 7:
+					activeArea.setLevel(3);
+					break;
+				}
+
+				if (activeArea.getLevel() != -1) {
+					activeAreas.add(activeArea);
+				}
+			}
+		}
+
+		activeAreas.sort(Comparator.comparing(ActiveArea::getLevel));
+
+		return activeAreas;
 	}
 }

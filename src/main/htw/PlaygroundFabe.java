@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveArea;
 import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 import main.htw.properties.CFGPropertyManager;
@@ -67,7 +68,12 @@ public class PlaygroundFabe {
 
 				Area testArea = new Area(5, "Sick Test Area", 2, shape, (double) 1);
 				// TODO: send Area to zigpos
-				connectionManager.addArea(testArea);
+				// connectionManager.addArea(testArea);
+
+				List<ActiveArea> aa = connectionManager.getActiveAreasFromZigpos();
+				for (ActiveArea a : aa) {
+					log.info("ActiveArea Level: " + a.getLevel());
+				}
 
 				// connectionManager.getActiveBadges();
 			} catch (Exception e) {

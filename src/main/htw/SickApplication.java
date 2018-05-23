@@ -53,10 +53,10 @@ import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EditAreaGUI;
 import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
+import main.htw.manager.AreaManager;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
-import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.AreaList;
 import main.htw.xml.XMLMarshler;
@@ -289,7 +289,7 @@ public class SickApplication extends Application implements Observer {
 						updateNeeded = true;
 					}
 					if (updateNeeded) {
-						SickUtils.updateAreaShapes();
+						AreaManager.updateAreaShapes();
 					}
 				});
 			}
@@ -461,7 +461,7 @@ public class SickApplication extends Application implements Observer {
 					ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
 					Area selectedArea = selectedItems.get(0);
 
-					Area editArea = SickUtils.editArea(selectedArea, nameDistance.getKey(), nameDistance.getValue());
+					Area editArea = AreaManager.editArea(selectedArea, nameDistance.getKey(), nameDistance.getValue());
 					int pos = 0;
 					for (int i = 0; i < tableData.size(); ++i) {
 						Area currentArea = tableData.get(i);

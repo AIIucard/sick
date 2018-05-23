@@ -16,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import main.htw.utils.SickUtils;
+import main.htw.manager.AreaManager;
 import main.htw.xml.Area;
 
 public class EditAreaGUI extends Dialog<Pair<String, Double>> {
@@ -95,7 +95,7 @@ public class EditAreaGUI extends Dialog<Pair<String, Double>> {
 
 		this.setResultConverter(dialogButton -> {
 			if (dialogButton == editButtonType) {
-				if (SickUtils.isDublicatedArea(selectedItems.get(0).getName(),
+				if (AreaManager.isDublicatedArea(selectedItems.get(0).getName(),
 						selectedItems.get(0).getDistanceToRobot(), areaName.getText(),
 						new Double(distance.getText()))) {
 					Alert alert = new Alert(AlertType.ERROR);
