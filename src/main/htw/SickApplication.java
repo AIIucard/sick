@@ -26,6 +26,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -51,7 +52,6 @@ import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EditAreaGUI;
-import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
 import main.htw.manager.AreaManager;
 import main.htw.properties.CFGPropertyManager;
@@ -83,6 +83,7 @@ public class SickApplication extends Application implements Observer {
 	private Button startButton;
 	private Button stopButton;
 	private Button editAreaButton;
+	private CheckBox visitorModeCheckBox;
 	private boolean isEditDisabled = false;
 
 	private static double width = 200;
@@ -188,8 +189,8 @@ public class SickApplication extends Application implements Observer {
 		borderPane.setCenter(centerVBox);
 		centerVBox.getChildren().add(areaTable);
 
-		EmulatorGUI emulatorGUI = new EmulatorGUI();
-		borderPane.setBottom(emulatorGUI);
+		// EmulatorGUI emulatorGUI = new EmulatorGUI();
+		// borderPane.setBottom();
 
 		primaryStage.setScene(new Scene(borderPane, width, height));
 	}
@@ -316,10 +317,23 @@ public class SickApplication extends Application implements Observer {
 				appManager.startApplication(app);
 				startButton.setDisable(true);
 				stopButton.setDisable(false);
+				visitorModeCheckBox.setDisable(true);
 				editAreaButton.setDisable(true);
 				isEditDisabled = true;
+
+				if (visitorModeCheckBox.isSelected()) {
+					database.setGodMode(true);
+					log.info("GodeMode on");
+				} else {
+					database.setGodMode(false);
+					log.info("GodeMode off");
+				}
 			}
 		});
+
+		visitorModeCheckBox = new CheckBox();
+		visitorModeCheckBox.setText("Visitor Mode");
+		visitorModeCheckBox.setSelected(false);
 
 		stopButton = new Button();
 		stopButton.setText(STOP_BUTTON);
@@ -330,6 +344,7 @@ public class SickApplication extends Application implements Observer {
 				appManager = ApplicationManager.getInstance();
 				appManager.stopApplication();
 				startButton.setDisable(false);
+				visitorModeCheckBox.setDisable(false);
 				stopButton.setDisable(true);
 				isEditDisabled = false;
 				resetConnectionStatus();
@@ -343,7 +358,7 @@ public class SickApplication extends Application implements Observer {
 		hBox.setPadding(new Insets(15, 12, 15, 12));
 		hBox.setSpacing(10);
 		hBox.setAlignment(Pos.CENTER);
-		hBox.getChildren().addAll(startButton, stopButton);
+		hBox.getChildren().addAll(startButton, stopButton, visitorModeCheckBox);
 
 		return hBox;
 	}
