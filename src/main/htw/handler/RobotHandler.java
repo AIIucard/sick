@@ -1,6 +1,5 @@
 package main.htw.handler;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
@@ -40,9 +39,6 @@ public class RobotHandler extends SickHandler {
 					} catch (URISyntaxException e) {
 						// TODO: Log
 						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 				}
 			}
@@ -71,22 +67,6 @@ public class RobotHandler extends SickHandler {
 
 		log.info("Connection succsessful");
 	}
-
-	// public void postSecurityLevel() {
-	//
-	// try {
-	// NodeId nodeId = new NodeId(3,
-	// "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
-	// DataValue value = client.readValue(nodeId);
-	// log.info("Test:" + value.getValue().toString());
-	// } catch (ServiceException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (StatusException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
 
 	public void sendSecurityLevel(int securityLevel) {
 		try {

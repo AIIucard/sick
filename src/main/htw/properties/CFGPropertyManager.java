@@ -2,6 +2,7 @@ package main.htw.properties;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -25,7 +26,7 @@ public class CFGPropertyManager {
 		// Use getInstance
 	}
 
-	public static CFGPropertyManager getInstance() throws IOException {
+	public static CFGPropertyManager getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
@@ -38,13 +39,22 @@ public class CFGPropertyManager {
 		return (instance);
 	}
 
-	private void loadProperties() throws IOException {
+	private void loadProperties() {
 
 		// create and load default properties
 		log.info("Load default properties file...");
-		FileInputStream in = new FileInputStream(DEFAULT_CFG_FILE);
-		defaultProps.load(in);
-		in.close();
+		FileInputStream in;
+		try {
+			in = new FileInputStream(DEFAULT_CFG_FILE);
+			defaultProps.load(in);
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		log.info("Default properties loaded.");
 
 		// create application properties with default

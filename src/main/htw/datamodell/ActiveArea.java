@@ -14,6 +14,8 @@ public class ActiveArea {
 
 	private Area area;
 	private List<ActiveBadge> containgBatchesList = new ArrayList<ActiveBadge>();
+
+	// Sorted by level. 0 Robot to 3 far awav
 	private int level;
 
 	public ActiveArea(Area area, int level) {

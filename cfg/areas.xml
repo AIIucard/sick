@@ -2,52 +2,102 @@
 <areas>
     <area>
         <id>1</id>
-        <name>Room A</name>
+        <name>Level 0</name>
         <layer>2</layer>
         <shape>
             <type>Polygon</type>
             <coordinates>
                 <x>1.0</x>
-                <y>2.0</y>
+                <y>13.45</y>
             </coordinates>
             <coordinates>
-                <x>2.0</x>
-                <y>2.0</y>
+                <x>7.0</x>
+                <y>13.45</y>
             </coordinates>
             <coordinates>
                 <x>1.0</x>
-                <y>1.0</y>
+                <y>7.449999999999999</y>
             </coordinates>
             <coordinates>
-                <x>2.0</x>
-                <y>1.0</y>
+                <x>7.0</x>
+                <y>7.449999999999999</y>
             </coordinates>
         </shape>
-        <distanceToRobot>1.0</distanceToRobot>
+        <distanceToRobot>3.0</distanceToRobot>
     </area>
     <area>
         <id>2</id>
-        <name>Room X</name>
+        <name>Lever 1</name>
         <layer>2</layer>
         <shape>
             <type>Polygon</type>
             <coordinates>
-                <x>0.25</x>
-                <y>1.75</y>
+                <x>0.0</x>
+                <y>14.45</y>
             </coordinates>
             <coordinates>
-                <x>1.75</x>
-                <y>1.75</y>
+                <x>8.0</x>
+                <y>14.45</y>
             </coordinates>
             <coordinates>
-                <x>0.25</x>
-                <y>0.25</y>
+                <x>0.0</x>
+                <y>6.449999999999999</y>
             </coordinates>
             <coordinates>
-                <x>1.75</x>
-                <y>0.25</y>
+                <x>8.0</x>
+                <y>6.449999999999999</y>
             </coordinates>
         </shape>
-        <distanceToRobot>1.5</distanceToRobot>
+        <distanceToRobot>4.0</distanceToRobot>
+    </area>
+    <area>
+        <id>3</id>
+        <name>Lever 2</name>
+        <layer>2</layer>
+        <shape>
+            <type>Polygon</type>
+            <coordinates>
+                <x>-1.0</x>
+                <y>15.45</y>
+            </coordinates>
+            <coordinates>
+                <x>9.0</x>
+                <y>15.45</y>
+            </coordinates>
+            <coordinates>
+                <x>-1.0</x>
+                <y>5.449999999999999</y>
+            </coordinates>
+            <coordinates>
+                <x>9.0</x>
+                <y>5.449999999999999</y>
+            </coordinates>
+        </shape>
+        <distanceToRobot>5.0</distanceToRobot>
+    </area>
+    <area>
+        <id>4</id>
+        <name>Lever 3</name>
+        <layer>2</layer>
+        <shape>
+            <type>Polygon</type>
+            <coordinates>
+                <x>-2.0</x>
+                <y>16.45</y>
+            </coordinates>
+            <coordinates>
+                <x>10.0</x>
+                <y>16.45</y>
+            </coordinates>
+            <coordinates>
+                <x>-2.0</x>
+                <y>4.449999999999999</y>
+            </coordinates>
+            <coordinates>
+                <x>10.0</x>
+                <y>4.449999999999999</y>
+            </coordinates>
+        </shape>
+        <distanceToRobot>6.0</distanceToRobot>
     </area>
 </areas>

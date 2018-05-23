@@ -13,5 +13,4 @@ public class PropertiesKeys {
 	public static final String HTTPS_PROTOCOL = "httpsProtocol";
 	public static final String AREA_LAYER = "areaLayer";
 	public static final String LIGHT_BASE_URL = "lightBaseUrl";
-	public static final String ZIGPOS_SICK_LAYER = "zigposSickLayer";
 }
