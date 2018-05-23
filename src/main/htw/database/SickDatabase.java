@@ -27,7 +27,7 @@ public class SickDatabase extends Observable {
 	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
 	private boolean isLightReconnected = false;
 
-	private ArrayList<ActiveArea> activeAreasList = new ArrayList<ActiveArea>();
+	private List<ActiveArea> activeAreasList = new ArrayList<ActiveArea>();
 	private List<ActiveBadge> activeBadgesList = new ArrayList<ActiveBadge>();
 	private ActiveArea nearestActiveArea = null;
 
@@ -98,11 +98,11 @@ public class SickDatabase extends Observable {
 		this.robotPositionY = robotPositionY;
 	}
 
-	public ArrayList<ActiveArea> getActiveAreasList() {
+	public List<ActiveArea> getActiveAreasList() {
 		return activeAreasList;
 	}
 
-	public void setActiveAreasList(ArrayList<ActiveArea> activeAreasList) {
+	public void setActiveAreasList(List<ActiveArea> activeAreasList) {
 		this.activeAreasList = activeAreasList;
 	}
 

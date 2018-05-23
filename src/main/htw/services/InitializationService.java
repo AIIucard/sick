@@ -90,6 +90,7 @@ public class InitializationService extends Service<Void> {
 							RTLSHandler rtlsHandler = RTLSHandler.getInstance();
 							rtlsHandler.updateAreas();
 							// TODO Set Active Areas
+							database.setActiveAreasList(rtlsHandler.getActiveAreasFromZigpos());
 							log.info("Areas updated!");
 						} else {
 							log.info("Can not get active badges from RTLS system! Connection not available!");

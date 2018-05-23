@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
+import main.htw.datamodell.ActiveArea;
+import main.htw.datamodell.ActiveBadge;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickUtils;
@@ -46,8 +48,7 @@ public class AreaManager {
 		return (highestID + 1);
 	}
 
-	// TODO: Implement, Sort Active Area List by Level
-	public static void AddAreaToActiveArea(Area area, int level) {
+	public static void addAreaToActiveArea(Area area, int level) {
 		log.warn("AddAreaToActiveArea - not implemented!");
 		return;
 		// SickDatabase db = SickDatabase.getInstance();
@@ -56,10 +57,28 @@ public class AreaManager {
 		//
 		// ActiveArea activeArea = new ActiveArea(area, level);
 		// sort by distance
+		// TODO: Implement, Sort Active Area List by Level
 	}
 
 	// TODO: Add ActiveBadge to Active Area
 	// return ActiveArea
+	public static ActiveArea addActiveBadgeToActiveArea(ActiveBadge badge, ActiveArea activeArea) {
+		log.warn("Not Implemented!");
+		return null;
+	}
+
+	public static ActiveArea getActiveAreaByID(Integer ID) {
+		SickDatabase database = SickDatabase.getInstance();
+		List<ActiveArea> activeAreas = database.getActiveAreasList();
+
+		for (ActiveArea activeArea : activeAreas) {
+			if (activeArea.getArea().getId() == ID)
+				return activeArea;
+		}
+
+		log.error("Active Area with ID '" + ID + "' not found!");
+		return null;
+	}
 
 	public static Area addNewArea(String areaName, Double distanceToRobot) {
 		log.info("Create new Area...");
