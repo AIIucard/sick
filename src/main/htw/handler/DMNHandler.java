@@ -91,8 +91,11 @@ public class DMNHandler {
 		if (decisionTableResult != null) {
 			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
 			log.info("The result is =" + dmnDecisionRuleResult.values());
-			String robotSafetyLevel = dmnDecisionRuleResult.values().toString().split(",")[0];
-			String lightColor = dmnDecisionRuleResult.values().toString().split(",")[0];
+			String resultAsString = dmnDecisionRuleResult.values().toString();
+			resultAsString = resultAsString.replace("[", "");
+			resultAsString = resultAsString.replace("]", "");
+			String robotSafetyLevel = resultAsString.split(",")[0];
+			String lightColor = resultAsString.split(",")[1];
 			switch (lightColor) {
 			case "BLUE":
 				return new Pair<Integer, SickColor>(new Integer(robotSafetyLevel), SickColor.BLUE);

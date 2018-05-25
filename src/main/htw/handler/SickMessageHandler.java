@@ -22,6 +22,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
 import main.htw.ApplicationManager;
+import main.htw.manager.AreaManager;
 
 /**
  *
@@ -63,7 +64,10 @@ public class SickMessageHandler extends WebSocketAdapter {
 
 			case "GEOFENCING_EVENT":
 				JSONObject payload = (JSONObject) jsonObject.get("payload");
-				ApplicationManager.getInstance().handleGeofenceEvent(payload);
+				if (AreaManager.checkIfActiveAreaExistsByID(Integer.parseInt((String) payload.get("areaId")))) {
+					ApplicationManager.getInstance().handleGeofenceEvent(payload);
+				}
+				break;
 
 			default:
 				log.warn("Unsupported topic: " + topic + "! Message not handled!");

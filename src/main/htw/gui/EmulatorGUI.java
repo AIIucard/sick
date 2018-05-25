@@ -62,8 +62,7 @@ public class EmulatorGUI extends FlowPane {
 					areas.put(area3);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(),
-							areas.toString());
+					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(), areas.toString());
 					log.info(areas.toString());
 
 				} catch (JSONException e) {
@@ -154,8 +153,7 @@ public class EmulatorGUI extends FlowPane {
 					devices.put(device2);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(),
-							devices.toString());
+					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(), devices.toString());
 					log.info(devices.toString());
 
 				} catch (JSONException e) {
@@ -173,32 +171,26 @@ public class EmulatorGUI extends FlowPane {
 	private Button createSendFenceNotifyButton() {
 
 		Button button = new Button();
-		button.setText("Send Fence Notify");
+		button.setText("Send IN Event");
 		button.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				log.info("Send Fence Notify button hitted...");
+				log.info("Send IN Event button hitted...");
 				try {
-					int deviceNumber = (int) (Math.random() * 2) + 1;
-					int levelNumber = (int) (Math.random() * 3) + 1;
 					JSONObject notifyEvent = new JSONObject();
 					notifyEvent.put("topic", "GEOFENCING_EVENT");
 					JSONObject geofencingEvent = new JSONObject();
-					geofencingEvent.put("message",
-							"Device " + ((deviceNumber == 2) ? "'Uwe Gaul'" : "'Horst Schneider'") + " enters area "
-									+ "'Level " + levelNumber + "'");
+					geofencingEvent.put("message", "Device 'Horst Schneider' enters area 'Level 3'");
 					geofencingEvent.put("timestamp", new Long("1470393041329"));
 					geofencingEvent.put("eventType", "IN");
-					geofencingEvent.put("areaId", levelNumber);
-					geofencingEvent.put("address",
-							((deviceNumber == 2) ? "8121069331292357453" : "8121069331292357452"));
-					geofencingEvent.put("customName", ((deviceNumber == 2) ? "Uwe Gaul" : "Horst Schneider"));
+					geofencingEvent.put("areaId", "11");
+					geofencingEvent.put("address", "6507827280000080940");
+					geofencingEvent.put("customName", "Horst Schneider");
 					notifyEvent.put("payload", geofencingEvent);
 
 					SickMessageHandler sickMessagehandler = SickMessageHandler.getInstance();
-					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(),
-							notifyEvent.toString());
+					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(), notifyEvent.toString());
 					log.info(notifyEvent.toString());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

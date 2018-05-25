@@ -52,7 +52,7 @@ public class BusinessLogicService extends Service<Void> {
 			protected Void call() throws Exception {
 				boolean isChanged = false;
 				String eventType = (String) payload.get("eventType");
-				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("adress"));
+				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("address"));
 				ActiveArea activeAreaToChange = AreaManager
 						.getActiveAreaByID(Integer.parseInt((String) payload.get("areaId")));
 
@@ -69,8 +69,8 @@ public class BusinessLogicService extends Service<Void> {
 									+ "!");
 						}
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
-								+ payload.get("adress"));
+						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
 					break;
@@ -82,8 +82,8 @@ public class BusinessLogicService extends Service<Void> {
 						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge, activeAreaToChange);
 						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
-								+ payload.get("adress"));
+						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
 					break;
@@ -93,12 +93,12 @@ public class BusinessLogicService extends Service<Void> {
 					break;
 				}
 
-				if (database.getRobotConnectionStatus() == ConnectionStatusType.OK) {
+				if (database.getRobotConnectionStatus() == ConnectionStatusType.ERROR) {
 					// TODO: Implement Reconnect Service
 					database.setRobotReconnected(true);
 				}
 
-				if (database.getLightConnectionStatus() == ConnectionStatusType.OK) {
+				if (database.getLightConnectionStatus() == ConnectionStatusType.ERROR) {
 					// TODO: Implement Reconnect Service
 					database.setLightReconnected(true);
 				}

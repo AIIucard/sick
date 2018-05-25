@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,6 +36,8 @@ import main.htw.parser.JsonReader;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.xml.Area;
+import main.htw.xml.AreaComparator;
+import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
 
@@ -172,7 +175,7 @@ public class RTLSHandler extends SickHandler {
 			return null;
 		}
 
-		List<Area> areaList = new ArrayList<Area>();
+		List<Area> zigposAreaList = new ArrayList<Area>();
 
 		for (Object o : jsonArray) {
 			JSONObject jArea = (JSONObject) o;
@@ -184,13 +187,22 @@ public class RTLSHandler extends SickHandler {
 			// JSONArray coordinates = (JSONArray) shape.get("coordinates");
 
 			if (layer == sickLayer) {
-				log.info("OUR AREA DETECTED!!! " + name);
-				Area area = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
-				areaList.add(area);
+				Area newZigposArea = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
+
+				// Check if area already exists in database
+				SickDatabase database = SickDatabase.getInstance();
+				AreaList areaList = database.getAreaList();
+				for (Area currentArea : areaList.getAreas()) {
+					if (currentArea.getId() == newZigposArea.getId()) {
+						newZigposArea.setDistanceToRobot(currentArea.getDistanceToRobot());
+					}
+				}
+
+				zigposAreaList.add(newZigposArea);
 			}
 		}
 
-		return areaList;
+		return zigposAreaList;
 	}
 
 	public void tryReconnect() {
@@ -276,37 +288,25 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public ArrayList<ActiveArea> getActiveAreasFromZigpos() {
+
+		// Sort Areas by distance
 		List<Area> areas = getAllAreas();
+		Collections.sort(areas, new AreaComparator());
+
 		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();
 		CFGPropertyManager propManager = null;
 		propManager = CFGPropertyManager.getInstance();
 		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 
-		// iterate all areas and add them to active area
+		// Check for layer and add Areas to ActiveAreas
+		int currentLevel = 0;
 		for (Area a : areas) {
 			if (a.getLayer() == sickPosArea) {
-				ActiveArea activeArea = new ActiveArea(a, -1);
-				switch (a.getId()) {
-				case 4:
-					activeArea.setLevel(0);
-					break;
-				case 5:
-					activeArea.setLevel(1);
-					break;
-				case 6:
-					activeArea.setLevel(2);
-					break;
-				case 7:
-					activeArea.setLevel(3);
-					break;
-				}
-
-				if (activeArea.getLevel() != -1) {
-					activeAreas.add(activeArea);
-				}
+				ActiveArea activeArea = new ActiveArea(a, currentLevel);
+				currentLevel++;
+				activeAreas.add(activeArea);
 			}
 		}
-
 		activeAreas.sort(Comparator.comparing(ActiveArea::getLevel));
 
 		return activeAreas;

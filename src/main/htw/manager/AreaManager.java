@@ -64,6 +64,7 @@ public class AreaManager {
 
 				// Update Badge List
 				currentActiveArea.addActiveBadge(activeBadge);
+				activeAreaWithBadge = currentActiveArea;
 
 				// Update Highest Role
 				RoleType role = activeBadge.getRole();
@@ -130,6 +131,17 @@ public class AreaManager {
 
 		log.error("Active Area with ID '" + ID + "' not found!");
 		return null;
+	}
+
+	public static boolean checkIfActiveAreaExistsByID(int id) {
+		SickDatabase database = SickDatabase.getInstance();
+		List<ActiveArea> activeAreas = database.getActiveAreasList();
+		for (ActiveArea activeArea : activeAreas) {
+			if (activeArea.getArea().getId().intValue() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static Area addNewArea(String areaName, Double distanceToRobot) {
