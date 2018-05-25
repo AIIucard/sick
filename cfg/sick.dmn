@@ -24,7 +24,7 @@
           <text>0</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0lqya99">
-          <text>"0,rot"</text>
+          <text>"0,RED"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1vp3qvq">
@@ -35,7 +35,7 @@
           <text>1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0ijaqva">
-          <text>"2,blau"</text>
+          <text>"2,BLUE"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_01nbwoo">
@@ -46,7 +46,7 @@
           <text>2</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_091t8w7">
-          <text>"5,gelb"</text>
+          <text>"5,YELLOW"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1c6vnx3">
@@ -57,7 +57,7 @@
           <text>3</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0u38kav">
-          <text>"8,grün"</text>
+          <text>"8,GREEN"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0vh4uun">
@@ -68,7 +68,7 @@
           <text>1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0vwkeym">
-          <text>"1,rot"</text>
+          <text>"1,RED"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1snx7m7">
@@ -79,7 +79,7 @@
           <text>2</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_19no5ag">
-          <text>"4,gelb"</text>
+          <text>"4,YELLOW"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_12u57lp">
@@ -90,7 +90,7 @@
           <text>3</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0qjocio">
-          <text>"7,grün"</text>
+          <text>"7,GREEN"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_137tfbx">
@@ -101,7 +101,7 @@
           <text>1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1gf1t3f">
-          <text>"0,rot"</text>
+          <text>"0,RED"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_198dz0j">
@@ -112,7 +112,7 @@
           <text>2</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1ydtzhj">
-          <text>"3,gelb"</text>
+          <text>"3,YELLOW"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1q6s0p3">
@@ -123,7 +123,7 @@
           <text>3</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_164gt5z">
-          <text>"6,grün"</text>
+          <text>"6,GREEN"</text>
         </outputEntry>
       </rule>
     </decisionTable>
