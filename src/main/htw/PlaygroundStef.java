@@ -48,11 +48,11 @@ public class PlaygroundStef {
 				LightHandler lightHandler = LightHandler.getInstance();
 				lightHandler.initializeConnection();
 				for (int i = 0; i <= 3; i++) {
-					lightHandler.setLight(SickColor.GREEN.toString());
+					lightHandler.setLight(SickColor.GREEN);
 					Thread.sleep(5000);
-					lightHandler.setLight(SickColor.YELLOW.toString());
+					lightHandler.setLight(SickColor.YELLOW);
 					Thread.sleep(5000);
-					lightHandler.setLight(SickColor.RED.toString());
+					lightHandler.setLight(SickColor.RED);
 					Thread.sleep(5000);
 				}
 				log.info("Connected to Light!");

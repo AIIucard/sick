@@ -1,6 +1,7 @@
 package main.htw.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
+import main.htw.datamodell.ActiveAreaComparator;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.properties.CFGPropertyManager;
@@ -246,5 +248,39 @@ public class AreaManager {
 			}
 		}
 		return false;
+	}
+
+	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
+		SickDatabase database = SickDatabase.getInstance();
+		ActiveArea nearestActiveArea = database.getNearestActiveArea();
+		if (nearestActiveArea.getArea().getId().equals(activeAreaWithoutBadge.getArea().getId())) {
+			if (nearestActiveArea.getContaingBatchesList().size() == 0) {
+				int lastLevel = nearestActiveArea.getLevel();
+				nearestActiveArea = null;
+				ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
+				Collections.sort(activeAreasList, new ActiveAreaComparator());
+				for (ActiveArea currentActiveArea : activeAreasList) {
+					if (currentActiveArea.getLevel() > lastLevel
+							&& currentActiveArea.getContaingBatchesList().size() > 0) {
+						nearestActiveArea = currentActiveArea;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static RoleType getLowestRoleInActiveArea(ActiveArea activeArea) {
+		RoleType lowestRole = activeArea.getHighestRoleType();
+		List<ActiveBadge> containgBatchesList = activeArea.getContaingBatchesList();
+		for (ActiveBadge activeBadge : containgBatchesList) {
+			if (lowestRole == RoleType.PROFESSOR && (activeBadge.getRole().equals(RoleType.LABORANT)
+					|| activeBadge.getRole().equals(RoleType.VISITOR))) {
+				lowestRole = activeBadge.getRole();
+			} else if (lowestRole == RoleType.LABORANT || activeBadge.getRole().equals(RoleType.VISITOR)) {
+				lowestRole = activeBadge.getRole();
+			}
+		}
+		return lowestRole;
 	}
 }

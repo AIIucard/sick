@@ -10,6 +10,7 @@ import java.net.URL;
 
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.SickColor;
 
 public class LightHandler extends SickHandler {
 
@@ -151,18 +152,18 @@ public class LightHandler extends SickHandler {
 		// TODO: Implement me
 	}
 
-	public void setLight(String color) {
+	public void setLight(SickColor color) {
 		switch (color) {
-		case "BLUE":
+		case BLUE:
 			setLightBlue();
 			break;
-		case "GREEN":
+		case GREEN:
 			setLightGreen();
 			break;
-		case "YELLOW":
+		case YELLOW:
 			setLightYellow();
 			break;
-		case "RED":
+		case RED:
 			setLightRed();
 			break;
 		}

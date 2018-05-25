@@ -6,9 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
+import main.htw.datamodell.RoleType;
+import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
 import main.htw.handler.RobotHandler;
 import main.htw.manager.AreaManager;
@@ -110,11 +113,26 @@ public class BusinessLogicService extends Service<Void> {
 				}
 
 				if (isChanged) {
-					// RETURN for DMNHandler
-					// DMNHandler.getInstance().evaluateDecision(role, geofence);
-					// Parse Decision
-					LightHandler.getInstance().setLight(SickColor.BLUE.toString());
-					RobotHandler.getInstance().sendSecurityLevel(-1);
+					ActiveArea nearestActiveArea = database.getNearestActiveArea();
+					if (nearestActiveArea != null) {
+						Pair<Integer, SickColor> decision = null;
+						if (database.isGodModeActive()) {
+							decision = DMNHandler.getInstance().evaluateDecision(
+									nearestActiveArea.getHighestRoleType().toString(), nearestActiveArea.getLevel());
+						} else {
+							RoleType lowestRole = AreaManager.getLowestRoleInActiveArea(nearestActiveArea);
+							decision = DMNHandler.getInstance().evaluateDecision(lowestRole.toString(),
+									nearestActiveArea.getLevel());
+						}
+						if (decision != null) {
+							RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
+							LightHandler.getInstance().setLight(decision.getValue());
+						} else {
+							log.error("No Decision available! Can not change robot speed and ligth!");
+						}
+					} else {
+						log.error("NearestActiveArea not set! Can not change robot speed and ligth!");
+					}
 				}
 				return null;
 			}
@@ -139,14 +157,12 @@ public class BusinessLogicService extends Service<Void> {
 	}
 
 	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
-		// Check for role!
-		// TODO: Implement
-		return false;
+		return AreaManager.updateNearestActiveAreaOUT(badge, activeAreaWithoutBadge);
 	}
 
 	private boolean updateNearestActiveArea(ActiveBadge badge) {
 		// Check for role!
-		// TODO: Implement
+		// TODO: Implement for Reconect
 		return false;
 	}
 }
