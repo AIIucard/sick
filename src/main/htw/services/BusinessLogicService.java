@@ -1,7 +1,5 @@
 package main.htw.services;
 
-import java.util.ArrayList;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,8 +58,13 @@ public class BusinessLogicService extends Service<Void> {
 
 					// Check if badge is registered in SickDatabase
 					if (activeBadge != null) {
-						ActiveArea activeAreaWithBadge = addBadgeToActiveArea(activeBadge);
-						isChanged = updateNearestActiveAreaIN(activeBadge, activeAreaWithBadge);
+						ActiveArea activeAreaWithBadge = addBadgeToActiveArea(activeBadge, activeAreaToChange);
+						if (activeAreaWithBadge != null) {
+							isChanged = updateNearestActiveAreaIN(activeBadge, activeAreaWithBadge);
+						} else {
+							log.error("Could not add badge to ActiveArea " + activeAreaToChange.getArea().getName()
+									+ "!");
+						}
 					} else {
 						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
 								+ payload.get("adress"));
@@ -73,7 +76,7 @@ public class BusinessLogicService extends Service<Void> {
 
 					// Check if badge is registered in SickDatabase
 					if (activeBadge != null) {
-						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge);
+						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge, activeAreaToChange);
 						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
 					} else {
 						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
@@ -123,28 +126,16 @@ public class BusinessLogicService extends Service<Void> {
 		log.warn("Not implemented! Fabe?");
 	}
 
-	private ActiveArea addBadgeToActiveArea(ActiveBadge badge) {
-		// Area Manager add
-		return null;
+	private ActiveArea addBadgeToActiveArea(ActiveBadge badge, ActiveArea activeAreaToChange) {
+		return AreaManager.addActiveBadgeToActiveArea(badge, activeAreaToChange);
 	}
 
-	private ActiveArea removeBadgeFromActiveArea(ActiveBadge badge) {
-		// Area Manager add
-		return null;
+	private ActiveArea removeBadgeFromActiveArea(ActiveBadge badge, ActiveArea activeAreaToChange) {
+		return AreaManager.removeActiveBadgeFromActiveArea(badge, activeAreaToChange);
 	}
 
 	private boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
-		ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
-		ActiveArea nearestActiveArea = database.getNearestActiveArea();
-		if (nearestActiveArea == null) {
-			database.setNearestActiveArea(activeAreaWithBadge);
-			return true;
-		} else {
-			if(nearestActiveArea == 
-		}
-
-		// Check for role!
-		return false;
+		return AreaManager.updateNearestActiveAreaIN(badge, activeAreaWithBadge);
 	}
 
 	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {

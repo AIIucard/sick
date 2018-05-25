@@ -14,12 +14,12 @@ import main.htw.xml.Badge;
 public class ActiveBadge {
 	private Integer id;
 	private String address;
-	private String role;
+	private RoleType role;
 	private Integer currentGeoFence = -1;
 
 	public ActiveBadge(Badge badge) {
 		this.address = badge.getAddress();
-		this.role = badge.getRole();
+		this.role = RoleType.getTypeByString(badge.getRole());
 	}
 
 	public Integer getId() {
@@ -46,11 +46,11 @@ public class ActiveBadge {
 		this.address = address;
 	}
 
-	public String getRole() {
+	public RoleType getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(RoleType role) {
 		this.role = role;
 	}
 }

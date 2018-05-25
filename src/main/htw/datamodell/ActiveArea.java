@@ -18,6 +18,8 @@ public class ActiveArea {
 	// Sorted by level. 0 Robot to 3 far awav
 	private int level;
 
+	private RoleType highestRoleType = RoleType.VISITOR;
+
 	public ActiveArea(Area area, int level) {
 		this.area = area;
 		this.level = level;
@@ -53,5 +55,13 @@ public class ActiveArea {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public RoleType getHighestRoleType() {
+		return highestRoleType;
+	}
+
+	public void setHighestRoleType(RoleType highestRoleType) {
+		this.highestRoleType = highestRoleType;
 	}
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
+import main.htw.datamodell.RoleType;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickUtils;
@@ -52,11 +53,68 @@ public class AreaManager {
 		// TODO: Implement, Sort Active Area List by Level
 	}
 
-	// TODO: Add ActiveBadge to Active Area
-	// return ActiveArea
-	public static ActiveArea addActiveBadgeToActiveArea(ActiveBadge badge, ActiveArea activeArea) {
-		log.warn("Not Implemented!");
-		return null;
+	public static ActiveArea addActiveBadgeToActiveArea(ActiveBadge activeBadge, ActiveArea activeArea) {
+		ActiveArea activeAreaWithBadge = null;
+		SickDatabase database = SickDatabase.getInstance();
+		ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
+		for (ActiveArea currentActiveArea : activeAreasList) {
+			if (currentActiveArea.equals(activeArea)) {
+
+				// Update Badge List
+				currentActiveArea.addActiveBadge(activeBadge);
+
+				// Update Highest Role
+				RoleType role = activeBadge.getRole();
+				if (role.equals(RoleType.PROFESSOR)) {
+					currentActiveArea.setHighestRoleType(RoleType.PROFESSOR);
+				} else if (role.equals(RoleType.LABORANT)
+						&& !(currentActiveArea.getHighestRoleType().equals(RoleType.PROFESSOR))) {
+					currentActiveArea.setHighestRoleType(RoleType.LABORANT);
+				}
+			}
+		}
+		return activeAreaWithBadge;
+	}
+
+	public static ActiveArea removeActiveBadgeFromActiveArea(ActiveBadge activeBadge, ActiveArea activeArea) {
+		ActiveArea activeAreaWithoutBadge = null;
+		SickDatabase database = SickDatabase.getInstance();
+		ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
+		for (ActiveArea currentActiveArea : activeAreasList) {
+			if (currentActiveArea.equals(activeArea)) {
+
+				// Count Roles
+				int laborantNumber = 0;
+				int professorNumber = 0;
+				for (ActiveBadge currentActiveBadge : currentActiveArea.getContaingBatchesList()) {
+
+					if (currentActiveBadge.getRole().equals(RoleType.PROFESSOR)) {
+						professorNumber += 1;
+					} else if (currentActiveBadge.getRole().equals(RoleType.LABORANT)) {
+						laborantNumber += 1;
+					}
+				}
+
+				// Update Badge List
+				currentActiveArea.removeActiveBadge(activeBadge);
+
+				// Update Highest Role
+				RoleType role = activeBadge.getRole();
+				if (activeBadge.getRole().equals(RoleType.PROFESSOR) && professorNumber == 1) {
+					if (laborantNumber > 0) {
+						currentActiveArea.setHighestRoleType(RoleType.LABORANT);
+					} else {
+						currentActiveArea.setHighestRoleType(RoleType.VISITOR);
+					}
+				} else if (role.equals(RoleType.LABORANT) && laborantNumber == 1) {
+					currentActiveArea.setHighestRoleType(RoleType.VISITOR);
+				}
+
+				// Update Badge List
+				currentActiveArea.removeActiveBadge(activeBadge);
+			}
+		}
+		return activeAreaWithoutBadge;
 	}
 
 	public static ActiveArea getActiveAreaByID(Integer ID) {
@@ -170,5 +228,23 @@ public class AreaManager {
 		AreaList areaList = new AreaList(newAreaList);
 		database.setAreaList(areaList);
 		log.info("Area Shapes Updated");
+	}
+
+	public static boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
+		SickDatabase database = SickDatabase.getInstance();
+		ActiveArea nearestActiveArea = database.getNearestActiveArea();
+		if (nearestActiveArea == null) {
+			database.setNearestActiveArea(activeAreaWithBadge);
+			return true;
+		} else {
+			if (activeAreaWithBadge.getLevel() < nearestActiveArea.getLevel()) {
+				nearestActiveArea = activeAreaWithBadge;
+				return true;
+			} else if (activeAreaWithBadge.getLevel() == nearestActiveArea.getLevel()) {
+				// True because check for Role
+				return true;
+			}
+		}
+		return false;
 	}
 }

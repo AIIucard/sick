@@ -1,10 +1,32 @@
 package main.htw.datamodell;
 
-public class RoleType {
+public enum RoleType {
 
-	public static final String ROLE_VISITOR = "Visitor";
+	VISITOR("Visitor"), LABORANT("Laborant"), PROFESSOR("Professor");
 
-	public static final String ROLE_LABORANT = "Laborant";
+	private final String role;
 
-	public static final String ROLE_PROFESSOR = "Professor";
+	RoleType(String role) {
+		this.role = role;
+	}
+
+	public static RoleType getTypeByString(String type) {
+		switch (type) {
+		case "Visitor":
+			return RoleType.VISITOR;
+
+		case "Laborant":
+			return RoleType.LABORANT;
+
+		case "Professor":
+			return RoleType.PROFESSOR;
+
+		}
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return role;
+	}
 }

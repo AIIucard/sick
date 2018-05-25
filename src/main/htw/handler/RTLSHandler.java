@@ -234,7 +234,7 @@ public class RTLSHandler extends SickHandler {
 				// no => add to DB
 				BadgeList badgeList = sickDatabase.getBadgeList();
 				if (!BadgeManager.isBadgeInDataBase(address)) {
-					badgeList.addBadge(new Badge(address, RoleType.ROLE_VISITOR));
+					badgeList.addBadge(new Badge(address, RoleType.VISITOR));
 					log.info("Badge added! ");
 				}
 
@@ -275,9 +275,9 @@ public class RTLSHandler extends SickHandler {
 
 	}
 
-	public List<ActiveArea> getActiveAreasFromZigpos() {
+	public ArrayList<ActiveArea> getActiveAreasFromZigpos() {
 		List<Area> areas = getAllAreas();
-		List<ActiveArea> activeAreas = new ArrayList<>();
+		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();
 		CFGPropertyManager propManager = null;
 		propManager = CFGPropertyManager.getInstance();
 		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
