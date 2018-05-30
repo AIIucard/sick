@@ -54,11 +54,11 @@ public class ApplicationManager {
 			isRunning = true;
 
 			ExecutorService executorService = Executors.newCachedThreadPool();
-			CountDownLatch latch = new CountDownLatch(3);
+			CountDownLatch latch = new CountDownLatch(2);
 
-			robotService = new RobotConnectionService(database, latch);
-			robotService.setExecutor(executorService);
-			robotService.startTheService();
+			// robotService = new RobotConnectionService(database, latch);
+			// robotService.setExecutor(executorService);
+			// robotService.startTheService();
 
 			rtlsService = new RTLSConnectionService(database, latch);
 			rtlsService.setExecutor(executorService);

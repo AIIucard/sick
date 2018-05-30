@@ -13,7 +13,6 @@ import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
-import main.htw.handler.RobotHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
@@ -54,7 +53,7 @@ public class BusinessLogicService extends Service<Void> {
 				String eventType = (String) payload.get("eventType");
 				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("address"));
 				ActiveArea activeAreaToChange = AreaManager
-						.getActiveAreaByID(Integer.parseInt((String) payload.get("areaId")));
+						.getActiveAreaByID(Integer.parseInt(String.valueOf(payload.get("areaId"))));
 
 				switch (eventType) {
 				case "IN":
@@ -114,8 +113,13 @@ public class BusinessLogicService extends Service<Void> {
 
 				if (isChanged) {
 					ActiveArea nearestActiveArea = database.getNearestActiveArea();
-					if (nearestActiveArea != null) {
+					if (nearestActiveArea == null) {
+						// RobotHandler.getInstance().sendSecurityLevel(10);
+						log.info("SpeedLvl: " + 10 + " Light: " + SickColor.WHITE);
+						LightHandler.getInstance().setLight(SickColor.WHITE);
+					} else {
 						Pair<Integer, SickColor> decision = null;
+
 						if (database.isGodModeActive()) {
 							decision = DMNHandler.getInstance().evaluateDecision(
 									nearestActiveArea.getHighestRoleType().toString(), nearestActiveArea.getLevel());
@@ -125,18 +129,18 @@ public class BusinessLogicService extends Service<Void> {
 									nearestActiveArea.getLevel());
 						}
 						if (decision != null) {
-							RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
+							// RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
 							LightHandler.getInstance().setLight(decision.getValue());
+							log.info("SpeedLvl: " + decision.getKey().intValue() + " Light: " + decision.getValue());
 						} else {
 							log.error("No Decision available! Can not change robot speed and ligth!");
 						}
-					} else {
-						log.error("NearestActiveArea not set! Can not change robot speed and ligth!");
 					}
 				}
 				return null;
 			}
 		};
+
 	}
 
 	private void addBadgeToActiveBadges(JSONObject payload) {

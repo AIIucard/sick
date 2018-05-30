@@ -46,7 +46,7 @@ public class PlaygroundStef {
 				// connectionManager.getAllAreas();
 				log.info("Connecting to Light...");
 				LightHandler lightHandler = LightHandler.getInstance();
-				lightHandler.initializeConnection();
+				lightHandler.setLight(SickColor.WHITE);
 				for (int i = 0; i <= 3; i++) {
 					lightHandler.setLight(SickColor.GREEN);
 					Thread.sleep(5000);

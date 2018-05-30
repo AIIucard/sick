@@ -98,9 +98,6 @@ public class AreaManager {
 					}
 				}
 
-				// Update Badge List
-				currentActiveArea.removeActiveBadge(activeBadge);
-
 				// Update Highest Role
 				RoleType role = activeBadge.getRole();
 				if (activeBadge.getRole().equals(RoleType.PROFESSOR) && professorNumber == 1) {
@@ -115,6 +112,8 @@ public class AreaManager {
 
 				// Update Badge List
 				currentActiveArea.removeActiveBadge(activeBadge);
+				activeAreaWithoutBadge = currentActiveArea;
+				break;
 			}
 		}
 		return activeAreaWithoutBadge;
@@ -253,6 +252,7 @@ public class AreaManager {
 		} else {
 			if (activeAreaWithBadge.getLevel() < nearestActiveArea.getLevel()) {
 				nearestActiveArea = activeAreaWithBadge;
+				database.setNearestActiveArea(nearestActiveArea);
 				return true;
 			} else if (activeAreaWithBadge.getLevel() == nearestActiveArea.getLevel()) {
 				// True because check for Role
@@ -265,9 +265,10 @@ public class AreaManager {
 	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
+		int lastLevel = -1;
 		if (nearestActiveArea.getArea().getId().equals(activeAreaWithoutBadge.getArea().getId())) {
 			if (nearestActiveArea.getContaingBatchesList().size() == 0) {
-				int lastLevel = nearestActiveArea.getLevel();
+				lastLevel = nearestActiveArea.getLevel();
 				nearestActiveArea = null;
 				ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
 				Collections.sort(activeAreasList, new ActiveAreaComparator());
@@ -275,9 +276,16 @@ public class AreaManager {
 					if (currentActiveArea.getLevel() > lastLevel
 							&& currentActiveArea.getContaingBatchesList().size() > 0) {
 						nearestActiveArea = currentActiveArea;
+						database.setNearestActiveArea(nearestActiveArea);
+						return true;
 					}
 				}
 			}
+		}
+		// Check for leaving geofence
+		if (lastLevel == 3 && nearestActiveArea == null) {
+			database.setNearestActiveArea(nearestActiveArea);
+			return true;
 		}
 		return false;
 	}

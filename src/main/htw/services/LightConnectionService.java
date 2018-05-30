@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import main.htw.database.SickDatabase;
 import main.htw.handler.LightHandler;
 import main.htw.utils.ConnectionStatusType;
+import main.htw.utils.SickColor;
 
 public class LightConnectionService extends Service<Void> {
 
@@ -45,7 +46,7 @@ public class LightConnectionService extends Service<Void> {
 				database.setLightConnectionStatus(ConnectionStatusType.PENDING);
 				LightHandler lightConnectionHandler = LightHandler.getInstance();
 				try {
-					lightConnectionHandler.initializeConnection();
+					lightConnectionHandler.setLight(SickColor.WHITE);
 					database.setLightConnectionStatus(ConnectionStatusType.OK);
 				} catch (Exception ex) {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());

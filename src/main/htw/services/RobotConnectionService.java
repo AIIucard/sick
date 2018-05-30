@@ -46,7 +46,6 @@ public class RobotConnectionService extends Service<Void> {
 				RobotHandler robotConnectionHandler = RobotHandler.getInstance();
 				try {
 					robotConnectionHandler.initializeConnection();
-					database.setRobotConnectionStatus(ConnectionStatusType.OK);
 				} catch (Exception ex) {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());
 					database.setRobotConnectionStatus(ConnectionStatusType.ERROR);
