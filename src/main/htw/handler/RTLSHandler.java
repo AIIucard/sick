@@ -192,13 +192,18 @@ public class RTLSHandler extends SickHandler {
 				// Check if area already exists in database
 				SickDatabase database = SickDatabase.getInstance();
 				AreaList areaList = database.getAreaList();
-				for (Area currentArea : areaList.getAreas()) {
-					if (currentArea.getId() == newZigposArea.getId()) {
-						newZigposArea.setDistanceToRobot(currentArea.getDistanceToRobot());
+				if (areaList != null) {
+					for (Area currentArea : areaList.getAreas()) {
+						if (currentArea.getId() == newZigposArea.getId()) {
+							newZigposArea.setDistanceToRobot(currentArea.getDistanceToRobot());
+						}
 					}
-				}
 
-				zigposAreaList.add(newZigposArea);
+					zigposAreaList.add(newZigposArea);
+
+				} else {
+					log.error("Area list is null!");
+				}
 			}
 		}
 
