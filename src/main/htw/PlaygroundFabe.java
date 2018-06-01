@@ -47,10 +47,6 @@ public class PlaygroundFabe {
 			final RTLSHandler connectionManager = RTLSHandler.getInstance();
 			connectionManager.initializeConnection();
 			try {
-				// connectionManager.registerGeoFence();
-				// Badge badge = new Badge(1, "8121069331292357553", null);
-				// sickDatabase.addToBadgeList(badge);
-				// sickMessageHandler.onTextMessage(null, geoFenceEvent);
 				List<Area> areas = connectionManager.getAllAreas();
 				for (Area a : areas) {
 					log.info("AREA");
@@ -68,7 +64,7 @@ public class PlaygroundFabe {
 
 				Area testArea = new Area(5, "Sick Test Area", 2, shape, (double) 1);
 				// TODO: send Area to zigpos
-				// connectionManager.addArea(testArea);
+				connectionManager.addArea(testArea);
 
 				List<ActiveArea> aa = connectionManager.getActiveAreasFromZigpos();
 				for (ActiveArea a : aa) {

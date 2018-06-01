@@ -22,11 +22,8 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
 import main.htw.ApplicationManager;
+import main.htw.manager.AreaManager;
 
-/**
- *
- * @author richter
- */
 public class SickMessageHandler extends WebSocketAdapter {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -51,7 +48,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	}
 
 	public void handleMessage(String message) {
-		log.info("Handle message: " + message);
+		log.debug("Handle message: " + message);
 
 		JSONParser parser = new JSONParser();
 		try {
@@ -63,7 +60,10 @@ public class SickMessageHandler extends WebSocketAdapter {
 
 			case "GEOFENCING_EVENT":
 				JSONObject payload = (JSONObject) jsonObject.get("payload");
-				ApplicationManager.getInstance().handleGeofenceEvent(payload);
+				if (AreaManager.checkIfActiveAreaExistsByID(Integer.parseInt(String.valueOf(payload.get("areaId"))))) {
+					ApplicationManager.getInstance().handleGeofenceEvent(payload);
+				}
+				break;
 
 			default:
 				log.warn("Unsupported topic: " + topic + "! Message not handled!");

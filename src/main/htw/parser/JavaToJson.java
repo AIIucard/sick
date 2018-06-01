@@ -28,7 +28,7 @@ public class JavaToJson {
 
 		// add shape.Coordinate
 		jsonString += "\"type\": \"" + shape.getType() + "\",";
-		jsonString += "\"coordiates\": [ [";
+		jsonString += "\"coordinates\": [ [";
 		// int count = shape.getCoordinates().size() - 1;
 		// int tmp = 0;
 		for (Coordinate c : shape.getCoordinates()) {

@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.SickColor;
 
 public class LightHandler extends SickHandler {
 
@@ -17,8 +20,10 @@ public class LightHandler extends SickHandler {
 	private static final String YELLOW = "\"xy\": [0.499226, 0.478163]";
 	private static final String GREEN = "\"xy\": [0.126289, 0.815775]";
 	private static final String BLUE = "\"xy\": [0.157309, 0.0214311]";
+	private static final String BLUE = "\"xy\": [0.157309, 0.0214311]";
+	private static final String WHITE = "\"xy\": [0.157309, 0.0214311]"; // TODO change in white
 
-	private static HttpURLConnection Connection;
+	private static HttpURLConnection connection;
 
 	private static Object lock = new Object();
 	private static LightHandler instance = null;
@@ -36,6 +41,9 @@ public class LightHandler extends SickHandler {
 					instance = new LightHandler();
 					try {
 						propManager = CFGPropertyManager.getInstance();
+						// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
+						// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
+						// url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
 						url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
 					} catch (IOException e) {
 						// TODO: Log
@@ -47,104 +55,84 @@ public class LightHandler extends SickHandler {
 		return (instance);
 	}
 
-	public void initializeConnection() throws Exception {
-		// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
-		// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
+	private static void initializeConnection() {
+		try {
+			log.debug("Opening Connection");
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			setRequestSettings();
+			connection.disconnect();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-		// TODO: Change this to static url from above which is initialized by cfg file!
-		URL url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
-		log.info("Opening Connection");
-		Connection = (HttpURLConnection) url.openConnection();// (HttpURLConnection)
-																// url.openConnection();
-		Connection.setDoOutput(true);
+	private static void setRequestSettings() {
+		try {
+			log.debug("Setting Request Settings");
+			connection.setRequestMethod("PUT");
+			connection.setRequestProperty("Content-Type", "application/json");
+		} catch (ProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void sendLight(String color) {
+		initializeConnection();
 		setRequestSettings();
-		Connection.disconnect();
-	}
+		try {
+			connection.connect();
 
-	private static void setRequestSettings() throws IOException {
+			// on = true | off = false
+			String input = "{ \"on\": true, " + color + "}";
 
-		log.info("Setting Request Settings");
-		Connection.setRequestMethod("PUT");
-		Connection.setRequestProperty("Content-Type", "application/json");
-	}
+			log.debug("Getting Output Stream");
+			OutputStream os = connection.getOutputStream();
+			log.debug("Writing input");
+			os.write(input.getBytes());
+			log.debug("Flushing Output Stream");
+			os.flush();
+			log.debug("Closing Output Stream");
+			os.close();
 
-	private static void sendLight(String color) throws IOException {
-		Connection.connect();
+			InputStream is = connection.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader((is)));
 
-		// on = true | off = false
-		String input = "{ \"on\": true, " + color + "}";
+			String output;
+			log.debug("Output from Server: ");
+			while ((output = br.readLine()) != null) {
+				log.info(output);
+			}
 
-		log.info("Getting Output Stream");
-		OutputStream os = Connection.getOutputStream();
-		log.info("Writing input");
-		os.write(input.getBytes());
-		log.info("Flushing Output Stream");
-		os.flush();
-		log.info("Closing Output Stream");
-		os.close();
+			if (connection.getResponseCode() != 200) {
+				throw new RuntimeException();
+			}
 
-		InputStream is = Connection.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader((is)));
-
-		String output;
-		log.info("Output from Server: ");
-		while ((output = br.readLine()) != null) {
-			log.info(output);
+			connection.disconnect();
+		} catch (IOException e) {
+			log.error("Request failed! " + e.getLocalizedMessage());
 		}
-
-		if (Connection.getResponseCode() != 200) {
-			throw new RuntimeException("Request failed! HTTP error code : " + Connection.getResponseCode());
-		}
-
-		Connection.disconnect();
 	}
 
 	private void setLightGreen() {
-
-		if (instance == null) {
-			log.error("Light Handler not initialized!");
-			return;
-		}
-
-		try {
-			sendLight(LightHandler.GREEN);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.error("Could not set light to green!");
-			e.printStackTrace();
-		}
+		sendLight(LightHandler.GREEN);
 	}
 
 	private void setLightRed() {
-
-		if (instance == null) {
-			log.error("Light Handler not initialized!");
-			return;
-		}
-
-		try {
-			sendLight(LightHandler.RED);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.error("Could not set light to red!");
-			e.printStackTrace();
-		}
+		sendLight(LightHandler.RED);
 	}
 
 	private void setLightYellow() {
+		sendLight(LightHandler.YELLOW);
+	}
 
-		if (instance == null) {
-			log.error("Light Handler not initialized!");
-			return;
-		}
-
-		try {
-			sendLight(LightHandler.YELLOW);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.error("Could not set light to yellow!");
-			e.printStackTrace();
-		}
+	private void setLightBlue() {
+		sendLight(LightHandler.BLUE);
 	}
 
 	private void setLightBlue() {
@@ -160,23 +148,29 @@ public class LightHandler extends SickHandler {
 			log.error("Could not set light to blue!");
 			e.printStackTrace();
 		}
+	private void setLightWhite() {
+		sendLight(LightHandler.WHITE);
+	private void setLightWhite() {
+		sendLight(LightHandler.WHITE);
 	}
 
-	public void setLight(String color) {
+	public void setLight(SickColor color) {
 		switch (color) {
-		case "BLUE":
+		case BLUE:
 			setLightBlue();
 			break;
-		case "GREEN":
+		case GREEN:
 			setLightGreen();
 			break;
-		case "YELLOW":
+		case YELLOW:
 			setLightYellow();
 			break;
-		case "RED":
+		case RED:
 			setLightRed();
+			break;
+		case WHITE:
+			setLightWhite();
 			break;
 		}
 	}
-
 }

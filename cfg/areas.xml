@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <areas>
     <area>
-        <id>1</id>
+        <id>8</id>
         <name>Level 0</name>
         <layer>2</layer>
         <shape>
@@ -26,7 +26,7 @@
         <distanceToRobot>3.0</distanceToRobot>
     </area>
     <area>
-        <id>2</id>
+        <id>9</id>
         <name>Lever 1</name>
         <layer>2</layer>
         <shape>
@@ -51,7 +51,7 @@
         <distanceToRobot>4.0</distanceToRobot>
     </area>
     <area>
-        <id>3</id>
+        <id>10</id>
         <name>Lever 2</name>
         <layer>2</layer>
         <shape>
@@ -76,7 +76,7 @@
         <distanceToRobot>5.0</distanceToRobot>
     </area>
     <area>
-        <id>4</id>
+        <id>11</id>
         <name>Lever 3</name>
         <layer>2</layer>
         <shape>

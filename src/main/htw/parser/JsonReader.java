@@ -26,8 +26,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonReader {
+
+	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private static JSONParser parser = new JSONParser();
 
@@ -81,18 +85,25 @@ public class JsonReader {
 	}
 
 	public static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
-		// InputStream is = null;
-		try {
-			InputStream is = getContent(url);
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-			String jsonText = readAll(rd);
-			Object obj = parser.parse(jsonText);
-			JSONArray json = (JSONArray) obj;
-			return json;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		int timeoutTrysCounter = 1;
+		JSONArray jsonArray = null;
+		while (jsonArray == null && timeoutTrysCounter < 10) {
+			try {
+				InputStream is = getContent(url);
+				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+				String jsonText = readAll(rd);
+				Object obj = parser.parse(jsonText);
+				jsonArray = (JSONArray) obj;
+				log.info("Areas read from Zigpos: " + jsonArray.toJSONString());
+				return jsonArray;
+			} catch (Exception e) {
+				log.error(
+						"Can not read Areas from Zigpos! the following Exception Occured:  " + e.getLocalizedMessage());
+				timeoutTrysCounter++;
+				log.info("Try to read Areas again! " + timeoutTrysCounter + " try...");
+			}
 		}
+		return null;
 	}
 
 	public static JSONObject readJsonObjectFromUrl(String url) throws IOException, JSONException {

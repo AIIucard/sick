@@ -3,7 +3,6 @@ package main.htw.handler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -16,6 +15,9 @@ import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javafx.util.Pair;
+import main.htw.utils.SickColor;
 
 public class DMNHandler {
 	private static Object lock = new Object();
@@ -31,7 +33,7 @@ public class DMNHandler {
 		// Use getInstance
 	}
 
-	public static DMNHandler getInstance() throws IOException {
+	public static DMNHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
 				if (instance == null) {
@@ -61,10 +63,10 @@ public class DMNHandler {
 		}
 	}
 
-	public DmnDecisionRuleResult evaluateDecision(String role, int geofence) {
+	public Pair<Integer, SickColor> evaluateDecision(String role, int geofenceLevel) {
 
 		// Create Input Variables
-		VariableMap variables = Variables.createVariables().putValue("role", role).putValue("geofence", geofence);
+		VariableMap variables = Variables.createVariables().putValue("role", role).putValue("geofence", geofenceLevel);
 
 		int decisionTableSize = decisionList.size();
 
@@ -89,7 +91,24 @@ public class DMNHandler {
 		if (decisionTableResult != null) {
 			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
 			log.info("The result is =" + dmnDecisionRuleResult.values());
-			return dmnDecisionRuleResult;
+			String resultAsString = dmnDecisionRuleResult.values().toString();
+			resultAsString = resultAsString.replace("[", "");
+			resultAsString = resultAsString.replace("]", "");
+			String robotSafetyLevel = resultAsString.split(",")[0];
+			String lightColor = resultAsString.split(",")[1];
+			switch (lightColor) {
+			case "BLUE":
+				return new Pair<Integer, SickColor>(new Integer(robotSafetyLevel), SickColor.BLUE);
+			case "GREEN":
+				return new Pair<Integer, SickColor>(new Integer(robotSafetyLevel), SickColor.GREEN);
+			case "YELLOW":
+				return new Pair<Integer, SickColor>(new Integer(robotSafetyLevel), SickColor.YELLOW);
+			case "RED":
+				return new Pair<Integer, SickColor>(new Integer(robotSafetyLevel), SickColor.RED);
+			default:
+				log.error("No result found!");
+				return null;
+			}
 		} else {
 			log.error("No result found!");
 			return null;

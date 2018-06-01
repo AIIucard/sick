@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveBadge;
+import main.htw.datamodell.RoleType;
+import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
-import main.htw.handler.RobotHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
@@ -49,9 +51,9 @@ public class BusinessLogicService extends Service<Void> {
 			protected Void call() throws Exception {
 				boolean isChanged = false;
 				String eventType = (String) payload.get("eventType");
-				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("adress"));
+				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("address"));
 				ActiveArea activeAreaToChange = AreaManager
-						.getActiveAreaByID(Integer.parseInt((String) payload.get("areaId")));
+						.getActiveAreaByID(Integer.parseInt(String.valueOf(payload.get("areaId"))));
 
 				switch (eventType) {
 				case "IN":
@@ -66,8 +68,8 @@ public class BusinessLogicService extends Service<Void> {
 									+ "!");
 						}
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
-								+ payload.get("adress"));
+						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
 					break;
@@ -79,8 +81,8 @@ public class BusinessLogicService extends Service<Void> {
 						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge, activeAreaToChange);
 						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and adress: "
-								+ payload.get("adress"));
+						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
 					break;
@@ -90,12 +92,12 @@ public class BusinessLogicService extends Service<Void> {
 					break;
 				}
 
-				if (database.getRobotConnectionStatus() == ConnectionStatusType.OK) {
+				if (database.getRobotConnectionStatus() == ConnectionStatusType.ERROR) {
 					// TODO: Implement Reconnect Service
 					database.setRobotReconnected(true);
 				}
 
-				if (database.getLightConnectionStatus() == ConnectionStatusType.OK) {
+				if (database.getLightConnectionStatus() == ConnectionStatusType.ERROR) {
 					// TODO: Implement Reconnect Service
 					database.setLightReconnected(true);
 				}
@@ -110,15 +112,35 @@ public class BusinessLogicService extends Service<Void> {
 				}
 
 				if (isChanged) {
-					// RETURN for DMNHandler
-					// DMNHandler.getInstance().evaluateDecision(role, geofence);
-					// Parse Decision
-					LightHandler.getInstance().setLight(SickColor.BLUE.toString());
-					RobotHandler.getInstance().sendSecurityLevel(-1);
+					ActiveArea nearestActiveArea = database.getNearestActiveArea();
+					if (nearestActiveArea == null) {
+						// RobotHandler.getInstance().sendSecurityLevel(10);
+						log.info("SpeedLvl: " + 10 + " Light: " + SickColor.WHITE);
+						LightHandler.getInstance().setLight(SickColor.WHITE);
+					} else {
+						Pair<Integer, SickColor> decision = null;
+
+						if (database.isGodModeActive()) {
+							decision = DMNHandler.getInstance().evaluateDecision(
+									nearestActiveArea.getHighestRoleType().toString(), nearestActiveArea.getLevel());
+						} else {
+							RoleType lowestRole = AreaManager.getLowestRoleInActiveArea(nearestActiveArea);
+							decision = DMNHandler.getInstance().evaluateDecision(lowestRole.toString(),
+									nearestActiveArea.getLevel());
+						}
+						if (decision != null) {
+							// RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
+							LightHandler.getInstance().setLight(decision.getValue());
+							log.info("SpeedLvl: " + decision.getKey().intValue() + " Light: " + decision.getValue());
+						} else {
+							log.error("No Decision available! Can not change robot speed and ligth!");
+						}
+					}
 				}
 				return null;
 			}
 		};
+
 	}
 
 	private void addBadgeToActiveBadges(JSONObject payload) {
@@ -139,14 +161,12 @@ public class BusinessLogicService extends Service<Void> {
 	}
 
 	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
-		// Check for role!
-		// TODO: Implement
-		return false;
+		return AreaManager.updateNearestActiveAreaOUT(badge, activeAreaWithoutBadge);
 	}
 
 	private boolean updateNearestActiveArea(ActiveBadge badge) {
 		// Check for role!
-		// TODO: Implement
+		// TODO: Implement for Reconect
 		return false;
 	}
 }

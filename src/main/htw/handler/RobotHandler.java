@@ -13,8 +13,10 @@ import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.client.UaClient;
 
+import main.htw.database.SickDatabase;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.ConnectionStatusType;
 
 public class RobotHandler extends SickHandler {
 
@@ -64,7 +66,9 @@ public class RobotHandler extends SickHandler {
 		identity.setApplicationDescription(appDescription);
 		client.setApplicationIdentity(identity);
 		client.connect();
-
+		// TODO Fix this
+		SickDatabase database = SickDatabase.getInstance();
+		database.setRobotConnectionStatus(ConnectionStatusType.OK);
 		log.info("Connection succsessful");
 	}
 
@@ -74,6 +78,7 @@ public class RobotHandler extends SickHandler {
 			NodeId nodeId = new NodeId(3, "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
 
 			if (client.writeAttribute(nodeId, Attributes.Value, new Short(new Integer(securityLevel).toString()))) {
+				// TODO
 				log.info("Write attribute check" + securityLevel);
 			}
 

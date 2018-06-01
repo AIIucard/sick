@@ -1,6 +1,7 @@
 package main.htw.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
+import main.htw.datamodell.ActiveAreaComparator;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.properties.CFGPropertyManager;
@@ -62,6 +64,7 @@ public class AreaManager {
 
 				// Update Badge List
 				currentActiveArea.addActiveBadge(activeBadge);
+				activeAreaWithBadge = currentActiveArea;
 
 				// Update Highest Role
 				RoleType role = activeBadge.getRole();
@@ -95,9 +98,6 @@ public class AreaManager {
 					}
 				}
 
-				// Update Badge List
-				currentActiveArea.removeActiveBadge(activeBadge);
-
 				// Update Highest Role
 				RoleType role = activeBadge.getRole();
 				if (activeBadge.getRole().equals(RoleType.PROFESSOR) && professorNumber == 1) {
@@ -112,6 +112,8 @@ public class AreaManager {
 
 				// Update Badge List
 				currentActiveArea.removeActiveBadge(activeBadge);
+				activeAreaWithoutBadge = currentActiveArea;
+				break;
 			}
 		}
 		return activeAreaWithoutBadge;
@@ -128,6 +130,17 @@ public class AreaManager {
 
 		log.error("Active Area with ID '" + ID + "' not found!");
 		return null;
+	}
+
+	public static boolean checkIfActiveAreaExistsByID(int id) {
+		SickDatabase database = SickDatabase.getInstance();
+		List<ActiveArea> activeAreas = database.getActiveAreasList();
+		for (ActiveArea activeArea : activeAreas) {
+			if (activeArea.getArea().getId().intValue() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static Area addNewArea(String areaName, Double distanceToRobot) {
@@ -239,6 +252,7 @@ public class AreaManager {
 		} else {
 			if (activeAreaWithBadge.getLevel() < nearestActiveArea.getLevel()) {
 				nearestActiveArea = activeAreaWithBadge;
+				database.setNearestActiveArea(nearestActiveArea);
 				return true;
 			} else if (activeAreaWithBadge.getLevel() == nearestActiveArea.getLevel()) {
 				// True because check for Role
@@ -246,5 +260,47 @@ public class AreaManager {
 			}
 		}
 		return false;
+	}
+
+	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
+		SickDatabase database = SickDatabase.getInstance();
+		ActiveArea nearestActiveArea = database.getNearestActiveArea();
+		int lastLevel = -1;
+		if (nearestActiveArea.getArea().getId().equals(activeAreaWithoutBadge.getArea().getId())) {
+			if (nearestActiveArea.getContaingBatchesList().size() == 0) {
+				lastLevel = nearestActiveArea.getLevel();
+				nearestActiveArea = null;
+				ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
+				Collections.sort(activeAreasList, new ActiveAreaComparator());
+				for (ActiveArea currentActiveArea : activeAreasList) {
+					if (currentActiveArea.getLevel() > lastLevel
+							&& currentActiveArea.getContaingBatchesList().size() > 0) {
+						nearestActiveArea = currentActiveArea;
+						database.setNearestActiveArea(nearestActiveArea);
+						return true;
+					}
+				}
+			}
+		}
+		// Check for leaving geofence
+		if (lastLevel == 3 && nearestActiveArea == null) {
+			database.setNearestActiveArea(nearestActiveArea);
+			return true;
+		}
+		return false;
+	}
+
+	public static RoleType getLowestRoleInActiveArea(ActiveArea activeArea) {
+		RoleType lowestRole = activeArea.getHighestRoleType();
+		List<ActiveBadge> containgBatchesList = activeArea.getContaingBatchesList();
+		for (ActiveBadge activeBadge : containgBatchesList) {
+			if (lowestRole == RoleType.PROFESSOR && (activeBadge.getRole().equals(RoleType.LABORANT)
+					|| activeBadge.getRole().equals(RoleType.VISITOR))) {
+				lowestRole = activeBadge.getRole();
+			} else if (lowestRole == RoleType.LABORANT || activeBadge.getRole().equals(RoleType.VISITOR)) {
+				lowestRole = activeBadge.getRole();
+			}
+		}
+		return lowestRole;
 	}
 }

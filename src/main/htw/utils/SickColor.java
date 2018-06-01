@@ -2,7 +2,7 @@ package main.htw.utils;
 
 public enum SickColor {
 
-	BLUE("BLUE"), GREEN("GREEN"), YELLOW("YELLOW"), RED("RED");
+	BLUE("BLUE"), GREEN("GREEN"), YELLOW("YELLOW"), RED("RED"), WHITE("WHITE");
 
 	private final String colorAsString;
 

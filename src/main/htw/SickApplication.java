@@ -52,6 +52,7 @@ import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EditAreaGUI;
+import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
 import main.htw.manager.AreaManager;
 import main.htw.properties.CFGPropertyManager;
@@ -189,8 +190,8 @@ public class SickApplication extends Application implements Observer {
 		borderPane.setCenter(centerVBox);
 		centerVBox.getChildren().add(areaTable);
 
-		// EmulatorGUI emulatorGUI = new EmulatorGUI();
-		// borderPane.setBottom();
+		EmulatorGUI emulatorGUI = new EmulatorGUI();
+		borderPane.setBottom(emulatorGUI);
 
 		primaryStage.setScene(new Scene(borderPane, width, height));
 	}
