@@ -263,6 +263,7 @@ public class AreaManager {
 	}
 
 	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
+		boolean isChanged = false;
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
 		int lastLevel = -1;

@@ -50,10 +50,18 @@ public class BusinessLogicService extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				boolean isChanged = false;
+				RoleType previousHighestRoleType = null;
 				String eventType = (String) payload.get("eventType");
 				ActiveBadge activeBadge = BadgeManager.getActiveBadgeByAddress((String) payload.get("address"));
 				ActiveArea activeAreaToChange = AreaManager
 						.getActiveAreaByID(Integer.parseInt(String.valueOf(payload.get("areaId"))));
+
+				// Save highest role type for god mode is changed
+				if (database.isGodModeActive()) {
+					if (database.getNearestActiveArea() != null) {
+						previousHighestRoleType = database.getNearestActiveArea().getHighestRoleType();
+					}
+				}
 
 				switch (eventType) {
 				case "IN":
@@ -84,6 +92,13 @@ public class BusinessLogicService extends Service<Void> {
 						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
 								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
+					}
+
+					// Check for roleChange
+					if (database.isGodModeActive()) {
+						if (!database.getNearestActiveArea().getHighestRoleType().equals(previousHighestRoleType)) {
+							isChanged = true;
+						}
 					}
 					break;
 

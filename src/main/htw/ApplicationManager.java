@@ -91,7 +91,9 @@ public class ApplicationManager {
 	}
 
 	public void handleGeofenceEvent(JSONObject payload) {
-		BusinessLogicService businessLogicService = new BusinessLogicService(SickDatabase.getInstance(), payload);
-		businessLogicService.start();
+		if (isRunning) {
+			BusinessLogicService businessLogicService = new BusinessLogicService(SickDatabase.getInstance(), payload);
+			businessLogicService.start();
+		}
 	}
 }

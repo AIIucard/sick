@@ -111,7 +111,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	 */
 	@Override
 	public void onTextMessage(WebSocket ws, String message) {
-		log.info("Sick MessageHandler received a message!");
+		log.debug("Sick MessageHandler received a message!");
 		handleMessage(message);
 	}
 
