@@ -20,7 +20,6 @@ public class LightHandler extends SickHandler {
 	private static final String YELLOW = "\"xy\": [0.499226, 0.478163]";
 	private static final String GREEN = "\"xy\": [0.126289, 0.815775]";
 	private static final String BLUE = "\"xy\": [0.157309, 0.0214311]";
-	private static final String BLUE = "\"xy\": [0.157309, 0.0214311]";
 	private static final String WHITE = "\"xy\": [0.157309, 0.0214311]"; // TODO change in white
 
 	private static HttpURLConnection connection;
@@ -135,21 +134,6 @@ public class LightHandler extends SickHandler {
 		sendLight(LightHandler.BLUE);
 	}
 
-	private void setLightBlue() {
-		if (instance == null) {
-			log.error("Light Handler not initialized!");
-			return;
-		}
-
-		try {
-			sendLight(LightHandler.BLUE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.error("Could not set light to blue!");
-			e.printStackTrace();
-		}
-	private void setLightWhite() {
-		sendLight(LightHandler.WHITE);
 	private void setLightWhite() {
 		sendLight(LightHandler.WHITE);
 	}
