@@ -119,16 +119,29 @@ public class AreaManager {
 		return activeAreaWithoutBadge;
 	}
 
-	public static ActiveArea getActiveAreaByID(Integer ID) {
+	public static Area getAreaByID(Long id) {
+		SickDatabase database = SickDatabase.getInstance();
+		List<Area> areas = database.getAreaList().getAreas();
+
+		for (Area area : areas) {
+			if (area.getId() == id.intValue())
+				return area;
+		}
+
+		log.error("Area with ID '" + id + "' not found!");
+		return null;
+	}
+
+	public static ActiveArea getActiveAreaByID(Integer id) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<ActiveArea> activeAreas = database.getActiveAreasList();
 
 		for (ActiveArea activeArea : activeAreas) {
-			if (activeArea.getArea().getId() == ID)
+			if (activeArea.getArea().getId() == id)
 				return activeArea;
 		}
 
-		log.error("Active Area with ID '" + ID + "' not found!");
+		log.error("Active Area with ID '" + id + "' not found!");
 		return null;
 	}
 
@@ -263,7 +276,6 @@ public class AreaManager {
 	}
 
 	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
-		boolean isChanged = false;
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
 		int lastLevel = -1;
@@ -287,6 +299,16 @@ public class AreaManager {
 		if (lastLevel == 3 && nearestActiveArea == null) {
 			database.setNearestActiveArea(nearestActiveArea);
 			return true;
+		}
+		return false;
+	}
+
+	public static boolean isAreaInDataBase(Long id) {
+		SickDatabase database = SickDatabase.getInstance();
+		for (Area areaToCheck : database.getAreaList().getAreas()) {
+			if (areaToCheck.getId() == id.intValue()) {
+				return true;
+			}
 		}
 		return false;
 	}

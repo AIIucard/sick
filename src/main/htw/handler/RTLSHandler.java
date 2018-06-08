@@ -26,10 +26,9 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
-import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
-import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
+import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.parser.JavaToJson;
 import main.htw.parser.JsonReader;
@@ -37,9 +36,7 @@ import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.xml.Area;
 import main.htw.xml.AreaComparator;
-import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
-import main.htw.xml.BadgeList;
 
 /**
  * ChatServer Client
@@ -51,10 +48,8 @@ public class RTLSHandler extends SickHandler {
 
 	private SickMessageHandler sickMessageHandler = null;
 
-	private WebSocketFactory factory = new WebSocketFactory();
 	private WebSocket websocket;
 	private static final String REGISTER_GEO_FENCE_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"GEOFENCING_EVENT\"]}";
-	private static final String REGISTER_POSITION_MSG = "{\"topic\":\"REGISTER\",\"payload\":[\"POSITION\"]}";
 
 	private static Object lock = new Object();
 	private static RTLSHandler instance = null;
@@ -104,7 +99,7 @@ public class RTLSHandler extends SickHandler {
 	public void registerGeoFence() {
 		log.info("Registering to topic GEOFENCEING_EVENT...");
 		if (sickMessageHandler == null) {
-			log.warn("sickMessagehandler is not initiliazed!");
+			log.warn("SickMessagehandler is not initiliazed!");
 		}
 		websocket.addListener(sickMessageHandler);
 		try {
@@ -116,7 +111,8 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
-	public void addArea(Area area) {
+	// TODO. Currently unused! Check if needed!
+	public void addAreaToZigpos(Area area) {
 		log.info("Adding new Area to Zigpos...");
 		String jsonFormattedString = JavaToJson.getAreaJson(area);
 		log.info("Our fine litte json Text IS: " + jsonFormattedString);
@@ -155,19 +151,18 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void editArea(Area editArea) {
+		// TODO implement me!
 		log.info("Editing Area in Zigpos...");
 		log.warn("NOT IMPLEMENTED");
 	}
 
-	public List<Area> getAllAreas() {
-		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
+	private List<Area> getAllAreasForLayerFromZigpos(Long sickLayer) {
 		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 		JSONArray jsonArray;
 
-		log.info("Getting All Areas");
-
 		try {
+			log.info("Getting All Areas from Zigpos...");
 			jsonArray = JsonReader.readJsonArrayFromUrl(urlString);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -177,97 +172,44 @@ public class RTLSHandler extends SickHandler {
 
 		List<Area> zigposAreaList = new ArrayList<Area>();
 
-		for (Object o : jsonArray) {
-			JSONObject jArea = (JSONObject) o;
+		for (Object obj : jsonArray) {
+			JSONObject jsonAreaObj = (JSONObject) obj;
 
-			Long id = (Long) jArea.get("id");
-			Long layer = (Long) jArea.get("layer");
-			String name = (String) jArea.get("name");
-			// JSONObject shape = (JSONObject) jArea.get("shape");
-			// JSONArray coordinates = (JSONArray) shape.get("coordinates");
+			Long id = (Long) jsonAreaObj.get("id");
+			Long layer = (Long) jsonAreaObj.get("layer");
+			String name = (String) jsonAreaObj.get("name");
 
 			if (layer == sickLayer) {
-				Area newZigposArea = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
-
-				// Check if area already exists in database
-				SickDatabase database = SickDatabase.getInstance();
-				AreaList areaList = database.getAreaList();
-				if (areaList != null) {
-					for (Area currentArea : areaList.getAreas()) {
-						if (currentArea.getId() == newZigposArea.getId()) {
-							newZigposArea.setDistanceToRobot(currentArea.getDistanceToRobot());
-						}
-					}
-
-					zigposAreaList.add(newZigposArea);
-
-				} else {
-					log.error("Area list is null!");
+				if (AreaManager.isAreaInDataBase(id)) {
+					Area newArea = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
+					newArea.setDistanceToRobot(AreaManager.getAreaByID(id).getDistanceToRobot());
+					zigposAreaList.add(newArea);
 				}
 			}
 		}
-
 		return zigposAreaList;
 	}
 
-	public void tryReconnect() {
-		log.debug("Recreating Websocket");
-		WebSocketFactory factory = new WebSocketFactory();
-		SSLContext context;
-		try {
-			context = NaiveSSLContext.getInstance("TLS");
-			factory.setSSLContext(context);
-			factory.setVerifyHostname(false);
-			websocket = factory.createSocket(uri);
-			websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
-			websocket.connect();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (WebSocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	public void getActiveBadges() {
-		SickDatabase sickDatabase = SickDatabase.getInstance();
 		JSONArray jsonBadgeArray;
 		try {
-			// Read JSON from URL
 			String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
 			jsonBadgeArray = JsonReader.readJsonArrayFromUrl(urlString);
 
 			for (Object badgeObj : jsonBadgeArray) {
 				JSONObject jsonBadge = (JSONObject) badgeObj;
-
 				String address = (String) jsonBadge.get("address");
-				// Is Badge Address in XMLS Badges?
-				// yes => do nothing
-				// no => add to DB
-				BadgeList badgeList = sickDatabase.getBadgeList();
+				String name = (String) jsonBadge.get("customName");
+
 				if (!BadgeManager.isBadgeInDataBase(address)) {
-					badgeList.addBadge(new Badge(address, RoleType.VISITOR));
-					log.info("Badge added! ");
+					BadgeManager.addBadge(new Badge(address, name, RoleType.VISITOR));
 				}
 
-				Boolean connected = (Boolean) jsonBadge.get("connected");
-
-				// Is connected == true?
-				// yes => get role from XML Badge
-				// && create ActiveBadge
-				// no => ignore
-				if (connected) {
+				Boolean isBadgeConnected = (Boolean) jsonBadge.get("connected");
+				if (isBadgeConnected) {
 					Badge badge = BadgeManager.getBadgeByAddress(address);
-					ActiveBadge activeBadge = new ActiveBadge(badge);
-					if (!BadgeManager.isActiveBadgeInDataBase(activeBadge.getAddress())) {
-						sickDatabase.getActiveBadgesList().add(activeBadge);
-						log.info("Badge connected! ");
-					}
+					BadgeManager.addBadgeToActiveBadges(badge);
 				}
 			}
 			log.info("Devices found: " + jsonBadgeArray.size());
@@ -292,10 +234,12 @@ public class RTLSHandler extends SickHandler {
 
 	}
 
-	public ArrayList<ActiveArea> getActiveAreasFromZigpos() {
+	public ArrayList<ActiveArea> getActiveAreas() {
+
+		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
+		List<Area> areas = getAllAreasForLayerFromZigpos(sickLayer);
 
 		// Sort Areas by distance
-		List<Area> areas = getAllAreas();
 		Collections.sort(areas, new AreaComparator());
 
 		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();
@@ -315,5 +259,28 @@ public class RTLSHandler extends SickHandler {
 		activeAreas.sort(Comparator.comparing(ActiveArea::getLevel));
 
 		return activeAreas;
+	}
+
+	public void tryReconnect() {
+		log.debug("Recreating Websocket");
+		WebSocketFactory factory = new WebSocketFactory();
+		SSLContext context;
+		try {
+			context = NaiveSSLContext.getInstance("TLS");
+			factory.setSSLContext(context);
+			factory.setVerifyHostname(false);
+			websocket = factory.createSocket(uri);
+			websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
+			websocket.connect();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WebSocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

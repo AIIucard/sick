@@ -52,14 +52,18 @@ import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 import main.htw.gui.ConfigureRobotPositionGUI;
 import main.htw.gui.EditAreaGUI;
+import main.htw.gui.EditBadgeGUI;
 import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
 import main.htw.manager.AreaManager;
+import main.htw.manager.BadgeManager;
 import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.Area;
 import main.htw.xml.AreaList;
+import main.htw.xml.Badge;
+import main.htw.xml.BadgeList;
 import main.htw.xml.XMLMarshler;
 
 public class SickApplication extends Application implements Observer {
@@ -77,6 +81,12 @@ public class SickApplication extends Application implements Observer {
 	private static final String DISTANCE_COLUMN = "Distance to Robot";
 	private static final String EDIT_AREA_BUTTON = "Edit";
 
+	private static final String BADGES_TITLE = "Badges";
+	private static final String ADRESS_COLUMN = "ID";
+	private static final String BADGE_NAME_COLUMN = "Name";
+	private static final String ROLE_COLUMN = "Role";
+	private static final String EDIT_BADGE_BUTTON = "Edit";
+
 	private static CFGPropertyManager propManager = null;
 	private static XMLMarshler xmlMarshaller = null;
 	private static ApplicationManager appManager = null;
@@ -84,16 +94,22 @@ public class SickApplication extends Application implements Observer {
 	private Button startButton;
 	private Button stopButton;
 	private Button editAreaButton;
+	private Button editBadgeButton;
 	private CheckBox visitorModeCheckBox;
-	private boolean isEditDisabled = false;
+	private boolean isEditAreaDisabled = false;
+	private boolean isEditBadgeDisabled = false;
 
 	private static double width = 200;
 	private static double height = 200;
 
 	private static MenuBar sickMenuBar = null;
-	private static TableView<Area> table = null;
-	private static ObservableList<Area> tableData = null;
+	private static TableView<Area> areaTable = null;
+	private static ObservableList<Area> areaTableData = null;
 	private static FlowPane areaButtonPane = null;
+
+	private static TableView<Badge> badgeTable = null;
+	private static ObservableList<Badge> badgeTableData = null;
+	private static FlowPane badgeButtonPane = null;
 
 	private Map<String, Image> appIconSet = new LinkedHashMap<>();
 	private ObjectProperty<ConnectionStatusType> rtlsStatus = new SimpleObjectProperty<>(ConnectionStatusType.NEW);
@@ -168,7 +184,7 @@ public class SickApplication extends Application implements Observer {
 		});
 	}
 
-	public void createPrimaryStage(Stage primaryStage) {
+	private void createPrimaryStage(Stage primaryStage) {
 
 		primaryStage.setTitle(APP_TITLE);
 		BorderPane borderPane = new BorderPane();
@@ -178,7 +194,7 @@ public class SickApplication extends Application implements Observer {
 
 		HBox startStopButtons = createStartStopButtons(this);
 		GridPane statusArea = createConnectionStatusArea();
-		VBox areaTable = createAreaTable();
+		VBox areaTable = createTables();
 
 		borderPane.setTop(sickMenuBar);
 
@@ -320,7 +336,9 @@ public class SickApplication extends Application implements Observer {
 				stopButton.setDisable(false);
 				visitorModeCheckBox.setDisable(true);
 				editAreaButton.setDisable(true);
-				isEditDisabled = true;
+				editBadgeButton.setDisable(true);
+				isEditAreaDisabled = true;
+				isEditBadgeDisabled = true;
 
 				if (visitorModeCheckBox.isSelected()) {
 					database.setGodMode(true);
@@ -347,7 +365,8 @@ public class SickApplication extends Application implements Observer {
 				startButton.setDisable(false);
 				visitorModeCheckBox.setDisable(false);
 				stopButton.setDisable(true);
-				isEditDisabled = false;
+				isEditAreaDisabled = false;
+				isEditBadgeDisabled = false;
 				resetConnectionStatus();
 				log.info("Stopped Application...");
 			}
@@ -370,13 +389,30 @@ public class SickApplication extends Application implements Observer {
 		database.setLightConnectionStatus(ConnectionStatusType.NEW);
 	}
 
-	@SuppressWarnings("unchecked")
-	private VBox createAreaTable() {
+	private VBox createTables() {
 
-		table = new TableView<Area>();
-		tableData = FXCollections.observableArrayList(SickDatabase.getInstance().getAreaList().getAreas());
-		table.setEditable(true);
-		table.setMaxWidth(width - 20);
+		areaTableData = FXCollections.observableArrayList(SickDatabase.getInstance().getAreaList().getAreas());
+		areaTable = createAreaTable(areaTableData);
+		areaButtonPane = createAreaButtonPane(areaTable);
+
+		badgeTableData = FXCollections.observableArrayList(SickDatabase.getInstance().getBadgeList().getBadges());
+		badgeTable = createBadgeTable(badgeTableData);
+		badgeButtonPane = createBadgeButtonPane(badgeTable);
+
+		final VBox vbox = new VBox();
+		vbox.setSpacing(5);
+		vbox.setPadding(new Insets(10, 0, 0, 10));
+		vbox.getChildren().addAll(areaButtonPane, areaTable, badgeButtonPane, badgeTable);
+
+		return vbox;
+	}
+
+	@SuppressWarnings("unchecked")
+	private TableView<Area> createAreaTable(ObservableList<Area> tableData) {
+		TableView<Area> tableView = new TableView<Area>();
+
+		tableView.setEditable(true);
+		tableView.setMaxWidth(width - 20);
 
 		TableColumn<Area, Integer> idColumn = new TableColumn<Area, Integer>(ID_COLUMN);
 		idColumn.setMinWidth(20);
@@ -394,13 +430,13 @@ public class SickApplication extends Application implements Observer {
 		distanceColumn.setMinWidth(80);
 		distanceColumn.setCellValueFactory(new PropertyValueFactory<Area, Double>("distanceToRobot"));
 
-		table.setItems(tableData);
-		table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
-			handleTableSelection(selectedItems);
+		tableView.setItems(tableData);
+		tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			ObservableList<Area> selectedItems = tableView.getSelectionModel().getSelectedItems();
+			handleAreaTableSelection(selectedItems);
 		});
 
-		table.setRowFactory(new Callback<TableView<Area>, TableRow<Area>>() {
+		tableView.setRowFactory(new Callback<TableView<Area>, TableRow<Area>>() {
 			@Override
 			public TableRow<Area> call(TableView<Area> tableView2) {
 				final TableRow<Area> row = new TableRow<>();
@@ -408,12 +444,12 @@ public class SickApplication extends Application implements Observer {
 					@Override
 					public void handle(MouseEvent event) {
 						final int index = row.getIndex();
-						if (index >= 0 && index < table.getItems().size()
-								&& table.getSelectionModel().isSelected(index)) {
-							table.getSelectionModel().clearSelection();
+						if (index >= 0 && index < tableView.getItems().size()
+								&& tableView.getSelectionModel().isSelected(index)) {
+							tableView.getSelectionModel().clearSelection();
 							event.consume();
-							ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
-							handleTableSelection(selectedItems);
+							ObservableList<Area> selectedItems = tableView.getSelectionModel().getSelectedItems();
+							handleAreaTableSelection(selectedItems);
 						}
 					}
 				});
@@ -421,16 +457,58 @@ public class SickApplication extends Application implements Observer {
 			}
 		});
 
-		table.getColumns().addAll(idColumn, nameColumn, layerColumn, distanceColumn);
+		tableView.getColumns().addAll(idColumn, nameColumn, layerColumn, distanceColumn);
+		return tableView;
+	}
 
-		areaButtonPane = createAreaButtonPane(table);
+	@SuppressWarnings("unchecked")
+	private TableView<Badge> createBadgeTable(ObservableList<Badge> tableData) {
+		TableView<Badge> tableView = new TableView<Badge>();
 
-		final VBox vbox = new VBox();
-		vbox.setSpacing(5);
-		vbox.setPadding(new Insets(10, 0, 0, 10));
-		vbox.getChildren().addAll(areaButtonPane, table);
+		tableView.setEditable(true);
+		tableView.setMaxWidth(width - 20);
 
-		return vbox;
+		TableColumn<Badge, String> addressColumn = new TableColumn<Badge, String>(ADRESS_COLUMN);
+		addressColumn.setMinWidth(20);
+		addressColumn.setCellValueFactory(new PropertyValueFactory<Badge, String>("address"));
+
+		TableColumn<Badge, String> nameColumn = new TableColumn<Badge, String>(BADGE_NAME_COLUMN);
+		nameColumn.setMinWidth(80);
+		nameColumn.setCellValueFactory(new PropertyValueFactory<Badge, String>("name"));
+
+		TableColumn<Badge, String> roleColumn = new TableColumn<Badge, String>(ROLE_COLUMN);
+		roleColumn.setMinWidth(20);
+		roleColumn.setCellValueFactory(new PropertyValueFactory<Badge, String>("role"));
+
+		tableView.setItems(tableData);
+		tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			ObservableList<Badge> selectedItems = tableView.getSelectionModel().getSelectedItems();
+			handleBadgeTableSelection(selectedItems);
+		});
+
+		tableView.setRowFactory(new Callback<TableView<Badge>, TableRow<Badge>>() {
+			@Override
+			public TableRow<Badge> call(TableView<Badge> tableView2) {
+				final TableRow<Badge> row = new TableRow<>();
+				row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						final int index = row.getIndex();
+						if (index >= 0 && index < tableView.getItems().size()
+								&& tableView.getSelectionModel().isSelected(index)) {
+							tableView.getSelectionModel().clearSelection();
+							event.consume();
+							ObservableList<Badge> selectedItems = tableView.getSelectionModel().getSelectedItems();
+							handleBadgeTableSelection(selectedItems);
+						}
+					}
+				});
+				return row;
+			}
+		});
+
+		tableView.getColumns().addAll(addressColumn, nameColumn, roleColumn);
+		return tableView;
 	}
 
 	private FlowPane createAreaButtonPane(TableView<Area> table) {
@@ -452,13 +530,42 @@ public class SickApplication extends Application implements Observer {
 		return areaButtonPane;
 	}
 
-	private void handleTableSelection(ObservableList<Area> selectedItems) {
+	private FlowPane createBadgeButtonPane(TableView<Badge> table) {
+		FlowPane areaButtonPane = new FlowPane();
+		areaButtonPane.setPadding(new Insets(5, 0, 5, 0));
+		areaButtonPane.setVgap(4);
+		areaButtonPane.setHgap(4);
+		areaButtonPane.setPrefWrapLength(width - 20);
+		areaButtonPane.setAlignment(Pos.BOTTOM_LEFT);
+
+		Label label = new Label(BADGES_TITLE);
+		label.setFont(new Font("Source Sans Pro", 20));
+
+		editBadgeButton = createEditBadgeButton(table);
+		editBadgeButton.setDisable(true);
+
+		areaButtonPane.getChildren().addAll(label, editBadgeButton);
+
+		return areaButtonPane;
+	}
+
+	private void handleAreaTableSelection(ObservableList<Area> selectedItems) {
 		if (selectedItems.size() > 1) {
 			editAreaButton.setDisable(true);
-		} else if (selectedItems.size() == 1 && !isEditDisabled) {
+		} else if (selectedItems.size() == 1 && !isEditAreaDisabled) {
 			editAreaButton.setDisable(false);
 		} else {
 			editAreaButton.setDisable(true);
+		}
+	}
+
+	private void handleBadgeTableSelection(ObservableList<Badge> selectedItems) {
+		if (selectedItems.size() > 1) {
+			editBadgeButton.setDisable(true);
+		} else if (selectedItems.size() == 1 && !isEditBadgeDisabled) {
+			editBadgeButton.setDisable(false);
+		} else {
+			editBadgeButton.setDisable(true);
 		}
 	}
 
@@ -479,8 +586,8 @@ public class SickApplication extends Application implements Observer {
 
 					Area editArea = AreaManager.editArea(selectedArea, nameDistance.getKey(), nameDistance.getValue());
 					int pos = 0;
-					for (int i = 0; i < tableData.size(); ++i) {
-						Area currentArea = tableData.get(i);
+					for (int i = 0; i < areaTableData.size(); ++i) {
+						Area currentArea = areaTableData.get(i);
 						if (currentArea.getName().equals(selectedArea.getName())
 								&& currentArea.getDistanceToRobot().equals(selectedArea.getDistanceToRobot())) {
 							currentArea.setName(nameDistance.getKey());
@@ -489,8 +596,40 @@ public class SickApplication extends Application implements Observer {
 							break;
 						}
 					}
-					tableData.set(pos, editArea);
+					areaTableData.set(pos, editArea);
 					RTLSHandler.getInstance().editArea(editArea);
+				});
+			}
+		});
+		return button;
+	}
+
+	private Button createEditBadgeButton(TableView<Badge> table) {
+		Button button = new Button();
+		button.setText(EDIT_BADGE_BUTTON);
+		button.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				log.debug("Edit Badge button hitted...");
+				Dialog<String> dialog = new EditBadgeGUI(table);
+				Optional<String> result = dialog.showAndWait();
+
+				result.ifPresent(role -> {
+					ObservableList<Badge> selectedItems = table.getSelectionModel().getSelectedItems();
+					Badge selectedBadge = selectedItems.get(0);
+
+					Badge editBadge = BadgeManager.editBadge(selectedBadge, role);
+					int pos = 0;
+					for (int i = 0; i < badgeTableData.size(); ++i) {
+						Badge currentBadge = badgeTableData.get(i);
+						if (currentBadge.getAddress().equals(selectedBadge.getAddress())) {
+							currentBadge.setRole(role);
+							pos = i;
+							break;
+						}
+					}
+					badgeTableData.set(pos, editBadge);
 				});
 			}
 		});
@@ -501,9 +640,9 @@ public class SickApplication extends Application implements Observer {
 		primaryStage.getScene().widthProperty().addListener((obs, oldVal, newVal) -> {
 			if (propManager != null) {
 				propManager.setProperty(PropertiesKeys.APP_WIDTH, "" + newVal);
-				table.setMaxWidth(newVal.doubleValue() - 20);
+				areaTable.setMaxWidth(newVal.doubleValue() - 20);
 				areaButtonPane.setMaxWidth(newVal.doubleValue() - 20);
-				table.refresh();
+				areaTable.refresh();
 			} else {
 				log.error("Cannot change app width property!");
 			}
@@ -521,13 +660,15 @@ public class SickApplication extends Application implements Observer {
 	private void saveData() {
 		try {
 			AreaList areaList = SickDatabase.getInstance().getAreaList();
+			BadgeList badgeList = SickDatabase.getInstance().getBadgeList();
 			if (propManager != null) {
 				propManager.storeProperties();
 			} else {
 				log.error("Cannot store properties!");
 			}
-			if (xmlMarshaller != null && areaList != null) {
+			if (xmlMarshaller != null && areaList != null && badgeList != null) {
 				xmlMarshaller.marshalAreaList(areaList);
+				xmlMarshaller.marshalBadgeList(badgeList);
 			} else {
 				log.error("Cannot store areas!");
 			}

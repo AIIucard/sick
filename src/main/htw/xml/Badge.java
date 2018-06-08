@@ -12,13 +12,15 @@ public class Badge {
 
 	private String address;
 	private String role;
+	private String name;
 
 	public Badge() {
 		// Default constructor
 	}
 
-	public Badge(String address, RoleType visitor) {
+	public Badge(String address, String name, RoleType visitor) {
 		this.address = address;
+		this.name = name;
 		this.role = visitor.toString();
 	}
 
@@ -28,6 +30,14 @@ public class Badge {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getRole() {
