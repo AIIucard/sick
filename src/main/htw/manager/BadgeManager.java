@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.htw.SickApplication;
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
@@ -92,5 +93,30 @@ public class BadgeManager {
 			}
 		}
 		return oldBadge;
+	}
+
+	public static void updateBadgeName(String address, String name) {
+		if (isBadgeInDataBase(address)) {
+			if (!BadgeManager.getBadgeByAddress(address).getName().equals(name)) {
+				SickDatabase database = SickDatabase.getInstance();
+				List<Badge> badgeList = database.getBadgeList().getBadges();
+
+				int pos = 0;
+
+				for (int i = 0; i < badgeList.size(); i++) {
+					Badge badgeToCheck = badgeList.get(i);
+					if (badgeToCheck.getAddress().equals(address)) {
+						pos = i;
+						Badge updateBadge = new Badge(address, name, RoleType.getTypeByString(badgeToCheck.getRole()));
+						badgeList.set(pos, updateBadge);
+						database.getBadgeList().setBadges(badgeList);
+						SickApplication.updateBadgeTable(address, updateBadge);
+						log.info("Update Badge " + address + " Name: " + name);
+					}
+				}
+			}
+		} else {
+			log.error("Badge " + address + " is not in Database!");
+		}
 	}
 }

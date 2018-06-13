@@ -475,6 +475,7 @@ public class SickApplication extends Application implements Observer {
 		TableColumn<Badge, String> nameColumn = new TableColumn<Badge, String>(BADGE_NAME_COLUMN);
 		nameColumn.setMinWidth(80);
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Badge, String>("name"));
+		nameColumn.setSortType(TableColumn.SortType.ASCENDING);
 
 		TableColumn<Badge, String> roleColumn = new TableColumn<Badge, String>(ROLE_COLUMN);
 		roleColumn.setMinWidth(20);
@@ -508,6 +509,7 @@ public class SickApplication extends Application implements Observer {
 		});
 
 		tableView.getColumns().addAll(addressColumn, nameColumn, roleColumn);
+		tableView.getSortOrder().add(nameColumn);
 		return tableView;
 	}
 
@@ -705,5 +707,21 @@ public class SickApplication extends Application implements Observer {
 
 	public void setStopButton(Button stopButton) {
 		this.stopButton = stopButton;
+	}
+
+	public static <T> void updateBadgeTable(String adress, Badge badgeToChange) {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				for (int i = 0; i < badgeTableData.size(); ++i) {
+					if (badgeTableData.get(i).getAddress().equals(adress)) {
+						System.out.println(badgeTableData.get(i).getName());
+						badgeTableData.set(i, badgeToChange);
+					}
+				}
+			}
+		});
+
 	}
 }

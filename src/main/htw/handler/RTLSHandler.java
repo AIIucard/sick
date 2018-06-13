@@ -204,6 +204,8 @@ public class RTLSHandler extends SickHandler {
 
 				if (!BadgeManager.isBadgeInDataBase(address)) {
 					BadgeManager.addBadge(new Badge(address, name, RoleType.VISITOR));
+				} else {
+					BadgeManager.updateBadgeName(address, name);
 				}
 
 				Boolean isBadgeConnected = (Boolean) jsonBadge.get("connected");
