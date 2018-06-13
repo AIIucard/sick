@@ -115,11 +115,10 @@ public class JsonReader {
 			JSONObject json = (JSONObject) obj;
 			return json;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not read JSONObject from URL" + url + "! Got the following Exception: "
+					+ e.getLocalizedMessage());
 			return null;
 		}
-
 	}
 
 	public static JSONArray readJsonFromFile(String filepath)

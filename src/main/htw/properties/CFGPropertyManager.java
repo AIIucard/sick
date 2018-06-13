@@ -41,7 +41,6 @@ public class CFGPropertyManager {
 
 	private void loadProperties() {
 
-		// create and load default properties
 		log.info("Load default properties file...");
 		FileInputStream in;
 		try {
@@ -49,11 +48,9 @@ public class CFGPropertyManager {
 			defaultProps.load(in);
 			in.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not load Properties File! Got the following Exception: " + e.getLocalizedMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not load Properties File! Got the following Exception: " + e.getLocalizedMessage());
 		}
 		log.info("Default properties loaded.");
 

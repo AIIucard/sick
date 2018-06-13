@@ -39,8 +39,8 @@ public class RobotHandler extends SickHandler {
 						propManager = CFGPropertyManager.getInstance();
 						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
 					} catch (URISyntaxException e) {
-						// TODO: Log
-						e.printStackTrace();
+						log.error("Can not create new URI for RobotHandler! Got the following Exception: "
+								+ e.getLocalizedMessage());
 					}
 				}
 			}
@@ -78,17 +78,15 @@ public class RobotHandler extends SickHandler {
 			NodeId nodeId = new NodeId(3, "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
 
 			if (client.writeAttribute(nodeId, Attributes.Value, new Short(new Integer(securityLevel).toString()))) {
-				// TODO
 				log.info("Write attribute check" + securityLevel);
 			}
 
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not send Security Level to OPC-UA Interface! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		} catch (StatusException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not send Security Level to OPC-UA Interface! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		}
 	}
-
 }

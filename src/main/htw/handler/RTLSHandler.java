@@ -1,6 +1,5 @@
 package main.htw.handler;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -72,8 +71,8 @@ public class RTLSHandler extends SickHandler {
 						uri = new URI(websocketString);
 
 					} catch (URISyntaxException e) {
-						// TODO: Log
-						e.printStackTrace();
+						log.error("Can not create new URI for RTLSHandler! Got the following Exception: "
+								+ e.getLocalizedMessage());
 					}
 				}
 			}
@@ -106,8 +105,8 @@ public class RTLSHandler extends SickHandler {
 			websocket.connect();
 			websocket.sendText(RTLSHandler.REGISTER_GEO_FENCE_MSG);
 		} catch (WebSocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not initialize Websocket in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		}
 	}
 
@@ -165,8 +164,7 @@ public class RTLSHandler extends SickHandler {
 			log.info("Getting All Areas from Zigpos...");
 			jsonArray = JsonReader.readJsonArrayFromUrl(urlString);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not read Areas from Json! Got the following Exception: " + e.getLocalizedMessage());
 			return null;
 		}
 
@@ -215,15 +213,12 @@ public class RTLSHandler extends SickHandler {
 				}
 			}
 			log.info("Devices found: " + jsonBadgeArray.size());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not load ActiveBadges in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not load ActiveBadges in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		}
 	}
 
@@ -232,7 +227,7 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void updateAreas() {
-		// TODO Auto-generated method stub
+		// TODO Implement me
 
 	}
 
@@ -275,14 +270,14 @@ public class RTLSHandler extends SickHandler {
 			websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
 			websocket.connect();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		} catch (WebSocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		}
 	}
 }

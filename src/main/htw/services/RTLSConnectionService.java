@@ -47,7 +47,6 @@ public class RTLSConnectionService extends Service<Void> {
 				try {
 					rtlsConnectionHandler.initializeConnection();
 					database.setRTLSConnectionStatus(ConnectionStatusType.OK);
-					database.setRobotConnectionStatus(ConnectionStatusType.OK); // TODO: Remove this!
 				} catch (Exception ex) {
 					log.error("Exception thrown: " + ex.getLocalizedMessage());
 					database.setRTLSConnectionStatus(ConnectionStatusType.ERROR);

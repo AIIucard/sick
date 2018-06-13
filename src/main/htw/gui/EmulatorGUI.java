@@ -66,11 +66,9 @@ public class EmulatorGUI extends FlowPane {
 					log.info(areas.toString());
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Area Json! Got the following Exception: " + e.getLocalizedMessage());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Area Json! Got the following Exception: " + e.getLocalizedMessage());
 				}
 			}
 		});
@@ -157,11 +155,9 @@ public class EmulatorGUI extends FlowPane {
 					log.info(devices.toString());
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Device Json! Got the following Exception: " + e.getLocalizedMessage());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Device Json! Got the following Exception: " + e.getLocalizedMessage());
 				}
 			}
 		});
@@ -193,15 +189,14 @@ public class EmulatorGUI extends FlowPane {
 					sickMessagehandler.onTextMessage(RTLSHandler.getInstance().getWebsocket(), notifyEvent.toString());
 					log.info(notifyEvent.toString());
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Fence Notify Json! Got the following Exception: "
+							+ e.getLocalizedMessage());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("Can not create Fence Notify Json! Got the following Exception: "
+							+ e.getLocalizedMessage());
 				}
 			}
 		});
 		return button;
 	}
-
 }

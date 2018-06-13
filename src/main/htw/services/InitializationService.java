@@ -89,7 +89,6 @@ public class InitializationService extends Service<Void> {
 						if (database.getRTLSConnectionStatus() == ConnectionStatusType.OK) {
 							RTLSHandler rtlsHandler = RTLSHandler.getInstance();
 							rtlsHandler.updateAreas();
-							// TODO Set Active Areas
 							database.setActiveAreasList(rtlsHandler.getActiveAreas());
 							log.info("Areas updated!");
 						} else {

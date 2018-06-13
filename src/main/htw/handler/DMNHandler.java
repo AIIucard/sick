@@ -70,8 +70,8 @@ public class DMNHandler {
 
 		int decisionTableSize = decisionList.size();
 
-		log.info("Try to find decision");
-		log.info("Tablesize=" + decisionTableSize + "Entry:" + decisionList.toString());
+		log.info("Try to find decision...");
+		log.debug("Tablesize=" + decisionTableSize + "Entry:" + decisionList.toString());
 
 		// Evaluate Decision
 		DmnDecisionTableResult decisionTableResult = null;
@@ -82,8 +82,7 @@ public class DMNHandler {
 			int resultSize = decisionTableResult.size();
 
 			if (resultSize != 0) {
-				// TODO: Make nice log message KAY!
-				// log.info("Found Decision at rule=" + i);
+				log.debug("Found Decision at rule=" + i);
 				break;
 			}
 		}

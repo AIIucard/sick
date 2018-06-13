@@ -20,7 +20,7 @@ public class LightHandler extends SickHandler {
 	private static final String YELLOW = "\"xy\": [0.499226, 0.478163]";
 	private static final String GREEN = "\"xy\": [0.126289, 0.815775]";
 	private static final String BLUE = "\"xy\": [0.157309, 0.0214311]";
-	private static final String WHITE = "\"xy\": [0.157309, 0.0214311]"; // TODO change in white
+	private static final String WHITE = "\"xy\": [0.157294, 0.0214311]";
 
 	private static HttpURLConnection connection;
 
@@ -44,9 +44,9 @@ public class LightHandler extends SickHandler {
 						// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
 						// url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
 						url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
-					} catch (IOException e) {
-						// TODO: Log
-						e.printStackTrace();
+					} catch (MalformedURLException e) {
+						log.error("Can not create new URL for LightHandler! Got the following Exception: "
+								+ e.getLocalizedMessage());
 					}
 				}
 			}
@@ -62,11 +62,11 @@ public class LightHandler extends SickHandler {
 			setRequestSettings();
 			connection.disconnect();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not initialize Connection in LightHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not initialize Connection in LightHandler! Got the following Exception: "
+					+ e.getLocalizedMessage());
 		}
 	}
 
@@ -76,8 +76,7 @@ public class LightHandler extends SickHandler {
 			connection.setRequestMethod("PUT");
 			connection.setRequestProperty("Content-Type", "application/json");
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Can not load settings in LightHandler! Got the following Exception: " + e.getLocalizedMessage());
 		}
 	}
 
