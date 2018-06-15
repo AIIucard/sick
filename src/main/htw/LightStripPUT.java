@@ -22,11 +22,6 @@ public class LightStripPUT {
 			conn.setRequestMethod("PUT");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			// on = true | off = false
-			// xy = colore
-			// \"xy\": [0.734662, 0.265047] = rot
-			// \"xy\": [0.499226, 0.478163] = gelb
-			// \"xy\": [0.126289, 0.815775] = grün
 			String input = "{ \"on\": false, \"xy\": [0.734662, 0.265047]}";
 
 			OutputStream os = conn.getOutputStream();
