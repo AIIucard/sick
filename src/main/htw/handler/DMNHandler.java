@@ -68,18 +68,13 @@ public class DMNHandler {
 		// Create Input Variables
 		VariableMap variables = Variables.createVariables().putValue("role", role).putValue("geofence", geofenceLevel);
 
-		int decisionTableSize = decisionList.size();
-
-		log.info("Try to find decision...");
-		log.debug("Tablesize=" + decisionTableSize + "Entry:" + decisionList.toString());
-
 		// Evaluate Decision
-		DmnDecisionTableResult decisionTableResult = null;
-		//
-		for (int i = 0; i <= decisionTableSize; i++) {
+		log.info("Try to find decision...");
+		DmnDecisionTableResult decisionTableResultList = null;
+		for (int i = 0; i <= decisionList.size(); i++) {
 			DmnDecision decision = decisionList.get(i);
-			decisionTableResult = dmnEngine.evaluateDecisionTable(decision, variables);
-			int resultSize = decisionTableResult.size();
+			decisionTableResultList = dmnEngine.evaluateDecisionTable(decision, variables);
+			int resultSize = decisionTableResultList.size();
 
 			if (resultSize != 0) {
 				log.debug("Found Decision at rule=" + i);
@@ -87,8 +82,8 @@ public class DMNHandler {
 			}
 		}
 
-		if (decisionTableResult != null) {
-			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResult.get(0);
+		if (decisionTableResultList != null && decisionTableResultList.size() == 1) {
+			DmnDecisionRuleResult dmnDecisionRuleResult = decisionTableResultList.get(0);
 			log.info("The result is =" + dmnDecisionRuleResult.values());
 			String resultAsString = dmnDecisionRuleResult.values().toString();
 			resultAsString = resultAsString.replace("[", "");

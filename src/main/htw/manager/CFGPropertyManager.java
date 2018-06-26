@@ -1,4 +1,4 @@
-package main.htw.properties;
+package main.htw.manager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +9,8 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import main.htw.properties.CleanProperties;
 
 public class CFGPropertyManager {
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

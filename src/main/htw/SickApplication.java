@@ -57,7 +57,7 @@ import main.htw.gui.EmulatorGUI;
 import main.htw.handler.RTLSHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
-import main.htw.properties.CFGPropertyManager;
+import main.htw.manager.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.Area;

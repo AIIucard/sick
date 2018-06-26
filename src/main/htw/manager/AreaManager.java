@@ -12,7 +12,6 @@ import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.ActiveAreaComparator;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
-import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
@@ -29,30 +28,6 @@ public class AreaManager {
 		CFGPropertyManager propManager = CFGPropertyManager.getInstance();
 		sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 		return sickPosArea;
-	}
-
-	private static Integer getNextId() {
-		int highestID = -1;
-		SickDatabase database = SickDatabase.getInstance();
-		List<Area> areas = database.getAreaList().getAreas();
-		for (Area area : areas) {
-			if (area.getId() > highestID) {
-				highestID = area.getId();
-			}
-		}
-		return (highestID + 1);
-	}
-
-	public static void addAreaToActiveArea(Area area, int level) {
-		log.warn("AddAreaToActiveArea - not implemented!");
-		return;
-		// SickDatabase db = SickDatabase.getInstance();
-		// List<ActiveArea> activeAreas = new ArrayList<>();
-		// activeAreas = db.getActiveAreasList();
-		//
-		// ActiveArea activeArea = new ActiveArea(area, level);
-		// sort by distance
-		// TODO: Implement, Sort Active Area List by Level
 	}
 
 	public static ActiveArea addActiveBadgeToActiveArea(ActiveBadge activeBadge, ActiveArea activeArea) {
@@ -156,27 +131,6 @@ public class AreaManager {
 		return false;
 	}
 
-	public static Area addNewArea(String areaName, Double distanceToRobot) {
-		log.info("Create new Area...");
-		SickDatabase database = SickDatabase.getInstance();
-		double robotPositionX = database.getRobotPositionX();
-		double robotPositionY = database.getRobotPositionY();
-		List<Area> areaList = database.getAreaList().getAreas();
-
-		List<Coordinate> coordinates = SickUtils.calculateCoordinates(robotPositionX, robotPositionY, distanceToRobot);
-		Shape newShape = new Shape("Polygon", coordinates);
-		int sickPosArea = getSickArea();
-		if (sickPosArea == -1) {
-			return null;
-		}
-
-		Area newArea = new Area(getNextId(), areaName, sickPosArea, newShape, distanceToRobot);
-		areaList.add(newArea);
-		database.getAreaList().setAreas(areaList);
-		log.info("Created new Area " + areaName + " with distance to Robot " + distanceToRobot);
-		return newArea;
-	}
-
 	public static Area editArea(Area oldArea, String areaName, Double distanceToRobot) {
 		log.info("Edit Area...");
 		SickDatabase database = SickDatabase.getInstance();
@@ -227,15 +181,6 @@ public class AreaManager {
 		return false;
 	}
 
-	public static void removeArea(Area area) {
-		log.info("Remove Area...");
-		SickDatabase database = SickDatabase.getInstance();
-		List<Area> areaList = database.getAreaList().getAreas();
-		areaList.remove(area);
-		database.getAreaList().setAreas(areaList);
-		log.info("Removed Area " + area.getName() + " with distance to Robot " + area.getDistanceToRobot());
-	}
-
 	public static void updateAreaShapes() {
 		log.info("Update Area Shapes...");
 		SickDatabase database = SickDatabase.getInstance();
@@ -279,7 +224,12 @@ public class AreaManager {
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
 		int lastLevel = -1;
+
+		// Check if current ActiveArea is affected
 		if (nearestActiveArea.getArea().getId().equals(activeAreaWithoutBadge.getArea().getId())) {
+
+			// If NearestActiveArea has no Badges update NearestActiveArea to higher level
+			// with badges
 			if (nearestActiveArea.getContaingBatchesList().size() == 0) {
 				lastLevel = nearestActiveArea.getLevel();
 				nearestActiveArea = null;

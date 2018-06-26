@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import main.htw.properties.CFGPropertyManager;
+import main.htw.manager.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickColor;
 
@@ -40,9 +40,6 @@ public class LightHandler extends SickHandler {
 					instance = new LightHandler();
 					try {
 						propManager = CFGPropertyManager.getInstance();
-						// HTW = http://141.56.180.9/api/0F0A018180/lights/1/state
-						// S!CK = http://192.168.8.1/api/C02773CB34/lights/1/state
-						// url = new URL("http://141.56.180.9/api/0F0A018180/lights/1/state");
 						url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
 					} catch (MalformedURLException e) {
 						log.error("Can not create new URL for LightHandler! Got the following Exception: "

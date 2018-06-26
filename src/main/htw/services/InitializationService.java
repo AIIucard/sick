@@ -40,7 +40,8 @@ public class InitializationService extends Service<Void> {
 				countDownLatch.await();
 				if (database.getRTLSConnectionStatus() == ConnectionStatusType.OK
 						&& database.getRobotConnectionStatus() == ConnectionStatusType.OK
-						&& database.getLightConnectionStatus() == ConnectionStatusType.OK) {
+						&& database.getLightConnectionStatus() == ConnectionStatusType.OK
+						&& countDownLatch.getCount() == 0) {
 					runGetAllActiveBadgesService();
 					runUpdateAreasService();
 					runRegisterForGeoFencingEventsService();
@@ -116,7 +117,6 @@ public class InitializationService extends Service<Void> {
 							log.info("Registered for Geo Fencing Events!");
 						} else {
 							log.info("Can not get active badges from RTLS system! Connection not available!");
-
 						}
 						return null;
 					}

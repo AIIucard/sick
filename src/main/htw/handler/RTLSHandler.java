@@ -29,9 +29,9 @@ import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.RoleType;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
+import main.htw.manager.CFGPropertyManager;
 import main.htw.parser.JavaToJson;
 import main.htw.parser.JsonReader;
-import main.htw.properties.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.xml.Area;
 import main.htw.xml.AreaComparator;
@@ -110,7 +110,7 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
-	// TODO. Currently unused! Check if needed!
+	// TODO Currently unused! Check if needed!
 	public void addAreaToZigpos(Area area) {
 		log.info("Adding new Area to Zigpos...");
 		String jsonFormattedString = JavaToJson.getAreaJson(area);
@@ -236,7 +236,7 @@ public class RTLSHandler extends SickHandler {
 		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 		List<Area> areas = getAllAreasForLayerFromZigpos(sickLayer);
 
-		// Sort Areas by distance
+		// Sort Areas by distance ==> 0 to 3
 		Collections.sort(areas, new AreaComparator());
 
 		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();

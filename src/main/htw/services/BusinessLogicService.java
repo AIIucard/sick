@@ -13,6 +13,7 @@ import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
+import main.htw.handler.RobotHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
@@ -94,7 +95,8 @@ public class BusinessLogicService extends Service<Void> {
 						addBadgeToActiveBadges(payload);
 					}
 
-					// Check for roleChange
+					// Check for roleChange at out event because highest role is changed for adding
+					// batches to ActiveArea and not for removing them...
 					if (database.isGodModeActive()) {
 						if (!database.getNearestActiveArea().getHighestRoleType().equals(previousHighestRoleType)) {
 							isChanged = true;
@@ -117,6 +119,7 @@ public class BusinessLogicService extends Service<Void> {
 					database.setLightReconnected(true);
 				}
 
+				// If Reconnect is successful update NearestActiveArea again
 				if (database.isRobotReconnected() || database.isLightReconnected()) {
 					if (database.getRobotConnectionStatus() == ConnectionStatusType.OK
 							&& database.getLightConnectionStatus() == ConnectionStatusType.OK) {
@@ -129,7 +132,7 @@ public class BusinessLogicService extends Service<Void> {
 				if (isChanged) {
 					ActiveArea nearestActiveArea = database.getNearestActiveArea();
 					if (nearestActiveArea == null) {
-						// RobotHandler.getInstance().sendSecurityLevel(10);
+						RobotHandler.getInstance().sendSecurityLevel(10);
 						log.info("SpeedLvl: " + 10 + " Light: " + SickColor.WHITE);
 						LightHandler.getInstance().setLight(SickColor.WHITE);
 					} else {
@@ -144,7 +147,7 @@ public class BusinessLogicService extends Service<Void> {
 									nearestActiveArea.getLevel());
 						}
 						if (decision != null) {
-							// RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
+							RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
 							LightHandler.getInstance().setLight(decision.getValue());
 							log.info("SpeedLvl: " + decision.getKey().intValue() + " Light: " + decision.getValue());
 						} else {
@@ -159,7 +162,7 @@ public class BusinessLogicService extends Service<Void> {
 	}
 
 	private void addBadgeToActiveBadges(JSONObject payload) {
-		// TODO: Fabi
+		// TODO: Fabi & Review Maxi
 		log.warn("Not implemented! Fabe?");
 	}
 
@@ -181,7 +184,7 @@ public class BusinessLogicService extends Service<Void> {
 
 	private boolean updateNearestActiveArea(ActiveBadge badge) {
 		// Check for role!
-		// TODO: Implement for Reconect
+		// TODO: Implement for Reconnect
 		return false;
 	}
 }
