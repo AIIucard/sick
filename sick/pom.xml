@@ -85,6 +85,20 @@
         	<systemPath>${basedir}/lib/jetty-all-9.4.9.v20180320-uber.jar</systemPath>
 		</dependency>
 		<!-- OPCUA -->
+  		<dependency>
+			<groupId>opc-ua-stack</groupId>
+		    <artifactId>opc-ua-stack</artifactId>
+		    <version>1.3.343-167</version>
+			<scope>system</scope>
+        	<systemPath>${basedir}/lib/opc-ua-stack-1.3.343-167.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>prosys-opc-ua-java-sdk-client-server-evaluation</groupId>
+		    <artifactId>prosys-opc-ua-java-sdk-client-server-evaluation</artifactId>
+		    <version>3.0.0-454</version>
+			<scope>system</scope>
+        	<systemPath>${basedir}/lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>bcpkix</groupId>
 		    <artifactId>bcpkix</artifactId>
@@ -134,20 +148,7 @@
 			<scope>system</scope>
         	<systemPath>${basedir}/lib/httpcore-nio-4.4.4.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>opc-ua-stack</groupId>
-		    <artifactId>opc-ua-stack</artifactId>
-		    <version>1.3.343-167</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/opc-ua-stack-1.3.343-167.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>prosys-opc-ua-java-sdk-client-server-evaluation</groupId>
-		    <artifactId>prosys-opc-ua-java-sdk-client-server-evaluation</artifactId>
-		    <version>3.0.0-454</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar</systemPath>
-		</dependency>
+		
 		<!-- JAXB -->
 		<dependency>
 		    <groupId>com.sun.xml.bind</groupId>
