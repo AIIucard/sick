@@ -13,7 +13,6 @@ import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.handler.DMNHandler;
 import main.htw.handler.LightHandler;
-import main.htw.handler.RobotHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
@@ -132,7 +131,9 @@ public class BusinessLogicService extends Service<Void> {
 				if (isChanged) {
 					ActiveArea nearestActiveArea = database.getNearestActiveArea();
 					if (nearestActiveArea == null) {
-						RobotHandler.getInstance().sendSecurityLevel(10);
+						// TODO: Replace RobotHandler with appropriate Connection Handler to Robot
+						// Webservice
+						// RobotHandler.getInstance().sendSecurityLevel(10);
 						log.info("SpeedLvl: " + 10 + " Light: " + SickColor.WHITE);
 						LightHandler.getInstance().setLight(SickColor.WHITE);
 					} else {
@@ -147,7 +148,9 @@ public class BusinessLogicService extends Service<Void> {
 									nearestActiveArea.getLevel());
 						}
 						if (decision != null) {
-							RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
+							// TODO: Replace RobotHandler with appropriate Connection Handler to Robot
+							// Webservice
+							// RobotHandler.getInstance().sendSecurityLevel(decision.getKey().intValue());
 							LightHandler.getInstance().setLight(decision.getValue());
 							log.info("SpeedLvl: " + decision.getKey().intValue() + " Light: " + decision.getValue());
 						} else {

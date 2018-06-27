@@ -13,11 +13,6 @@ import com.prosysopc.ua.ServiceException;
 import com.prosysopc.ua.StatusException;
 import com.prosysopc.ua.client.UaClient;
 
-import main.htw.database.SickDatabase;
-import main.htw.manager.CFGPropertyManager;
-import main.htw.properties.PropertiesKeys;
-import main.htw.utils.ConnectionStatusType;
-
 public class RobotHandler extends SickHandler {
 
 	private static Object lock = new Object();
@@ -36,8 +31,7 @@ public class RobotHandler extends SickHandler {
 				if (instance == null) {
 					instance = new RobotHandler();
 					try {
-						propManager = CFGPropertyManager.getInstance();
-						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
+						uri = new URI("opc.tcp\\://192.168.100.10\\:4840/");
 					} catch (URISyntaxException e) {
 						log.error("Can not create new URI for RobotHandler! Got the following Exception: "
 								+ e.getLocalizedMessage());
@@ -69,8 +63,9 @@ public class RobotHandler extends SickHandler {
 		client.connect();
 
 		// TODO Fix this for Connection
-		SickDatabase database = SickDatabase.getInstance();
-		database.setRobotConnectionStatus(ConnectionStatusType.OK);
+		// TODO Set connected Status in S!CK Main Application
+		// SickDatabase database = SickDatabase.getInstance();
+		// database.setRobotConnectionStatus(ConnectionStatusType.OK);
 		log.info("Connection successful");
 	}
 
