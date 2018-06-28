@@ -114,42 +114,22 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
-	private void setLightGreen() {
-		sendLight(LightHandler.GREEN);
-	}
-
-	private void setLightRed() {
-		sendLight(LightHandler.RED);
-	}
-
-	private void setLightYellow() {
-		sendLight(LightHandler.YELLOW);
-	}
-
-	private void setLightBlue() {
-		sendLight(LightHandler.BLUE);
-	}
-
-	private void setLightWhite() {
-		sendLight(LightHandler.WHITE);
-	}
-
 	public void setLight(SickColor color) {
 		switch (color) {
 		case BLUE:
-			setLightBlue();
+			sendLight(LightHandler.BLUE);
 			break;
 		case GREEN:
-			setLightGreen();
+			sendLight(LightHandler.GREEN);
 			break;
 		case YELLOW:
-			setLightYellow();
+			sendLight(LightHandler.YELLOW);
 			break;
 		case RED:
-			setLightRed();
+			sendLight(LightHandler.RED);
 			break;
 		case WHITE:
-			setLightWhite();
+			sendLight(LightHandler.WHITE);
 			break;
 		}
 	}
