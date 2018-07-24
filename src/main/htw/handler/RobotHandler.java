@@ -18,6 +18,17 @@ import main.htw.manager.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 
+/**
+ * RobotHandler is a singleton, so the instantiation is restricted to one
+ * object. Because there is just one object needed to coordinate the following
+ * actions.
+ * 
+ * <ul>
+ * <li>Initializes the Connection to the Robot
+ * <li>Send the calculated security level to the robot via OPCUA
+ * </ul>
+ *
+ */
 public class RobotHandler extends SickHandler {
 
 	private static Object lock = new Object();
@@ -30,6 +41,14 @@ public class RobotHandler extends SickHandler {
 		// Use getInstance
 	}
 
+	/**
+	 * Realizes the singleton pattern with synchronized(lock), ensures that just one
+	 * class can instantiate this class in one specific moment. If there is already
+	 * an instance of this class, the method returns a reference. The class get
+	 * instantiated with a URI which is defined and loaded from config file.
+	 *
+	 * @return instance
+	 */
 	public static RobotHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
@@ -48,6 +67,16 @@ public class RobotHandler extends SickHandler {
 		return (instance);
 	}
 
+	/**
+	 * Initializes the connection to the loaded URI of the robot instance. The
+	 * method ignores certificates through SecurityMode.None. Describes the
+	 * connection with an required appDescription and identity. If the connection
+	 * attempt is successful, sets database connection flag OK.
+	 * 
+	 * @throws Exception
+	 *             Exception is generalized and depends on the connection type.
+	 *             Handle <code>LocalizedMessage()<code> and try to reconnect!
+	 */
 	public void initializeConnection() throws Exception {
 
 		// If connection broke change SickApplication to SimpleClient again
@@ -74,6 +103,15 @@ public class RobotHandler extends SickHandler {
 		log.info("Connection successful");
 	}
 
+	/**
+	 * Sends the security level to the robot. The NodeID is an OPCUA reference which
+	 * specifies the value to be written by a layer and the attribute path that can
+	 * be red out with UA Expert for a particular system. SecurityLevel is sent when
+	 * no exception is thrown. Otherwise look up log.
+	 * 
+	 * @param securityLevel
+	 *            range of values 0-10 -> 0 robot turns off 10 runs at normal speed
+	 */
 	public void sendSecurityLevel(int securityLevel) {
 		try {
 
