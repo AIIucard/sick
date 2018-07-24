@@ -77,7 +77,7 @@ public class RobotHandler extends SickHandler {
 	public void sendSecurityLevel(int securityLevel) {
 		try {
 
-			NodeId nodeId = new NodeId(3, "\"GDB_OPC-UA\".\"Security\".\"UserAnnäherung\"");
+			NodeId nodeId = new NodeId(3, "\"GDB_OPC-UA\".\"Security\".\"UserAnnaeherung\"");
 
 			if (client.writeAttribute(nodeId, Attributes.Value, new Short(new Integer(securityLevel).toString()))) {
 				log.info("Write attribute check" + securityLevel);

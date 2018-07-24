@@ -2,22 +2,290 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sick</groupId>
 	<artifactId>sick</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 	    <plugins>
 		      <plugin>
-			        <artifactId>maven-compiler-plugin</artifactId>
+			        <groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-jar-plugin</artifactId>
 			        <version>3.1</version>
 			        <configuration>
-				          <source>1.8</source>
-				          <target>1.8</target>
+				    	<source>1.8</source>
+				        <target>1.8</target>
+				        <addClasspath>true</addClasspath>
+              			<mainClass>main.htw.SickApplication</mainClass>
+              			<archive>
+				          	<addMavenDescriptor>false</addMavenDescriptor>
+				        </archive>
 			        </configuration>
 		      </plugin>
+		      <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-install-plugin</artifactId>
+		      <version>2.5.2</version>
+		      <executions>
+		        	<execution>
+		            	<id>install-external1</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/logback-classic-1.1.7.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>ch.qos.logback</groupId>
+			                <artifactId>logback-classic</artifactId>
+			                <version>1.1.7</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external2</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/logback-core-1.1.7.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>ch.qos.logback</groupId>
+			                <artifactId>logback-core</artifactId>
+			                <version>1.1.7</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external3</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/slf4j-api-1.7.21.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>org.slf4j</groupId>
+			                <artifactId>slf4j-api</artifactId>
+			                <version>1.17.21</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external4</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/json-simple-1.1.1.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>com.googlecode.json-simple</groupId>
+			                <artifactId>json-simple</artifactId>
+			                <version>1.1.1</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external5</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/java-json.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>org.json</groupId>
+			                <artifactId>json</artifactId>
+			                <version>20160810</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external6</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/javax.websocket-api-1.0-rc4.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>javax.websocket</groupId>
+			                <artifactId>javax.websocket-api</artifactId>
+			                <version>1.0-rc4</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external7</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/jetty-all-9.4.9.v20180320-uber.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>org.eclipse.jetty.aggregate</groupId>
+			                <artifactId>jetty-all</artifactId>
+			                <version>9.4.9.v20180320</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external8</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/bcpkix-jdk15on-1.54.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>bcpkix</groupId>
+			                <artifactId>bcpkix</artifactId>
+			                <version>jdk15on-1.54</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external9</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/bcprov-jdk15on-1.54.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>bcprov</groupId>
+			                <artifactId>bcprov</artifactId>
+			                <version>jdk15on-1.54</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external10</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/commons-codec-1.9.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>commons-codec</groupId>
+			                <artifactId>commons-codec</artifactId>
+			                <version>1.9</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external11</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/commons-logging-1.2.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>commons-logging</groupId>
+			                <artifactId>commons-logging</artifactId>
+			                <version>1.2</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external12</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/httpclient-4.5.2.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>httpclient</groupId>
+			                <artifactId>httpclient</artifactId>
+			                <version>4.5.2</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external13</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/httpcore-4.4.4.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>httpcore</groupId>
+			                <artifactId>httpcore</artifactId>
+			                <version>4.4.4</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external14</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/httpcore-nio-4.4.4.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>httpcore-nio</groupId>
+			                <artifactId>httpcore-nio</artifactId>
+			                <version>4.4.4</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external15</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/opc-ua-stack-1.3.343-167.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>opc-ua-stack</groupId>
+			                <artifactId>opc-ua-stack</artifactId>
+			                <version>1.3.343-167</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		        	<execution>
+		            	<id>install-external16</id>
+		            	<phase>clean</phase>
+		            	<configuration>
+			                <file>${basedir}/lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar</file>
+			                <repositoryLayout>default</repositoryLayout>
+			                <groupId>prosys-opc-ua-java-sdk-client-server-evaluation</groupId>
+			                <artifactId>prosys-opc-ua-java-sdk-client-server-evaluation</artifactId>
+			                <version>3.0.0-454</version>
+			                <packaging>jar</packaging>
+			                <generatePom>true</generatePom>
+		            	</configuration>
+		            	<goals>
+		                	<goal>install-file</goal>
+		            	</goals>
+		        	</execution>
+		    	</executions>
+			</plugin>
 	    </plugins>
 	</build>
-	
 	<dependencyManagement>
 	    <dependencies>
 			<dependency>
@@ -29,124 +297,91 @@
 			</dependency>
 	    </dependencies>
   	</dependencyManagement>
-	
 	<dependencies>
 		<!-- Lockback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.7</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/logback-classic-1.1.7.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 	 		<artifactId>logback-core</artifactId>
 	 		<version>1.1.7</version>
-	 		<scope>system</scope>
-        	<systemPath>${basedir}/lib/logback-core-1.1.7.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.21</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/slf4j-api-1.7.21.jar</systemPath>
 		</dependency>
 		<!-- Json -->
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
 		    <version>1.1.1</version>
-		    <scope>system</scope>
-        	<systemPath>${basedir}/lib/json-simple-1.1.1.jar</systemPath>
 		</dependency>
 		<dependency>
 	        <groupId>org.json</groupId>
 	        <artifactId>json</artifactId>
 	        <version>20160810</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/java-json.jar</systemPath>
 		</dependency>
 		<!-- Websocket -->
 		<dependency>
 		    <groupId>javax.websocket</groupId>
 		    <artifactId>javax.websocket-api</artifactId>
 		    <version>1.0-rc4</version>
-		    <scope>system</scope>
-        	<systemPath>${basedir}/lib/javax.websocket-api-1.0-rc4.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 		    <artifactId>jetty-all</artifactId>
 		    <version>9.4.9.v20180320</version>
 		    <type>pom</type>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/jetty-all-9.4.9.v20180320-uber.jar</systemPath>
 		</dependency>
 		<!-- OPCUA -->
 		<dependency>
 			<groupId>bcpkix</groupId>
 		    <artifactId>bcpkix</artifactId>
 		    <version>jdk15on-1.54</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/bcpkix-jdk15on-1.54.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>bcprov</groupId>
 		    <artifactId>bcprov</artifactId>
 		    <version>jdk15on-1.54</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/bcprov-jdk15on-1.54.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		    <version>1.9</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/commons-codec-1.9.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 		    <artifactId>commons-logging</artifactId>
 		    <version>1.2</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/commons-logging-1.2.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>httpclient</groupId>
 		    <artifactId>httpclient</artifactId>
 		    <version>4.5.2</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/httpclient-4.5.2.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>httpcore</groupId>
 		    <artifactId>httpcore</artifactId>
 		    <version>4.4.4</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/httpcore-4.4.4.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>httpcore-nio</groupId>
 		    <artifactId>httpcore-nio</artifactId>
 		    <version>4.4.4</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/httpcore-nio-4.4.4.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>opc-ua-stack</groupId>
 		    <artifactId>opc-ua-stack</artifactId>
 		    <version>1.3.343-167</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/opc-ua-stack-1.3.343-167.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>prosys-opc-ua-java-sdk-client-server-evaluation</groupId>
 		    <artifactId>prosys-opc-ua-java-sdk-client-server-evaluation</artifactId>
 		    <version>3.0.0-454</version>
-			<scope>system</scope>
-        	<systemPath>${basedir}/lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar</systemPath>
 		</dependency>
 		<!-- JAXB -->
 		<dependency>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project sick with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/eclipse/workspaces/BPA"/>
+    <property name="dir.jarfile" value="C:/Users/mmw/Desktop/Temp"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/SickApp.jar">
+            <manifest>
+                <attribute name="Main-Class" value="main.htw.SickApplication"/>
+                <attribute name="Class-Path" value=". SickApp_lib/logback-classic-1.1.7.jar SickApp_lib/logback-core-1.1.7.jar SickApp_lib/slf4j-api-1.7.21.jar SickApp_lib/json-simple-1.1.1.jar SickApp_lib/json-20160810.jar SickApp_lib/javax.websocket-api-1.0-rc4.jar SickApp_lib/bcpkix-jdk15on-1.54.jar SickApp_lib/bcprov-jdk15on-1.54.jar SickApp_lib/commons-codec-1.9.jar SickApp_lib/commons-logging-1.2.jar SickApp_lib/httpclient-4.5.2.jar SickApp_lib/httpcore-4.4.4.jar SickApp_lib/httpcore-nio-4.4.4.jar SickApp_lib/opc-ua-stack-1.3.343-167.jar SickApp_lib/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar SickApp_lib/jaxb-core-2.2.11.jar SickApp_lib/jaxb-impl-2.2.11.jar SickApp_lib/nv-websocket-client-2.4.jar SickApp_lib/camunda-engine-dmn-7.8.0.jar SickApp_lib/camunda-commons-utils-1.4.0.jar SickApp_lib/camunda-commons-logging-1.4.0.jar SickApp_lib/camunda-commons-typed-values-1.4.0.jar SickApp_lib/camunda-dmn-model-7.8.0.jar SickApp_lib/camunda-xml-model-7.8.0.jar SickApp_lib/camunda-engine-feel-api-7.8.0.jar SickApp_lib/camunda-engine-feel-juel-7.8.0.jar SickApp_lib/juel-api-2.2.7.jar SickApp_lib/juel-spi-2.2.7.jar SickApp_lib/juel-impl-2.2.7.jar"/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+        </jar>
+        <delete dir="${dir.jarfile}/SickApp_lib"/>
+        <mkdir dir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/ch/qos/logback/logback-classic/1.1.7/logback-classic-1.1.7.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/ch/qos/logback/logback-core/1.1.7/logback-core-1.1.7.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/json/json/20160810/json-20160810.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/javax/websocket/javax.websocket-api/1.0-rc4/javax.websocket-api-1.0-rc4.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/bcpkix/bcpkix/jdk15on-1.54/bcpkix-jdk15on-1.54.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/bcprov/bcprov/jdk15on-1.54/bcprov-jdk15on-1.54.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/httpclient/httpclient/4.5.2/httpclient-4.5.2.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/httpcore/httpcore/4.4.4/httpcore-4.4.4.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/httpcore-nio/httpcore-nio/4.4.4/httpcore-nio-4.4.4.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/opc-ua-stack/opc-ua-stack/1.3.343-167/opc-ua-stack-1.3.343-167.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/prosys-opc-ua-java-sdk-client-server-evaluation/prosys-opc-ua-java-sdk-client-server-evaluation/3.0.0-454/prosys-opc-ua-java-sdk-client-server-evaluation-3.0.0-454.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/com/sun/xml/bind/jaxb-core/2.2.11/jaxb-core-2.2.11.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.11/jaxb-impl-2.2.11.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/com/neovisionaries/nv-websocket-client/2.4/nv-websocket-client-2.4.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/bpm/dmn/camunda-engine-dmn/7.8.0/camunda-engine-dmn-7.8.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/commons/camunda-commons-utils/1.4.0/camunda-commons-utils-1.4.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/commons/camunda-commons-logging/1.4.0/camunda-commons-logging-1.4.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/commons/camunda-commons-typed-values/1.4.0/camunda-commons-typed-values-1.4.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/bpm/model/camunda-dmn-model/7.8.0/camunda-dmn-model-7.8.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/bpm/model/camunda-xml-model/7.8.0/camunda-xml-model-7.8.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/bpm/dmn/camunda-engine-feel-api/7.8.0/camunda-engine-feel-api-7.8.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/org/camunda/bpm/dmn/camunda-engine-feel-juel/7.8.0/camunda-engine-feel-juel-7.8.0.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/de/odysseus/juel/juel-api/2.2.7/juel-api-2.2.7.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/de/odysseus/juel/juel-spi/2.2.7/juel-spi-2.2.7.jar" todir="${dir.jarfile}/SickApp_lib"/>
+        <copy file="C:/Users/mmw/.m2/repository/de/odysseus/juel/juel-impl/2.2.7/juel-impl-2.2.7.jar" todir="${dir.jarfile}/SickApp_lib"/>
+    </target>
+</project>
