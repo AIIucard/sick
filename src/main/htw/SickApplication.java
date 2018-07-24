@@ -339,7 +339,7 @@ public class SickApplication extends Application implements Observer {
 				editBadgeButton.setDisable(true);
 				isEditAreaDisabled = true;
 				isEditBadgeDisabled = true;
-
+				// TODO Disable menuBar
 				if (visitorModeCheckBox.isSelected()) {
 					database.setGodMode(true);
 					log.info("GodeMode on");
