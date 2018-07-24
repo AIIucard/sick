@@ -21,11 +21,11 @@ public class SickDatabase extends Observable {
 	private double robotPositionY = 0;
 
 	private ConnectionStatusType robotConnectionStatus = ConnectionStatusType.NEW;
-	private boolean isRobotReconnected = false;
+	private boolean isRobotReconnecting = false;
 	private ConnectionStatusType rtlsConnectionStatus = ConnectionStatusType.NEW;
-	private boolean isRTLSReconnected = false;
+	private boolean isRTLSReconnecting = false;
 	private ConnectionStatusType lightConnectionStatus = ConnectionStatusType.NEW;
-	private boolean isLightReconnected = false;
+	private boolean isLightReconnecting = false;
 
 	private ArrayList<ActiveArea> activeAreasList = new ArrayList<ActiveArea>();
 	private ArrayList<ActiveBadge> activeBadgesList = new ArrayList<ActiveBadge>();
@@ -152,27 +152,27 @@ public class SickDatabase extends Observable {
 		notifyObservers();
 	}
 
-	public boolean isRobotReconnected() {
-		return isRobotReconnected;
+	public boolean isRobotReconnecting() {
+		return isRobotReconnecting;
 	}
 
-	public void setRobotReconnected(boolean isRobotReconnected) {
-		this.isRobotReconnected = isRobotReconnected;
+	public void setRobotReconnecting(boolean isRobotReconnecting) {
+		this.isRobotReconnecting = isRobotReconnecting;
 	}
 
-	public boolean isRTLSReconnected() {
-		return isRTLSReconnected;
+	public boolean isRTLSReconnecting() {
+		return isRTLSReconnecting;
 	}
 
-	public void setRTLSReconnected(boolean isRTLSReconnected) {
-		this.isRTLSReconnected = isRTLSReconnected;
+	public void setRTLSReconnecting(boolean isRTLSReconnecting) {
+		this.isRTLSReconnecting = isRTLSReconnecting;
 	}
 
-	public boolean isLightReconnected() {
-		return isLightReconnected;
+	public boolean isLightReconnecting() {
+		return isLightReconnecting;
 	}
 
-	public void setLightReconnected(boolean isLightReconnected) {
-		this.isLightReconnected = isLightReconnected;
+	public void setLightReconnecting(boolean isLightReconnecting) {
+		this.isLightReconnecting = isLightReconnecting;
 	}
 }

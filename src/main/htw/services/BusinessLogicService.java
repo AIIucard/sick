@@ -77,7 +77,7 @@ public class BusinessLogicService extends Service<Void> {
 									+ "!");
 						}
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+						log.info("Register badge with name:" + payload.get("customName") + " and address: "
 								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
@@ -90,7 +90,7 @@ public class BusinessLogicService extends Service<Void> {
 						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge, activeAreaToChange);
 						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
 					} else {
-						log.info("Register Badge with Name:" + payload.get("customName") + " and address: "
+						log.info("Register badge with name:" + payload.get("customName") + " and address: "
 								+ payload.get("address"));
 						addBadgeToActiveBadges(payload);
 					}
@@ -109,32 +109,47 @@ public class BusinessLogicService extends Service<Void> {
 					break;
 				}
 
-				if (database.getRobotConnectionStatus() == ConnectionStatusType.ERROR) {
-					// TODO: Implement Reconnect Service
-					database.setRobotReconnected(true);
+				if (database.getRobotConnectionStatus() == ConnectionStatusType.ERROR
+						&& !database.isRobotReconnecting()) {
+					RobotReconnectService robotService = new RobotReconnectService(database);
+					robotService.startTheService();
+					database.setRobotReconnecting(true);
 				}
 
-				if (database.getLightConnectionStatus() == ConnectionStatusType.ERROR) {
-					// TODO: Implement Reconnect Service
-					database.setLightReconnected(true);
+				if (database.getLightConnectionStatus() == ConnectionStatusType.ERROR
+						&& database.isLightReconnecting()) {
+					LightReconnectService lightService = new LightReconnectService(database);
+					lightService.startTheService();
+					database.setLightReconnecting(true);
 				}
 
 				// If Reconnect is successful update NearestActiveArea again
-				if (database.isRobotReconnected() || database.isLightReconnected()) {
-					if (database.getRobotConnectionStatus() == ConnectionStatusType.OK
-							&& database.getLightConnectionStatus() == ConnectionStatusType.OK) {
-						database.setRobotReconnected(false);
-						database.setLightReconnected(false);
-						isChanged = updateNearestActiveArea(activeBadge);
+				if (database.isRobotReconnecting() || database.isLightReconnecting()) {
+					if (database.getRobotConnectionStatus() == ConnectionStatusType.OK) {
+						database.setRobotReconnecting(false);
+					} else if (database.getLightConnectionStatus() == ConnectionStatusType.OK) {
+						database.setLightReconnecting(false);
+					} else {
+						log.info("Reconnect is not completed! Connection status of the robot is: "
+								+ database.getRobotConnectionStatus() + " and connection status of the light is: "
+								+ database.getLightConnectionStatus() + "!");
 					}
 				}
 
 				if (isChanged) {
 					ActiveArea nearestActiveArea = database.getNearestActiveArea();
 					if (nearestActiveArea == null) {
-						RobotHandler.getInstance().sendSecurityLevel(10);
-						log.info("SpeedLvl: " + 10 + " Light: " + SickColor.WHITE);
-						LightHandler.getInstance().setLight(SickColor.WHITE);
+						if (database.getRobotConnectionStatus() == ConnectionStatusType.OK) {
+							RobotHandler.getInstance().sendSecurityLevel(10);
+							log.info("Set speedLvl: " + 10 + " and light color: " + SickColor.WHITE);
+						} else {
+							log.info("Can not set robot SpeedLvl due to missing coonnection to robot!");
+						}
+						if (database.getLightConnectionStatus() == ConnectionStatusType.OK) {
+							LightHandler.getInstance().setLight(SickColor.WHITE);
+						} else {
+							log.info("Can not set light SickColor due to missing coonnection to light!");
+						}
 					} else {
 						Pair<Integer, SickColor> decision = null;
 
@@ -180,11 +195,5 @@ public class BusinessLogicService extends Service<Void> {
 
 	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
 		return AreaManager.updateNearestActiveAreaOUT(badge, activeAreaWithoutBadge);
-	}
-
-	private boolean updateNearestActiveArea(ActiveBadge badge) {
-		// Check for role!
-		// TODO: Implement for Reconnect
-		return false;
 	}
 }
