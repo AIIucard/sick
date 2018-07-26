@@ -139,13 +139,10 @@ public class RTLSHandler extends SickHandler {
 
 			log.info("magic happened here i guess");
 			// websocket.sendText("");
-
 		} catch (MalformedURLException e) {
-
-			e.printStackTrace();
+			log.error("Can not add area to Zigpos! MalformedURLException thrown: " + e.getLocalizedMessage());
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			log.error("Can not add area to Zigpos! IOException thrown: " + e.getLocalizedMessage());
 		}
 	}
 
@@ -214,10 +211,10 @@ public class RTLSHandler extends SickHandler {
 			}
 			log.info("Devices found: " + jsonBadgeArray.size());
 		} catch (IOException e) {
-			log.error("Can not load ActiveBadges in RTLSHandler! Got the following Exception: "
+			log.error("Can not load ActiveBadges in RTLSHandler! Got the following IOException: "
 					+ e.getLocalizedMessage());
 		} catch (JSONException e) {
-			log.error("Can not load ActiveBadges in RTLSHandler! Got the following Exception: "
+			log.error("Can not load ActiveBadges in RTLSHandler! Got the following JSONException: "
 					+ e.getLocalizedMessage());
 		}
 	}
@@ -270,13 +267,13 @@ public class RTLSHandler extends SickHandler {
 			websocket.addListener((WebSocketListener) SickMessageHandler.getInstance());
 			websocket.connect();
 		} catch (NoSuchAlgorithmException e) {
-			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following NoSuchAlgorithmException: "
 					+ e.getLocalizedMessage());
 		} catch (IOException e) {
-			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following IOException: "
 					+ e.getLocalizedMessage());
 		} catch (WebSocketException e) {
-			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following Exception: "
+			log.error("Can not reconnect to Websocket in RTLSHandler! Got the following WebSocketException: "
 					+ e.getLocalizedMessage());
 		}
 	}

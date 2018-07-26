@@ -212,6 +212,7 @@ public class SickApplication extends Application implements Observer {
 		borderPane.setBottom(emulatorGUI);
 
 		primaryStage.setScene(new Scene(borderPane, width, height));
+		primaryStage.sizeToScene();
 	}
 
 	private GridPane createConnectionStatusArea() {
@@ -645,8 +646,11 @@ public class SickApplication extends Application implements Observer {
 			if (propManager != null) {
 				propManager.setProperty(PropertiesKeys.APP_WIDTH, "" + newVal);
 				areaTable.setMaxWidth(newVal.doubleValue() - 20);
+				badgeTable.setMaxWidth(newVal.doubleValue() - 20);
 				areaButtonPane.setMaxWidth(newVal.doubleValue() - 20);
+				badgeButtonPane.setMaxWidth(newVal.doubleValue() - 20);
 				areaTable.refresh();
+				badgeTable.refresh();
 			} else {
 				log.error("Cannot change app width property!");
 			}
@@ -654,7 +658,8 @@ public class SickApplication extends Application implements Observer {
 
 		primaryStage.getScene().heightProperty().addListener((obs, oldVal, newVal) -> {
 			if (propManager != null) {
-				propManager.setProperty(PropertiesKeys.APP_HEIGHT, "" + newVal);
+				propManager.setProperty(PropertiesKeys.APP_HEIGHT,
+						"" + (newVal.doubleValue() + sickMenuBar.getHeight()));
 			} else {
 				log.error("Cannot change app height property!");
 			}
