@@ -39,6 +39,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -91,6 +93,8 @@ public class SickApplication extends Application implements Observer {
 	private static XMLMarshler xmlMarshaller = null;
 	private static ApplicationManager appManager = null;
 
+	private Stage sickPrimaryStage;
+	private Scene sickScene;
 	private Button startButton;
 	private Button stopButton;
 	private Button editAreaButton;
@@ -162,9 +166,9 @@ public class SickApplication extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) {
-		createPrimaryStage(primaryStage);
-		addPropertyListener(primaryStage);
-		primaryStage.show();
+		sickPrimaryStage = createPrimaryStage(primaryStage);
+		addPropertyListener(sickPrimaryStage);
+		sickPrimaryStage.show();
 	}
 
 	@Override
@@ -186,7 +190,7 @@ public class SickApplication extends Application implements Observer {
 		});
 	}
 
-	private void createPrimaryStage(Stage primaryStage) {
+	private Stage createPrimaryStage(Stage primaryStage) {
 
 		primaryStage.setTitle(APP_TITLE);
 		BorderPane borderPane = new BorderPane();
@@ -211,8 +215,22 @@ public class SickApplication extends Application implements Observer {
 		EmulatorGUI emulatorGUI = new EmulatorGUI();
 		borderPane.setBottom(emulatorGUI);
 
-		primaryStage.setScene(new Scene(borderPane, width, height));
+		sickScene = new Scene(borderPane, width, height);
+		primaryStage.setScene(sickScene);
 		primaryStage.sizeToScene();
+		sickScene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent t) {
+				if (t.getCode() == KeyCode.ESCAPE) {
+					if (sickPrimaryStage != null) {
+						saveData();
+						sickPrimaryStage.close();
+					}
+				}
+			}
+		});
+		return primaryStage;
 	}
 
 	private GridPane createConnectionStatusArea() {
