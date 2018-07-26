@@ -383,6 +383,17 @@
 		    <artifactId>prosys-opc-ua-java-sdk-client-server-evaluation</artifactId>
 		    <version>3.0.0-454</version>
 		</dependency>
+		<!-- XML -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.0</version>
+		</dependency> 
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
 		<!-- JAXB -->
 		<dependency>
 		    <groupId>com.sun.xml.bind</groupId>

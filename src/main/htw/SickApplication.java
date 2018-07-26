@@ -125,9 +125,9 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	@Override
-	public void init() throws Exception {
-		super.init();
+	public void init() {
 		try {
+			super.init();
 			database = SickDatabase.getInstance();
 			database.addObserver(this);
 			propManager = CFGPropertyManager.getInstance();
@@ -153,8 +153,10 @@ public class SickApplication extends Application implements Observer {
 			}
 
 			loadAppIconSet();
-		} catch (IOException e) {
-			log.error("IOException thrown: " + e.getLocalizedMessage());
+		} catch (IOException io) {
+			log.error("IOException thrown: " + io.getLocalizedMessage());
+		} catch (Exception e) {
+			log.error("Exception thrown: " + e.getLocalizedMessage());
 		}
 	}
 
