@@ -19,9 +19,9 @@ import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 
 /**
- * RobotHandler is a singleton, so the instantiation is restricted to one
- * object. Because there is just one object needed to coordinate the following
- * actions.
+ * RobotHandler is a singleton, so that instantiation of the class is restricted
+ * to one object. Because there is just one object needed to coordinate the
+ * following actions.
  * 
  * <ul>
  * <li>Initializes the Connection to the Robot

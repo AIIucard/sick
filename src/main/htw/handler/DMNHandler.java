@@ -19,6 +19,20 @@ import org.slf4j.LoggerFactory;
 import javafx.util.Pair;
 import main.htw.utils.SickColor;
 
+/**
+ * DMNHandler is a singleton, so that instantiation of the class is restricted
+ * to one object. Because there is just one object needed to coordinate the
+ * following actions. The class uses the Camunda library to process and
+ * integrate the business rule management.
+ * 
+ * <ul>
+ * <li>Initializes the DMNEngine
+ * <li>Initializes the DMNdecisionList
+ * <li>Load and parse the xml based Business Rule Management
+ * <li>Evaluate the decision by the given role and geofence
+ * </ul>
+ *
+ */
 public class DMNHandler {
 	private static Object lock = new Object();
 	private static DMNHandler instance = null;
@@ -33,6 +47,15 @@ public class DMNHandler {
 		// Use getInstance
 	}
 
+	/**
+	 * Realizes the singleton pattern with synchronized(lock), ensures that just one
+	 * class can instantiate this class in one specific moment. If there is already
+	 * an instance of this class, the method returns a reference. With the
+	 * instantiation of the class, a DMNEngine that processes the Decision Model is
+	 * created.
+	 *
+	 * @return instance
+	 */
 	public static DMNHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
@@ -45,6 +68,11 @@ public class DMNHandler {
 		return (instance);
 	}
 
+	/**
+	 * Creates the DMNEngine based on the Camunda library. The Method loads and
+	 * parses the decision model out of an xml file.
+	 *
+	 */
 	private static void createDMNEngine() {
 
 		log.info("Creating a default DMN engine...");
@@ -63,6 +91,18 @@ public class DMNHandler {
 		}
 	}
 
+	/**
+	 * The method looks up the decision table for an rule thats fits to the given
+	 * input values role and geofence. After a decision is evaluated some string
+	 * operation are carried out to format the result.
+	 *
+	 * @param role
+	 *            String that describes the authorization of the person in the lab
+	 * @param geofenceLevel
+	 *            int that indicates the area a person is moving in
+	 * @return Pair<Integer(security level), SickColor(color)> value range <0-10,
+	 *         Blue Green YELLOW RED>
+	 */
 	public Pair<Integer, SickColor> evaluateDecision(String role, int geofenceLevel) {
 
 		// Create Input Variables
