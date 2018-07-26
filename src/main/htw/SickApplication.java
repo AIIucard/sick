@@ -682,11 +682,14 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	private void loadAppIconSet() {
-		appIconSet.put("red", new Image(new File("icons" + File.separator + "status_error.png").toURI().toString()));
+		appIconSet.put("red",
+				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_error.png")));
 		appIconSet.put("yellow",
-				new Image(new File("icons" + File.separator + "status_pending.png").toURI().toString()));
-		appIconSet.put("green", new Image(new File("icons" + File.separator + "status_ok.png").toURI().toString()));
-		appIconSet.put("gray", new Image(new File("icons" + File.separator + "status_new.png").toURI().toString()));
+				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_pending.png")));
+		appIconSet.put("green",
+				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_ok.png")));
+		appIconSet.put("gray",
+				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_new.png")));
 	}
 
 	protected static Image createFXImage(String path, String description) {
