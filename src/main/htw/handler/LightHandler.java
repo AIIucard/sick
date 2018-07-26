@@ -33,6 +33,11 @@ public class LightHandler extends SickHandler {
 		// Use getInstance
 	}
 
+	/**
+	 * Gets the single instance of LightHandler.
+	 *
+	 * @return single instance of LightHandler
+	 */
 	public static LightHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
@@ -51,6 +56,9 @@ public class LightHandler extends SickHandler {
 		return (instance);
 	}
 
+	/**
+	 * Initialize connection.
+	 */
 	private static void initializeConnection() {
 		try {
 			log.debug("Opening Connection");
@@ -67,6 +75,9 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Sets the request settings.
+	 */
 	private static void setRequestSettings() {
 		try {
 			log.debug("Setting Request Settings");
@@ -77,6 +88,12 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Send light.
+	 *
+	 * @param color
+	 *            the color
+	 */
 	private static void sendLight(String color) {
 		initializeConnection();
 		setRequestSettings();
@@ -114,6 +131,12 @@ public class LightHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Sets the light.
+	 *
+	 * @param color
+	 *            the new light
+	 */
 	public void setLight(SickColor color) {
 		switch (color) {
 		case BLUE:

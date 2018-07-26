@@ -10,16 +10,28 @@ import main.htw.handler.LightHandler;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.utils.SickColor;
 
+/**
+ * The Class LightReconnectService.
+ */
 public class LightReconnectService extends Service<Void> {
 
 	private SickDatabase database = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	/**
+	 * Instantiates a new light reconnect service.
+	 *
+	 * @param database
+	 *            the database
+	 */
 	public LightReconnectService(SickDatabase database) {
 		this.database = database;
 	}
 
+	/**
+	 * Start the service.
+	 */
 	public void startTheService() {
 		if (!isRunning()) {
 			reset();
