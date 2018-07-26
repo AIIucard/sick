@@ -677,21 +677,21 @@ public class SickApplication extends Application implements Observer {
 				log.error("Cannot store areas!");
 			}
 		} catch (IOException e) {
-			log.error("Cannot store properties! IOException thrown: " + e);
+			log.error("Cannot store properties! IOException thrown: " + e.getLocalizedMessage());
 		} catch (JAXBException e) {
-			log.error("Cannot store areas! JAXBException thrown: " + e);
+			log.error("Cannot store areas! JAXBException thrown: " + e.getLocalizedMessage());
 		}
 	}
 
 	private void loadAppIconSet() {
-		appIconSet.put("red",
-				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_error.png")));
-		appIconSet.put("yellow",
-				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_pending.png")));
-		appIconSet.put("green",
-				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_ok.png")));
-		appIconSet.put("gray",
-				new Image(getClass().getClassLoader().getResourceAsStream(File.separator + "status_new.png")));
+		try {
+			appIconSet.put("red", new Image(SickApplication.class.getResource("/status_error.png").toString()));
+			appIconSet.put("yellow", new Image(SickApplication.class.getResource("/status_pending.png").toString()));
+			appIconSet.put("green", new Image(SickApplication.class.getResource("/status_ok.png").toString()));
+			appIconSet.put("gray", new Image(SickApplication.class.getResource("/status_new.png").toString()));
+		} catch (NullPointerException npe) {
+			log.error("Cannot load icons! NullPointerException thrown: " + npe.getLocalizedMessage());
+		}
 	}
 
 	protected static Image createFXImage(String path, String description) {
