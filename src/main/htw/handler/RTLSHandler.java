@@ -33,8 +33,8 @@ import main.htw.manager.CFGPropertyManager;
 import main.htw.parser.JavaToJson;
 import main.htw.parser.JsonReader;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.AreaComparator;
 import main.htw.xml.Area;
-import main.htw.xml.AreaComparator;
 import main.htw.xml.Badge;
 
 /**

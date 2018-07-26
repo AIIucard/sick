@@ -1,6 +1,8 @@
-package main.htw.xml;
+package main.htw.utils;
 
 import java.util.Comparator;
+
+import main.htw.xml.Area;
 
 public class AreaComparator implements Comparator<Area> {
 
