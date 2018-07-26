@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_044gd4w" name="DRD" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="Decision_13nychf" name="robotSafetyLevel">
+    <extensionElements>
+      <biodi:bounds x="200" y="200" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable_1">
+      <input id="input_1">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text>role</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0w0ovay">
+        <inputExpression id="LiteralExpression_1272de1" typeRef="integer">
+          <text>geofence</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" name="robot safety level" typeRef="string" />
+      <rule id="DecisionRule_15pyjsh">
+        <inputEntry id="UnaryTests_1q1wgs8">
+          <text>"Professor","Laborant","Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vh6tqc">
+          <text>0</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0lqya99">
+          <text>"0,RED"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1vp3qvq">
+        <inputEntry id="UnaryTests_0olpocw">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04jxcqn">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ijaqva">
+          <text>"2,BLUE"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_01nbwoo">
+        <inputEntry id="UnaryTests_1f3o7cq">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01mzrxb">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_091t8w7">
+          <text>"5,YELLOW"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1c6vnx3">
+        <inputEntry id="UnaryTests_1gwfy7z">
+          <text>"Professor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_09io6vv">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0u38kav">
+          <text>"8,GREEN"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0vh4uun">
+        <inputEntry id="UnaryTests_12itubk">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1j1tw8p">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0vwkeym">
+          <text>"1,RED"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1snx7m7">
+        <inputEntry id="UnaryTests_0ua62q9">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0t1c5zx">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_19no5ag">
+          <text>"4,YELLOW"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_12u57lp">
+        <inputEntry id="UnaryTests_08wmy6t">
+          <text>"Laborant"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1cxd675">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0qjocio">
+          <text>"7,GREEN"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_137tfbx">
+        <inputEntry id="UnaryTests_1xgbxnn">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04hntbl">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gf1t3f">
+          <text>"0,RED"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_198dz0j">
+        <inputEntry id="UnaryTests_095ya2g">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mwb74e">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ydtzhj">
+          <text>"3,YELLOW"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1q6s0p3">
+        <inputEntry id="UnaryTests_0c641jo">
+          <text>"Visitor"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0p4zyo9">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_164gt5z">
+          <text>"6,GREEN"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
