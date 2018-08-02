@@ -1,10 +1,12 @@
 package main.htw.parser;
 
+import main.htw.manager.CFGPropertyManager;
+import main.htw.properties.PropertiesKeys;
 import main.htw.xml.Area;
 import main.htw.xml.Coordinate;
 import main.htw.xml.Shape;
 
-public class JavaToJson {
+public class JavaToJsonParser {
 
 	public static String getAreaJson(Area area) {
 		String jsonString = "";
@@ -14,7 +16,8 @@ public class JavaToJson {
 		// jsonString += "\"id\": " + area.getId() + ",";
 
 		// add inOutHysteresis
-		jsonString += "\"inOutHysteresis\": 0.5,";
+		jsonString += "\"inOutHysteresis\": "
+				+ CFGPropertyManager.getInstance().getProperty(PropertiesKeys.IN_OUT_HYSTERESIS) + ",";
 
 		// add layer
 		jsonString += "\"layer\": " + area.getLayer() + ",";

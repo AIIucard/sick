@@ -18,6 +18,7 @@ import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.utils.SickColor;
+import main.htw.xml.Badge;
 
 public class BusinessLogicService extends Service<Void> {
 
@@ -177,8 +178,17 @@ public class BusinessLogicService extends Service<Void> {
 	}
 
 	private void addBadgeToActiveBadges(JSONObject payload) {
-		// TODO: Fabi & Review Maxi
-		log.warn("Not implemented! Fabe?");
+		String address = (String) payload.get("address");
+		String name = (String) payload.get("customName");
+
+		if (!BadgeManager.isBadgeInDataBase(address)) {
+			BadgeManager.addBadge(new Badge(address, name, RoleType.VISITOR));
+		} else {
+			BadgeManager.updateBadgeName(address, name);
+		}
+
+		Badge badge = BadgeManager.getBadgeByAddress(address);
+		BadgeManager.addBadgeToActiveBadges(badge);
 	}
 
 	private ActiveArea addBadgeToActiveArea(ActiveBadge badge, ActiveArea activeAreaToChange) {

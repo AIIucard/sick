@@ -34,7 +34,6 @@ public class CleanProperties extends Properties {
 				firstlineseen = true;
 			}
 		}
-
 	}
 
 	private static final long serialVersionUID = 7567765340218227372L;

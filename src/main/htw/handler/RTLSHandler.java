@@ -25,15 +25,17 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
+import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
 import main.htw.datamodell.RoleType;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.manager.CFGPropertyManager;
-import main.htw.parser.JavaToJson;
+import main.htw.parser.JavaToJsonParser;
 import main.htw.parser.JsonReader;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.AreaComparator;
+import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.Badge;
 
@@ -78,7 +80,6 @@ public class RTLSHandler extends SickHandler {
 			}
 		}
 		return (instance);
-
 	}
 
 	public void initializeConnection() throws Exception {
@@ -110,12 +111,9 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
-	// TODO Currently unused! Check if needed!
 	public void addAreaToZigpos(Area area) {
 		log.info("Adding new Area to Zigpos...");
-		String jsonFormattedString = JavaToJson.getAreaJson(area);
-		log.info("Our fine litte json Text IS: " + jsonFormattedString);
-
+		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
 		try {
 			String websocketString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
@@ -136,9 +134,6 @@ public class RTLSHandler extends SickHandler {
 			}
 
 			conn.disconnect();
-
-			log.info("magic happened here i guess");
-			// websocket.sendText("");
 		} catch (MalformedURLException e) {
 			log.error("Can not add area to Zigpos! MalformedURLException thrown: " + e.getLocalizedMessage());
 		} catch (IOException e) {
@@ -146,10 +141,38 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
+	public void updateAreaInZigpos(Area area) {
+		log.info("Updating Area in Zigpos...");
+		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
+		try {
+			String websocketString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas/" + area.getId();
+
+			URL url = new URL(websocketString);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("PUT");
+			conn.setRequestProperty("Content-Type", "application/json");
+			String input = jsonFormattedString;
+
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTPS error code : " + conn.getResponseCode());
+			}
+
+			conn.disconnect();
+		} catch (MalformedURLException e) {
+			log.error("Can not update area in Zigpos! MalformedURLException thrown: " + e.getLocalizedMessage());
+		} catch (IOException e) {
+			log.error("Can not update area in Zigpos! IOException thrown: " + e.getLocalizedMessage());
+		}
+	}
+
 	public void editArea(Area editArea) {
-		// TODO implement me!
-		log.info("Editing Area in Zigpos...");
-		log.warn("NOT IMPLEMENTED");
+		updateAreaInZigpos(editArea);
 	}
 
 	private List<Area> getAllAreasForLayerFromZigpos(Long sickLayer) {
@@ -224,8 +247,37 @@ public class RTLSHandler extends SickHandler {
 	}
 
 	public void updateAreas() {
-		// TODO Implement me
+		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
+		List<Area> areasInLayer = getAllAreasForLayerFromZigpos(sickLayer);
+		List<Area> areasToCheck = new ArrayList<Area>();
+		List<Area> areaList = SickDatabase.getInstance().getAreaList().getAreas();
+		for (Area area : areaList) {
+			areasToCheck.add(area);
+		}
+		for (Area areaToCheck : areasToCheck) {
+			for (Area areaInLayer : areasInLayer) {
 
+				// Check if area exists in layer
+				if (areaToCheck.getName().equals(areaInLayer.getName())) {
+
+					// Check if ID is different
+					if (areaToCheck.getId() != areaInLayer.getId()) {
+						areaToCheck.setId(areaInLayer.getId());
+					}
+
+					// Check if coordinates are different
+					if (areaToCheck.getId() == areaInLayer.getId()
+							&& SickUtils.hasDifferentCoordinates(areaToCheck, areaInLayer)) {
+						updateAreaInZigpos(areaToCheck);
+					}
+				} else {
+					addAreaToZigpos(areaToCheck);
+				}
+			}
+		}
+
+		// Update IDs from Areas
+		SickDatabase.getInstance().getAreaList().setAreas(areasToCheck);
 	}
 
 	public ArrayList<ActiveArea> getActiveAreas() {
@@ -237,14 +289,11 @@ public class RTLSHandler extends SickHandler {
 		Collections.sort(areas, new AreaComparator());
 
 		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();
-		CFGPropertyManager propManager = null;
-		propManager = CFGPropertyManager.getInstance();
-		int sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 
 		// Check for layer and add Areas to ActiveAreas
 		int currentLevel = 0;
 		for (Area a : areas) {
-			if (a.getLayer() == sickPosArea) {
+			if (a.getLayer() == sickLayer.intValue()) {
 				ActiveArea activeArea = new ActiveArea(a, currentLevel);
 				currentLevel++;
 				activeAreas.add(activeArea);

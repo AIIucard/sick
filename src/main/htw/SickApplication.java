@@ -107,6 +107,7 @@ public class SickApplication extends Application implements Observer {
 	private static double height = 200;
 
 	private static MenuBar sickMenuBar = null;
+	private static MenuItem editRobotPositionMenuItem = null;
 	private static TableView<Area> areaTable = null;
 	private static ObservableList<Area> areaTableData = null;
 	private static FlowPane areaButtonPane = null;
@@ -304,9 +305,9 @@ public class SickApplication extends Application implements Observer {
 		menuFile.getItems().addAll(save);
 
 		File robotPositionIconConfigure = new File("icons" + File.separator + "robot_position.png");
-		MenuItem robotPosition = new MenuItem("Configure Robot Position",
+		editRobotPositionMenuItem = new MenuItem("Configure Robot Position",
 				new ImageView(new Image(robotPositionIconConfigure.toURI().toString())));
-		robotPosition.setOnAction(new EventHandler<ActionEvent>() {
+		editRobotPositionMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 				log.debug("Configure Robot Position button hitted...");
 				Dialog<Pair<Double, Double>> dialog = new ConfigureRobotPositionGUI();
@@ -334,7 +335,7 @@ public class SickApplication extends Application implements Observer {
 			}
 		});
 
-		menuConfigure.getItems().addAll(robotPosition);
+		menuConfigure.getItems().addAll(editRobotPositionMenuItem);
 
 		menuBar.getMenus().addAll(menuFile, menuConfigure);
 
@@ -358,9 +359,9 @@ public class SickApplication extends Application implements Observer {
 				visitorModeCheckBox.setDisable(true);
 				editAreaButton.setDisable(true);
 				editBadgeButton.setDisable(true);
+				editRobotPositionMenuItem.setDisable(true);
 				isEditAreaDisabled = true;
 				isEditBadgeDisabled = true;
-				// TODO Disable menuBar
 				if (visitorModeCheckBox.isSelected()) {
 					database.setGodMode(true);
 					log.info("GodeMode on");
@@ -384,8 +385,9 @@ public class SickApplication extends Application implements Observer {
 				appManager = ApplicationManager.getInstance();
 				appManager.stopApplication();
 				startButton.setDisable(false);
-				visitorModeCheckBox.setDisable(false);
 				stopButton.setDisable(true);
+				visitorModeCheckBox.setDisable(false);
+				editRobotPositionMenuItem.setDisable(false);
 				isEditAreaDisabled = false;
 				isEditBadgeDisabled = false;
 				resetConnectionStatus();

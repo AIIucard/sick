@@ -3,6 +3,7 @@ package main.htw.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.htw.xml.Area;
 import main.htw.xml.Coordinate;
 
 public class SickUtils {
@@ -49,5 +50,16 @@ public class SickUtils {
 		coordinates.add(coodinate3);
 		coordinates.add(coodinate4);
 		return coordinates;
+	}
+
+	public static boolean hasDifferentCoordinates(Area areaToCheck, Area areaInLayer) {
+		List<Coordinate> coordinates1 = areaToCheck.getShape().getCoordinates();
+		List<Coordinate> coordinates2 = areaInLayer.getShape().getCoordinates();
+		for (int i = 0; i < coordinates1.size(); i++) {
+			if ((coordinates1.get(i).getX() != coordinates2.get(i).getX())
+					|| (coordinates1.get(i).getY() != coordinates2.get(i).getY()))
+				return true;
+		}
+		return false;
 	}
 }

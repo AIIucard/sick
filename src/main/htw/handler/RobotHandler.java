@@ -97,7 +97,6 @@ public class RobotHandler extends SickHandler {
 		client.setApplicationIdentity(identity);
 		client.connect();
 
-		// TODO Fix this for Connection
 		SickDatabase database = SickDatabase.getInstance();
 		database.setRobotConnectionStatus(ConnectionStatusType.OK);
 		log.info("Connection successful");
