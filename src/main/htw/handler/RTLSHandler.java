@@ -51,7 +51,6 @@ import main.htw.xml.Badge;
  * <li>Retrieves all badges and areas and filters for the relevant badges and
  * areas called "ActiveBadges" and "ActiveAreas"
  * </ul>
- *
  */
 @ClientEndpoint
 public class RTLSHandler extends SickHandler {

@@ -24,6 +24,15 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import main.htw.ApplicationManager;
 import main.htw.manager.AreaManager;
 
+/**
+ * <code>SickMessageHandler</code> is a singleton, so that instantiation of the
+ * class is restricted to one object. Because there is just one object needed to
+ * coordinate the following actions.
+ * 
+ * <ul>
+ * <li>1
+ * </ul>
+ */
 public class SickMessageHandler extends WebSocketAdapter {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -35,6 +44,13 @@ public class SickMessageHandler extends WebSocketAdapter {
 		// Use getInstance
 	}
 
+	/**
+	 * Realizes the singleton pattern with synchronized(lock), ensures that just one
+	 * class can instantiate this class in one specific moment. If there is already
+	 * an instance of this class, the method returns a reference.
+	 *
+	 * @return instance
+	 */
 	public static SickMessageHandler getInstance() throws IOException {
 		if (instance == null) {
 			synchronized (lock) {
@@ -47,6 +63,19 @@ public class SickMessageHandler extends WebSocketAdapter {
 		return (instance);
 	}
 
+	/**
+	 * Parses the given message object and handles it depending on the specific
+	 * topic. <br>
+	 * Currently only messages with the topic <code>GEOFENCING_EVENT</code> will be
+	 * handled. All other messages will be ignored by the application.
+	 * <p>
+	 * If the message cannot be parsed by the JSONParser an exception will be
+	 * logged.
+	 * 
+	 * @param message
+	 *            The message which will be parsed and handled depending on the
+	 *            message topic.
+	 */
 	public void handleMessage(String message) {
 		log.debug("Handle message: " + message);
 
