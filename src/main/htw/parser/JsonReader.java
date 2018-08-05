@@ -29,12 +29,24 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The JsonReader creates usable Java objects from a given JSON formatted
+ * string. The JsonReader coordinates the following actions:
+ * <li>*
+ */
 public class JsonReader {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private static JSONParser parser = new JSONParser();
 
+	/**
+	 * @param args
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 */
 	public static InputStream getContent(final String args)
 			throws IOException, NoSuchAlgorithmException, KeyManagementException {
 
@@ -84,6 +96,26 @@ public class JsonReader {
 		return sb.toString();
 	}
 
+	/**
+	 * Parses JSON formatted content of a webpage to an array containing JSON
+	 * objects which can be iterated on. If the method cannot read the content or
+	 * the resulting JSON object contains errors an exception will be thrown. Other
+	 * exceptions will be handled via logging them. The method will attempt to read
+	 * the contents 10 times before timing out.
+	 * 
+	 * @param url
+	 *            The URL from the webpage which houses the JSON formatted content
+	 *            which will be parsed. The content of the URL has to be formatted
+	 *            in <strong>UTF-8</strong>.
+	 * @return Returns a JSONArray containing JSON object parsed from the webpage
+	 *         content. <br>
+	 *         If the method times out 10 times then <code>NULL</code> will be
+	 *         returned.
+	 * @throws IOException
+	 *             Thrown when the URL cannot be accessed.
+	 * @throws JSONException
+	 *             Thrown when the JSON contains errors and cannot be parsed.
+	 */
 	public static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
 		int timeoutTrysCounter = 1;
 		JSONArray jsonArray = null;
@@ -106,6 +138,23 @@ public class JsonReader {
 		return null;
 	}
 
+	/**
+	 * Parses JSON formatted content of a webpage to a JSON object. If the method
+	 * cannot read the content or the resulting JSON object contains errors an
+	 * exception will be thrown. Other exceptions will be handled via logging them.
+	 * 
+	 * @param url
+	 *            The URL from the webpage which houses the JSON formatted content
+	 *            which will be parsed. The content of the URL has to be formatted
+	 *            in <strong>UTF-8</strong>.
+	 * @return Returns a JSONObject parsed from the webpage content. <br>
+	 *         If the method encounters an exception different from the ones it
+	 *         throws it will return <code>NULL</code>.
+	 * @throws IOException
+	 *             Thrown when the URL cannot be accessed.
+	 * @throws JSONException
+	 *             Thrown when the JSON contains errors and cannot be parsed.
+	 */
 	public static JSONObject readJsonObjectFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
@@ -121,6 +170,23 @@ public class JsonReader {
 		}
 	}
 
+	/**
+	 * Debug method which parses JSON formatted content of a file to a JSON Array
+	 * containing JSON objects which can be iterated on. Useful if you want to test
+	 * something locally.
+	 * 
+	 * @param filepath
+	 *            The filepath to the file containing the JSON formatted content.
+	 * @return Returns a JSONObject parsed from the file content.
+	 * @throws FileNotFoundException
+	 *             Thrown if the file is not physically present under the given
+	 *             filepath.
+	 * @throws IOException
+	 *             Thrown if the file cannot be accessed by the application.
+	 * @throws ParseException
+	 *             Thrown if the file content is not JSON formatted and the
+	 *             JSONArray cannot be parsed.
+	 */
 	public static JSONArray readJsonFromFile(String filepath)
 			throws FileNotFoundException, IOException, ParseException {
 		JSONArray a = (JSONArray) parser.parse(new FileReader(filepath));

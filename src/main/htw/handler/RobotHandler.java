@@ -75,7 +75,7 @@ public class RobotHandler extends SickHandler {
 	 * 
 	 * @throws Exception
 	 *             Exception is generalized and depends on the connection type.
-	 *             Handle <code>LocalizedMessage()<code> and try to reconnect!
+	 *             Handle <code>LocalizedMessage()</code> and try to reconnect!
 	 */
 	public void initializeConnection() throws Exception {
 
