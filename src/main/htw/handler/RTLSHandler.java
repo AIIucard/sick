@@ -40,9 +40,18 @@ import main.htw.xml.Area;
 import main.htw.xml.Badge;
 
 /**
- * ChatServer Client
+ * RTLSHandler is a singleton, so that instantiation of the class is restricted
+ * to one object. Because there is just one object needed to coordinate the
+ * following actions.
+ * 
+ * <ul>
+ * <li>Initializes the Connection to the ZigPos RTLS System
+ * <li>Registers to all geofencing events from the ZigPos RTLS System
+ * <li>Gets, adds and updates areas on the ZigPos RTLS System
+ * <li>Retrieves all badges and areas and filters for the relevant badges and
+ * areas called "ActiveBadges" and "ActiveAreas"
+ * </ul>
  *
- * @author Jiji_Sasidharan
  */
 @ClientEndpoint
 public class RTLSHandler extends SickHandler {
@@ -61,6 +70,18 @@ public class RTLSHandler extends SickHandler {
 		// Use getInstance
 	}
 
+	/**
+	 * Realizes the singleton pattern with synchronized (lock), ensures that just
+	 * one class can instantiate this class in one specific moment. If there is
+	 * already an instance of this class, the method returns a reference. The class
+	 * get instantiated with the ZigPos websocket URI which is defined in and loaded
+	 * from config file.
+	 * <p>
+	 * If the method cannot create the URI from the websocket string an exception
+	 * will be thrown inside the method and the URI will be Null.
+	 *
+	 * @return instance
+	 */
 	public static RTLSHandler getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
@@ -82,6 +103,17 @@ public class RTLSHandler extends SickHandler {
 		return (instance);
 	}
 
+	/**
+	 * Initializes the connection to the loaded URI of the RTLS instance. The method
+	 * ignores certificates through setting the verification of the host name to
+	 * false. Initializes the <link>SickMessageHandler</link> if not already done.
+	 * <p>
+	 * If the connection attempt is successful, sets database connection flag OK.
+	 * 
+	 * @throws Exception
+	 *             Exception is generalized and depends on the connection type.
+	 *             Handle <code>LocalizedMessage()</code> and try to reconnect!
+	 */
 	public void initializeConnection() throws Exception {
 		log.info("Connecting to RTLS at " + uri + "...");
 		WebSocketFactory factory = new WebSocketFactory();
@@ -96,8 +128,15 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Registers the Application to receive all ZigPos event messages for all
+	 * Geofencing Events. On calling it will also try to open a websocket with the
+	 * <link>SickMessageHandler</link> as Listener.
+	 * <p>
+	 * If something goes wrong an exception will be logged.
+	 */
 	public void registerGeoFence() {
-		log.info("Registering to topic GEOFENCEING_EVENT...");
+		log.info("Registering to topic GEOFENCING_EVENT...");
 		if (sickMessageHandler == null) {
 			log.warn("SickMessagehandler is not initiliazed!");
 		}
@@ -111,6 +150,21 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Adds the given Area to the ZigPos RTLS System. On calling the method creates
+	 * an JSON formatted string from the area object and tries to connect to the
+	 * ZigPos Geofencing Areas URL. If the connection is successful it will send the
+	 * JSON formatted string to the URL and thus add the specified area to the
+	 * ZigPos RTLS System for further usage.
+	 * <p>
+	 * If something goes wrong an exception will be logged.
+	 * <p>
+	 * If the connection gets the Response 200 an error will be thrown inside the
+	 * method.
+	 * 
+	 * @param area
+	 *            Area object which will be added to the ZigPos RTLS System.
+	 */
 	public void addAreaToZigpos(Area area) {
 		log.info("Adding new Area to Zigpos...");
 		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
@@ -141,6 +195,21 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * Updates the given Area on the ZigPos RTLS System. On calling the method
+	 * creates an JSON formatted string from the area object and tries to connect to
+	 * the ZigPos Geofencing Areas URL. If the connection is successful it will send
+	 * the JSON formatted string to the URL and thus update the specified and
+	 * existing area on the ZigPos RTLS System for further usage.
+	 * <p>
+	 * If something goes wrong an exception will be logged.
+	 * <p>
+	 * If the connection gets the Response 200 an error will be thrown inside the
+	 * method.
+	 * 
+	 * @param area
+	 *            Area object which will be updated on the ZigPos RTLS System.
+	 */
 	public void updateAreaInZigpos(Area area) {
 		log.info("Updating Area in Zigpos...");
 		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
@@ -171,11 +240,18 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
-	public void editArea(Area editArea) {
-		updateAreaInZigpos(editArea);
-	}
-
-	private List<Area> getAllAreasForLayerFromZigpos(Long sickLayer) {
+	/**
+	 * Retrieves a list of area objects belonging to the given layer in the ZigPos
+	 * RTLS System. Each Geofence/Area has to be attached to a certain layer in the
+	 * ZigPos RTLS System.
+	 * 
+	 * @param layer
+	 *            The layer for which all areas will be retrieved.
+	 * @return A list containing Area objects which match the given layer. <br>
+	 *         Returns Null of the ZigPos Areas URL doesn't contain parsable JSON or
+	 *         if no area matches the given layer.
+	 */
+	private List<Area> getAllAreasForLayerFromZigpos(Long layer) {
 		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
 				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 		JSONArray jsonArray;
@@ -194,12 +270,13 @@ public class RTLSHandler extends SickHandler {
 			JSONObject jsonAreaObj = (JSONObject) obj;
 
 			Long id = (Long) jsonAreaObj.get("id");
-			Long layer = (Long) jsonAreaObj.get("layer");
+			Long areaLayer = (Long) jsonAreaObj.get("layer");
 			String name = (String) jsonAreaObj.get("name");
 
-			if (layer == sickLayer) {
+			if (areaLayer == layer) {
 				if (AreaManager.isAreaInDataBase(id)) {
-					Area newArea = new Area(Integer.valueOf(id.intValue()), name, Integer.valueOf(layer.intValue()));
+					Area newArea = new Area(Integer.valueOf(id.intValue()), name,
+							Integer.valueOf(areaLayer.intValue()));
 					newArea.setDistanceToRobot(AreaManager.getAreaByID(id).getDistanceToRobot());
 					zigposAreaList.add(newArea);
 				}
@@ -208,6 +285,20 @@ public class RTLSHandler extends SickHandler {
 		return zigposAreaList;
 	}
 
+	/**
+	 * Retrieves all Badges known to the ZigPos RTLS System. For every badge it is
+	 * checked whether or not it is already known to the application. If it is a new
+	 * badge it will be assigned the <strong> default RoleType "Visitor"</strong>.
+	 * If the badge is already known to the application it will update its
+	 * attributes.
+	 * <p>
+	 * For every badge it is checked whether or not the badge is connected to the
+	 * RTLS System. Only connected badges will be useful for the application. If the
+	 * badge has its connected attribute set it will be added to the
+	 * <strong>ActiveBadges</strong>.
+	 * <p>
+	 * If something goes wrong an exception will be logged.
+	 */
 	public void getActiveBadges() {
 		JSONArray jsonBadgeArray;
 		try {
@@ -242,10 +333,20 @@ public class RTLSHandler extends SickHandler {
 		}
 	}
 
+	/**
+	 * @return websocket
+	 */
 	public WebSocket getWebsocket() {
 		return websocket;
 	}
 
+	/**
+	 * Updates all areas on the ZigPos RTLS System belonging to the so called "Sick
+	 * Layer" which houses all areas for a proper execution of this Application. The
+	 * Sick Layer can be customized in the configuration file. If the coordinates of
+	 * an area have changed it will be updated in the ZigPos RTLS System. If the
+	 * area doesn't exist in the ZigPos RTLS System it will be added to it.
+	 */
 	public void updateAreas() {
 		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
 		List<Area> areasInLayer = getAllAreasForLayerFromZigpos(sickLayer);
@@ -280,6 +381,14 @@ public class RTLSHandler extends SickHandler {
 		SickDatabase.getInstance().getAreaList().setAreas(areasToCheck);
 	}
 
+	/**
+	 * Gets all areas from the ZigPos RTLS System which are on the so called "Sick
+	 * Layer" which houses all areas for a proper execution of this Application. The
+	 * Sick Layer can be customized in the configuration file. The areas will be
+	 * sorted and added to the AreaStack.
+	 * 
+	 * @return A list of all active areas.
+	 */
 	public ArrayList<ActiveArea> getActiveAreas() {
 
 		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
@@ -291,6 +400,7 @@ public class RTLSHandler extends SickHandler {
 		ArrayList<ActiveArea> activeAreas = new ArrayList<ActiveArea>();
 
 		// Check for layer and add Areas to ActiveAreas
+		// Represents the structure of the Area Stack
 		int currentLevel = 0;
 		for (Area a : areas) {
 			if (a.getLayer() == sickLayer.intValue()) {
@@ -304,6 +414,12 @@ public class RTLSHandler extends SickHandler {
 		return activeAreas;
 	}
 
+	/**
+	 * If the connection to the ZigPos RLTS System is lost this method will try to
+	 * establish a new connection. *
+	 * <p>
+	 * If something goes wrong an exception will be logged.
+	 */
 	public void tryReconnect() {
 		log.debug("Recreating Websocket");
 		WebSocketFactory factory = new WebSocketFactory();

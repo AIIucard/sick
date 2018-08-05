@@ -622,7 +622,7 @@ public class SickApplication extends Application implements Observer {
 						}
 					}
 					areaTableData.set(pos, editArea);
-					RTLSHandler.getInstance().editArea(editArea);
+					RTLSHandler.getInstance().updateAreaInZigpos(editArea);
 				});
 			}
 		});
