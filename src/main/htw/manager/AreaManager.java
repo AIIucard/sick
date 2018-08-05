@@ -64,7 +64,7 @@ public class AreaManager {
 				// Count Roles
 				int laborantNumber = 0;
 				int professorNumber = 0;
-				for (ActiveBadge currentActiveBadge : currentActiveArea.getContaingBatchesList()) {
+				for (ActiveBadge currentActiveBadge : currentActiveArea.getContaingBadgesList()) {
 
 					if (currentActiveBadge.getRole().equals(RoleType.PROFESSOR)) {
 						professorNumber += 1;
@@ -230,14 +230,14 @@ public class AreaManager {
 
 			// If NearestActiveArea has no Badges update NearestActiveArea to higher level
 			// with badges
-			if (nearestActiveArea.getContaingBatchesList().size() == 0) {
+			if (nearestActiveArea.getContaingBadgesList().size() == 0) {
 				lastLevel = nearestActiveArea.getLevel();
 				nearestActiveArea = null;
 				ArrayList<ActiveArea> activeAreasList = database.getActiveAreasList();
 				Collections.sort(activeAreasList, new ActiveAreaComparator());
 				for (ActiveArea currentActiveArea : activeAreasList) {
 					if (currentActiveArea.getLevel() > lastLevel
-							&& currentActiveArea.getContaingBatchesList().size() > 0) {
+							&& currentActiveArea.getContaingBadgesList().size() > 0) {
 						nearestActiveArea = currentActiveArea;
 						database.setNearestActiveArea(nearestActiveArea);
 						return true;
@@ -265,7 +265,7 @@ public class AreaManager {
 
 	public static RoleType getLowestRoleInActiveArea(ActiveArea activeArea) {
 		RoleType lowestRole = activeArea.getHighestRoleType();
-		List<ActiveBadge> containgBatchesList = activeArea.getContaingBatchesList();
+		List<ActiveBadge> containgBatchesList = activeArea.getContaingBadgesList();
 		for (ActiveBadge activeBadge : containgBatchesList) {
 			if (lowestRole == RoleType.PROFESSOR && (activeBadge.getRole().equals(RoleType.LABORANT)
 					|| activeBadge.getRole().equals(RoleType.VISITOR))) {
