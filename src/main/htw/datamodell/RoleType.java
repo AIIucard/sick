@@ -1,5 +1,14 @@
 package main.htw.datamodell;
 
+/**
+ * All available Role Types which can be assigned to a badge object. The
+ * following roles can be used:
+ * <ul>
+ * <li>Visitor
+ * <li>Laborant
+ * <li>Professor
+ * </ul>
+ */
 public enum RoleType {
 
 	VISITOR("Visitor"), LABORANT("Laborant"), PROFESSOR("Professor");
@@ -10,6 +19,15 @@ public enum RoleType {
 		this.role = role;
 	}
 
+	/**
+	 * Gets the RoleType based on the input string. This method is case sensitive.
+	 * If the input string doesn't match "<strong>Visitor</strong>" ,
+	 * "<strong>Laborant</strong>" or "<strong>Professor</strong>" the method will
+	 * return Null.
+	 * 
+	 * @param type
+	 * @return RoleType
+	 */
 	public static RoleType getTypeByString(String type) {
 		switch (type) {
 		case "Visitor":

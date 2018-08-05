@@ -14,15 +14,11 @@ import main.htw.xml.Area;
  * ActiveArea is the representation of an area we want to use in our
  * application.
  * 
- *
- */
-/**
- * @author richter
- *
- */
-/**
- * @author richter
- *
+ * <ul>
+ * <li>Holds the level of the area regarding its position in the area stack
+ * <li>Holds the highest role of all badges in this area
+ * <li>Holds all badges currently in this area
+ * </ul>
  */
 public class ActiveArea {
 
@@ -35,7 +31,7 @@ public class ActiveArea {
 	private RoleType highestRoleType = RoleType.VISITOR;
 
 	/**
-	 * Constructor for the ActiveArea.
+	 * Initializes a new ActiveArea object.
 	 * 
 	 * @param area
 	 *            The ZigPos area object which is relevant for our application.
