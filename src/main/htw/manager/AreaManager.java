@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import main.htw.database.SickDatabase;
 import main.htw.datamodell.ActiveArea;
-import main.htw.datamodell.ActiveAreaComparator;
 import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.properties.PropertiesKeys;
+import main.htw.utils.ActiveAreaComparator;
 import main.htw.utils.SickUtils;
 import main.htw.xml.Area;
 import main.htw.xml.AreaList;

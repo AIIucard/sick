@@ -14,6 +14,15 @@ import javafx.scene.layout.GridPane;
 import main.htw.datamodell.RoleType;
 import main.htw.xml.Badge;
 
+/**
+ * EditBadgeGUI is used as a configuration dialog for determining the role of a
+ * badge. It contains the following actions:
+ * <ul>
+ * <li>Creating the dialog layout
+ * <li>Creating the dialog buttons
+ * </ul>
+ * The dialog label an task description can be changed inside these class.
+ */
 public class EditBadgeGUI extends Dialog<String> {
 
 	private static final String DIALOG_TITLE = "Edit Badge...";
@@ -28,29 +37,50 @@ public class EditBadgeGUI extends Dialog<String> {
 	private Label badgeAdress;
 	private Label badgeName;
 	private ComboBox<String> badgeRole;
-	private TableView<Badge> table;
+	private TableView<Badge> badgeTableView;
 
-	public EditBadgeGUI(TableView<Badge> table) {
+	/**
+	 * Creates the dialog with the layout and buttons. Saves the badge table view
+	 * for getting the selected item from the badge table.
+	 * 
+	 * @param badgeTableView
+	 *            the are table view for getting the selected item from the badge
+	 *            table
+	 */
+	public EditBadgeGUI(TableView<Badge> badgeTableView) {
 		this.setTitle(DIALOG_TITLE);
 		this.setHeaderText(TASK);
-		this.table = table;
+		this.badgeTableView = badgeTableView;
 
 		createButtons();
 		createLayout();
 	}
 
+	/**
+	 * Creates the dialog OK and CANCEL Buttons.
+	 */
 	private void createButtons() {
 		editButtonType = new ButtonType(EDIT_BUTTON, ButtonData.OK_DONE);
 		this.getDialogPane().getButtonTypes().addAll(editButtonType, ButtonType.CANCEL);
 	}
 
+	/**
+	 * Creates the dialogs layout which contains:
+	 * <ul>
+	 * <li>a label for the badge address
+	 * <li>a label for the badge name
+	 * <li>a combo box for selecting the role
+	 * <li>the corresponding labels
+	 * </ul>
+	 * The OK Button is disabled until the text fields contain valid values.
+	 */
 	private void createLayout() {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		ObservableList<Badge> selectedItems = table.getSelectionModel().getSelectedItems();
+		ObservableList<Badge> selectedItems = badgeTableView.getSelectionModel().getSelectedItems();
 
 		badgeAdress = new Label();
 		badgeAdress.setText("" + selectedItems.get(0).getAddress());

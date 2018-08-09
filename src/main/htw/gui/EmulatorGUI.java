@@ -17,10 +17,23 @@ import javafx.scene.layout.FlowPane;
 import main.htw.handler.RTLSHandler;
 import main.htw.handler.SickMessageHandler;
 
+/**
+ * EmulatorGUI is used as a emulation dialog for testing purposes. It contains
+ * the following actions:
+ * <ul>
+ * <li>Sending a list of areas
+ * <li>Sending a list of devices
+ * <li>Sending a IN-Event for an area
+ * </ul>
+ */
 public class EmulatorGUI extends FlowPane {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	/**
+	 * Creates the panel with the three corresponding buttons for emulation
+	 * function.
+	 */
 	public EmulatorGUI() {
 		this.setPadding(new Insets(5, 0, 5, 0));
 		this.setVgap(4);
@@ -33,6 +46,17 @@ public class EmulatorGUI extends FlowPane {
 		this.getChildren().addAll(sendAreasButton, sendAllDivicesButton, sendFenceNotifyButton);
 	}
 
+	/**
+	 * Creates a button for sending a list of Areas to the
+	 * {@link SickMessageHandler}. The list contains:
+	 * <ul>
+	 * <li>Area{id: 1; name: Level 1}
+	 * <li>Area{id: 2; name: Level 2}
+	 * <li>Area{id: 3; name: Level 3}
+	 * </ul>
+	 * 
+	 * @return the button
+	 */
 	private Button createSendAreasReplyButton() {
 
 		Button button = new Button();
@@ -75,6 +99,31 @@ public class EmulatorGUI extends FlowPane {
 		return button;
 	}
 
+	/**
+	 * Creates a button for sending a list of Devices to the
+	 * {@link SickMessageHandler}. The list contains:
+	 * <ul>
+	 * <li>Device{timestamp: 1512044640926; connected: false; networkId: 23103;
+	 * anchorId: -1; shortAddr: 844; parentAddr: 1433; networkRole: END_DEVICE;
+	 * networkType: IEEE_802_15_4; appRole: MOBILE; deviceState: 2; activated:true;
+	 * customName: Uwe Gaul; customType: Staatssekretär; hardwareName: CHINA_BADGE;
+	 * softwareVersion: 16777218; battery: 3.7; rssi: -53; rangingCapabilities:
+	 * {RSSI_802_15_4; PMU_RBL; TOF_UWB; DOA_UWB}; shortAddrAsHexString: 34C;
+	 * address: 8121069331292357452; addressAsHexString: 70B3D5879000034C;
+	 * parentAddrAsHexString: 599; softwareVersionAsString: 1.0.0_2}
+	 * 
+	 * <li>Device{timestamp: 1512044956749; connected: false; networkId: 23103;
+	 * anchorId: -1; shortAddr: 845; parentAddr: 1433; networkRole: END_DEVICE;
+	 * networkType: IEEE_802_15_4; appRole: MOBILE; deviceState: 2; activated:true;
+	 * customName: Horst Schneider; customType: n/a; hardwareName: CHINA_BADGE;
+	 * softwareVersion: 16777218; battery: 3.7; rssi: -49; rangingCapabilities:
+	 * {RSSI_802_15_4; PMU_RBL; TOF_UWB; TDOA_UWB}; shortAddrAsHexString: 34D;
+	 * address: 8121069331292357453; addressAsHexString: 70B3D5879000034D;
+	 * parentAddrAsHexString: 599; softwareVersionAsString: 1.0.0_2}
+	 * </ul>
+	 * 
+	 * @return the button
+	 */
 	private Button createSendAllDeviceReplyButton() {
 
 		Button button = new Button();
@@ -164,6 +213,24 @@ public class EmulatorGUI extends FlowPane {
 		return button;
 	}
 
+	/**
+	 * Creates a button for sending a IN-Event to the {@link SickMessageHandler}.
+	 * The IN-Event contains:
+	 * <ul>
+	 * <li>topic: GEOFENCING_EVENT
+	 * <li>payload:
+	 * <ul>
+	 * <li>message: Device 'Horst Schneider' enters area 'Level 3'
+	 * <li>timestamp: 1470393041329 *
+	 * <li>eventType: IN
+	 * <li>areaId: 1
+	 * <li>address: 6507827280000080940
+	 * <li>customName: Horst Schneider
+	 * </ul>
+	 * </ul>
+	 * 
+	 * @return the button
+	 */
 	private Button createSendFenceNotifyButton() {
 
 		Button button = new Button();
@@ -180,7 +247,7 @@ public class EmulatorGUI extends FlowPane {
 					geofencingEvent.put("message", "Device 'Horst Schneider' enters area 'Level 3'");
 					geofencingEvent.put("timestamp", new Long("1470393041329"));
 					geofencingEvent.put("eventType", "IN");
-					geofencingEvent.put("areaId", "11");
+					geofencingEvent.put("areaId", "1");
 					geofencingEvent.put("address", "6507827280000080940");
 					geofencingEvent.put("customName", "Horst Schneider");
 					notifyEvent.put("payload", geofencingEvent);

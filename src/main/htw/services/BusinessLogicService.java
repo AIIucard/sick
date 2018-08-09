@@ -97,7 +97,7 @@ public class BusinessLogicService extends Service<Void> {
 					}
 
 					// Check for roleChange at out event because highest role is changed for adding
-					// batches to ActiveArea and not for removing them...
+					// badges to ActiveArea and not for removing them...
 					if (database.isGodModeActive()) {
 						if (!database.getNearestActiveArea().getHighestRoleType().equals(previousHighestRoleType)) {
 							isChanged = true;

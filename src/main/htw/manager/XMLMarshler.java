@@ -1,4 +1,4 @@
-package main.htw.xml;
+package main.htw.manager;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import main.htw.xml.AreaList;
+import main.htw.xml.BadgeList;
 
 public class XMLMarshler {
 

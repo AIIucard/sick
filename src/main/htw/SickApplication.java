@@ -60,19 +60,19 @@ import main.htw.handler.RTLSHandler;
 import main.htw.manager.AreaManager;
 import main.htw.manager.BadgeManager;
 import main.htw.manager.CFGPropertyManager;
+import main.htw.manager.XMLMarshler;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 import main.htw.xml.Area;
 import main.htw.xml.AreaList;
 import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
-import main.htw.xml.XMLMarshler;
 
 /**
  * The SickApplication class represents the complete graphical user interface.
  * This includes the menu bar, the display of the connection status of the
  * services, the start and stop buttons, the management of the areas, the
- * management of the batches, as well as the emulator buttons in the lower area.
+ * management of the badges, as well as the emulator buttons in the lower area.
  * The graphical user interface is based on JavaFx. The class implements the
  * Observer pattern to be able to react dynamically to service status
  * changes.The SickApplication coordinates the following actions:
@@ -88,13 +88,13 @@ import main.htw.xml.XMLMarshler;
  * <ul>
  * <li>the stored default and user properties
  * <li>the configured areas from XML
- * <li>the configured roles and their corresponding batches from XML
+ * <li>the configured roles and their corresponding badges from XML
  * </ul>
  * <li>Start/ Stop of the application
  * <li>Use of the visitor mode
  * <li>Determining the robot position
  * <li>Change of the name and size of the areas
- * <li>Changing the role assignment of the batches
+ * <li>Changing the role assignment of the badges
  * </ul>
  * In addition, the labeling of the table columns and buttons in this class can
  * be changed.
@@ -526,7 +526,7 @@ public class SickApplication extends Application implements Observer {
 	 * The method determines the layout for the table and their buttons display. The
 	 * respective interface elements are created and integrated into the layout.
 	 * 
-	 * @return the vertical layout with the containing area and batch tables and
+	 * @return the vertical layout with the containing area and badge tables and
 	 *         their configuration buttons
 	 */
 	private VBox createTables() {
@@ -619,20 +619,20 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	/**
-	 * Creates the display of the batches in a table. The table has the following
+	 * Creates the display of the badges in a table. The table has the following
 	 * columns:
 	 * <ul>
-	 * <li>address the address of the batch
-	 * <li>name the name of the batch
-	 * <li>role the corresponding role of the batch
+	 * <li>address the address of the badge
+	 * <li>name the name of the badge
+	 * <li>role the corresponding role of the badge
 	 * </ul>
-	 * The batches are sorted in ascending order by name. The TableData is also
+	 * The badges are sorted in ascending order by name. The TableData is also
 	 * linked to the table in this method. The configuration button is disabled
-	 * until a batch is selected.
+	 * until a badge is selected.
 	 * 
 	 * @param tableData
-	 *            the batches to display inside these table
-	 * @return the table view for the batches to display
+	 *            the badges to display inside these table
+	 * @return the table view for the badges to display
 	 */
 	@SuppressWarnings("unchecked")
 	private TableView<Badge> createBadgeTable(ObservableList<Badge> tableData) {
@@ -714,14 +714,14 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	/**
-	 * Creates the button panel for the batch configuration button.
+	 * Creates the button panel for the badge configuration button.
 	 * 
-	 * @param batchTableView
-	 *            the batch table view for displaying the batches which is needed
-	 *            for the selection
+	 * @param badgeTableView
+	 *            the badge table view for displaying the badges which is needed for
+	 *            the selection
 	 * @return the button panel with the corresponding configuration button
 	 */
-	private FlowPane createBadgeButtonPane(TableView<Badge> batchTableView) {
+	private FlowPane createBadgeButtonPane(TableView<Badge> badgeTableView) {
 		FlowPane areaButtonPane = new FlowPane();
 		areaButtonPane.setPadding(new Insets(5, 0, 5, 0));
 		areaButtonPane.setVgap(4);
@@ -732,7 +732,7 @@ public class SickApplication extends Application implements Observer {
 		Label label = new Label(BADGES_TITLE);
 		label.setFont(new Font("Source Sans Pro", 20));
 
-		editBadgeButton = createEditBadgeButton(batchTableView);
+		editBadgeButton = createEditBadgeButton(badgeTableView);
 		editBadgeButton.setDisable(true);
 
 		areaButtonPane.getChildren().addAll(label, editBadgeButton);
@@ -758,12 +758,12 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	/**
-	 * Handles the selection for the batch table view. Enables the batch
+	 * Handles the selection for the badge table view. Enables the badge
 	 * configuration button if only one item is selected. Disables the button
 	 * otherwise.
 	 * 
 	 * @param selectedItems
-	 *            the selected items inside the batch table view
+	 *            the selected items inside the badge table view
 	 */
 	private void handleBadgeTableSelection(ObservableList<Badge> selectedItems) {
 		if (selectedItems.size() > 1) {
@@ -820,13 +820,13 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	/**
-	 * Creates the button for configuring the batches. This button opens a dialog in
-	 * which the role of the batch is changed. The role can be Visitor, Laborant or
+	 * Creates the button for configuring the badges. This button opens a dialog in
+	 * which the role of the badge is changed. The role can be Visitor, Laborant or
 	 * Professor.
 	 * 
 	 * @param areaTableView
 	 *            the area table view which is needed to get the selected item
-	 * @return the batch configuration button
+	 * @return the badge configuration button
 	 */
 	private Button createEditBadgeButton(TableView<Badge> table) {
 		Button button = new Button();
@@ -939,12 +939,12 @@ public class SickApplication extends Application implements Observer {
 	}
 
 	/**
-	 * Updates the batch table view after loading the batches from Zigpos.
+	 * Updates the badge table view after loading the badges from Zigpos.
 	 * 
 	 * @param adress
 	 *            the address of the badge which has to be changed
 	 * @param badgeToChange
-	 *            the batch date as a batch object which has to be updated
+	 *            the badge date as a badge object which has to be updated
 	 */
 	public static <T> void updateBadgeTable(String adress, Badge badgeToChange) {
 		Platform.runLater(new Runnable() {

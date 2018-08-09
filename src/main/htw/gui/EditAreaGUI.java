@@ -19,6 +19,16 @@ import javafx.util.Pair;
 import main.htw.manager.AreaManager;
 import main.htw.xml.Area;
 
+/**
+ * EditAreaGUI is used as a configuration dialog for determining the distance of
+ * an area to the robot and changing the area name. It contains the following
+ * actions:
+ * <ul>
+ * <li>Creating the dialog layout
+ * <li>Creating the dialog buttons
+ * </ul>
+ * The dialog label an task description can be changed inside these class.
+ */
 public class EditAreaGUI extends Dialog<Pair<String, Double>> {
 
 	private static final String DIALOG_TITLE = "Edit Fence...";
@@ -32,29 +42,50 @@ public class EditAreaGUI extends Dialog<Pair<String, Double>> {
 	private ButtonType editButtonType;
 	private TextField areaName;
 	private TextField distance;
-	private TableView<Area> table;
+	private TableView<Area> areaTableView;
 
-	public EditAreaGUI(TableView<Area> table) {
+	/**
+	 * Creates the dialog with the layout and buttons. Saves the area table view for
+	 * getting the selected item from the area table.
+	 * 
+	 * @param areaTableView
+	 *            the are table view for getting the selected item from the area
+	 *            table
+	 */
+	public EditAreaGUI(TableView<Area> areaTableView) {
 		this.setTitle(DIALOG_TITLE);
 		this.setHeaderText(TASK);
-		this.table = table;
+		this.areaTableView = areaTableView;
 
 		createButtons();
 		createLayout();
 	}
 
+	/**
+	 * Creates the dialog OK and CANCEL Buttons.
+	 */
 	private void createButtons() {
 		editButtonType = new ButtonType(EDIT_BUTTON, ButtonData.OK_DONE);
 		this.getDialogPane().getButtonTypes().addAll(editButtonType, ButtonType.CANCEL);
 	}
 
+	/**
+	 * Creates the dialogs layout which contains:
+	 * <ul>
+	 * <li>a text field for entering the area name
+	 * <li>a text field for entering the area distance
+	 * <li>the corresponding labels
+	 * <li>the check if the configured area is duplicated
+	 * </ul>
+	 * The OK Button is disabled until the text fields contain valid values.
+	 */
 	private void createLayout() {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
+		ObservableList<Area> selectedItems = areaTableView.getSelectionModel().getSelectedItems();
 
 		areaName = new TextField();
 		areaName.setPromptText(FENCE_NAME_PROMPT);

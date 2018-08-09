@@ -12,12 +12,14 @@ import main.htw.xml.Area;
 
 /**
  * ActiveArea is the representation of an area we want to use in our
- * application.
+ * application. It contains the following attributes:
  * 
  * <ul>
- * <li>Holds the level of the area regarding its position in the area stack
- * <li>Holds the highest role of all badges in this area
- * <li>Holds all badges currently in this area
+ * <li>area holds the corresponding area data
+ * <li>containgBadgesList holds all badges currently in this area
+ * <li>level holds the level of the area regarding its position in the area
+ * stack
+ * <li>highestRoleType holds the highest role of all badges in this area
  * </ul>
  */
 public class ActiveArea {
@@ -51,6 +53,7 @@ public class ActiveArea {
 	 * is currently in which area present.
 	 * 
 	 * @param activeBadge
+	 *            the active badge which has to be added
 	 */
 	public void addActiveBadge(ActiveBadge activeBadge) {
 		containgBadgesList.add(activeBadge);
@@ -61,6 +64,7 @@ public class ActiveArea {
 	 * badge is currently in which area present.
 	 * 
 	 * @param activeBadge
+	 *            the active badge which has to be removed
 	 */
 	public void removeActiveBadge(ActiveBadge activeBadge) {
 		containgBadgesList.remove(activeBadge);
@@ -69,7 +73,7 @@ public class ActiveArea {
 	/**
 	 * Gets the corresponding ZigPos area object belonging to the ActiveArea object.
 	 * 
-	 * @return area
+	 * @return the area
 	 */
 	public Area getArea() {
 		return area;
@@ -79,7 +83,7 @@ public class ActiveArea {
 	 * Sets the corresponding ZigPos area object belonging to the ActiveArea object.
 	 * 
 	 * @param area
-	 *            The ZigPos area object which is relevant for our application.
+	 *            the ZigPos area object which is relevant for our application.
 	 */
 	public void setArea(Area area) {
 		this.area = area;
@@ -88,7 +92,7 @@ public class ActiveArea {
 	/**
 	 * Gets all ActiveBadge objects currently present in this ActiveArea.
 	 * 
-	 * @return containing badges list
+	 * @return the containing badges list
 	 */
 	public List<ActiveBadge> getContaingBadgesList() {
 		return containgBadgesList;
@@ -98,6 +102,7 @@ public class ActiveArea {
 	 * Sets all ActiveBadge objects currently present in this ActiveArea.
 	 * 
 	 * @param containgBadgesList
+	 *            the containing badges list which has to be set
 	 */
 	public void setContaingBadgesList(List<ActiveBadge> containgBadgesList) {
 		this.containgBadgesList = containgBadgesList;
@@ -108,7 +113,7 @@ public class ActiveArea {
 	 * level depending on the distance of its borders to the robot cell. The closer
 	 * the border (and therefore smaller the area) the lower the level.
 	 * 
-	 * @return level
+	 * @return the level
 	 */
 	public int getLevel() {
 		return level;
@@ -120,6 +125,7 @@ public class ActiveArea {
 	 * the border (and therefore smaller the area) the lower the level.
 	 * 
 	 * @param level
+	 *            the level which has to be set
 	 */
 	public void setLevel(int level) {
 		this.level = level;
@@ -131,7 +137,7 @@ public class ActiveArea {
 	 * speed of the Robot in conjunction with the nearest distance of a badge to the
 	 * robot cell.
 	 * 
-	 * @return highestRoleType
+	 * @return the highest role type in the area stack
 	 */
 	public RoleType getHighestRoleType() {
 		return highestRoleType;
@@ -144,6 +150,7 @@ public class ActiveArea {
 	 * robot cell.
 	 * 
 	 * @param highestRoleType
+	 *            the highest role which has to be set
 	 */
 	public void setHighestRoleType(RoleType highestRoleType) {
 		this.highestRoleType = highestRoleType;

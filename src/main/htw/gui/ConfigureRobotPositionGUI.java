@@ -14,6 +14,15 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import main.htw.database.SickDatabase;
 
+/**
+ * ConfigureRobotPositionGUI is used as a configuration dialog for determining
+ * the position of the robot. It contains the following actions:
+ * <ul>
+ * <li>Creating the dialog layout
+ * <li>Creating the dialog buttons
+ * </ul>
+ * The dialog label an task description can be changed inside these class.
+ */
 public class ConfigureRobotPositionGUI extends Dialog<Pair<Double, Double>> {
 
 	private static final String DIALOG_TITLE = "Configure Robot Position...";
@@ -28,6 +37,9 @@ public class ConfigureRobotPositionGUI extends Dialog<Pair<Double, Double>> {
 	private TextField xCoordinate;
 	private TextField yCoordinate;
 
+	/**
+	 * Creates the dialog with the layout and buttons.
+	 */
 	public ConfigureRobotPositionGUI() {
 		this.setTitle(DIALOG_TITLE);
 		this.setHeaderText(TASK);
@@ -36,11 +48,23 @@ public class ConfigureRobotPositionGUI extends Dialog<Pair<Double, Double>> {
 		createLayout();
 	}
 
+	/**
+	 * Creates the dialog OK and CANCEL Buttons.
+	 */
 	private void createButtons() {
 		configureButtonType = new ButtonType(CONFIGURE_BUTTON, ButtonData.OK_DONE);
 		this.getDialogPane().getButtonTypes().addAll(configureButtonType, ButtonType.CANCEL);
 	}
 
+	/**
+	 * Creates the dialogs layout which contains:
+	 * <ul>
+	 * <li>a text field for entering the X coordinate
+	 * <li>a text field for entering the Y coordinate
+	 * <li>the corresponding labels
+	 * </ul>
+	 * The OK Button is disabled until the text fields contain valid values.
+	 */
 	private void createLayout() {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);

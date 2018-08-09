@@ -8,12 +8,15 @@ package main.htw.datamodell;
 import main.htw.xml.Badge;
 
 /**
- * ActiveBadge is the representation of a badge we want to use in our
- * application. Every badge has a assigned
- * <li>Identifier
- * <li>address
- * <li>role
- * <li>geofence
+ * ActiveArea is the representation of a badge we want to use in our
+ * application. It contains the following attributes:
+ * 
+ * <ul>
+ * <li>id holds the corresponding badge id
+ * <li>address holds the address of the badge
+ * <li>role holds the corresponding role of the badge
+ * <li>currentGeoFence holds the current Geofence where the badge is located
+ * </ul>
  */
 public class ActiveBadge {
 	private Integer id;
@@ -33,7 +36,7 @@ public class ActiveBadge {
 	}
 
 	/**
-	 * @return id
+	 * @return the id
 	 */
 	public Integer getId() {
 		return id;
@@ -41,13 +44,14 @@ public class ActiveBadge {
 
 	/**
 	 * @param id
+	 *            the id which has to be set
 	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return currentGeoFence
+	 * @return the current GeoFence
 	 */
 	public Integer getCurrentGeoFence() {
 		return currentGeoFence;
@@ -55,13 +59,14 @@ public class ActiveBadge {
 
 	/**
 	 * @param currentGeoFence
+	 *            the current GeoFence which has to be set
 	 */
 	public void setCurrentGeoFence(Integer currentGeoFence) {
 		this.currentGeoFence = currentGeoFence;
 	}
 
 	/**
-	 * @return address
+	 * @return the address
 	 */
 	public String getAddress() {
 		return address;
@@ -69,13 +74,14 @@ public class ActiveBadge {
 
 	/**
 	 * @param address
+	 *            the current address which has to be set
 	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return role
+	 * @return the current role
 	 */
 	public RoleType getRole() {
 		return role;
@@ -83,6 +89,7 @@ public class ActiveBadge {
 
 	/**
 	 * @param role
+	 *            the role which has to be set
 	 */
 	public void setRole(RoleType role) {
 		this.role = role;

@@ -47,6 +47,11 @@ public class ApplicationManager {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private ApplicationManager() {
 		// Use getInstance
 	}
@@ -76,7 +81,7 @@ public class ApplicationManager {
 	 * application waits for the successful connection attempt of each connection
 	 * service using an ExecutorService and CountDownLatch. After the successful
 	 * connection, the InitializationService is started in which the areas and
-	 * batches are updated and the registration is performed in the RTLS system. The
+	 * badges are updated and the registration is performed in the RTLS system. The
 	 * double start of the application is prevented by the flag isRunning.
 	 */
 	public void startApplication() {
