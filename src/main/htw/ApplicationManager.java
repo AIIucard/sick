@@ -15,6 +15,22 @@ import main.htw.services.LightConnectionService;
 import main.htw.services.RTLSConnectionService;
 import main.htw.services.RobotConnectionService;
 
+/**
+ * ApplicationManager is a singleton, so the instantiation is restricted to one
+ * object. The ApplicationManager coordinates the following actions:
+ * <ul>
+ * <li>Start/ Stop of the Application
+ * <li>Manage and handle all corresponding services including:
+ * <ul>
+ * <li>the InitializationService
+ * <li>the RobotConnectionService
+ * <li>the RTLSConnectionService
+ * <li>the RTLSConnectionService
+ * </ul>
+ * <li>Handle the service status
+ * <li>Handle the incoming GeofenceEvent
+ * </ul>
+ */
 public class ApplicationManager {
 
 	private boolean isRunning = false;
@@ -26,16 +42,23 @@ public class ApplicationManager {
 	private static RTLSConnectionService rtlsService = null;
 	private static LightConnectionService lightService = null;
 	private static InitializationService initializationService = null;
-	private SickApplication app = null;
 
 	private static SickDatabase database = null;
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private ApplicationManager() {
-
+		// Use getInstance
 	}
 
+	/**
+	 * Realizes the singleton pattern with synchronized(lock), ensures that just one
+	 * class can instantiate this class in one specific moment. If there is already
+	 * an instance of this class, the method returns a reference. The class get
+	 * instantiated with the database instance.
+	 *
+	 * @return The new or referenced instance of this class.
+	 */
 	public static ApplicationManager getInstance() {
 		if (instance == null) {
 			synchronized (lock) {
@@ -48,8 +71,15 @@ public class ApplicationManager {
 		return (instance);
 	}
 
-	public void startApplication(SickApplication app) {
-		this.app = app;
+	/**
+	 * Start the application by initializing the associated services. The
+	 * application waits for the successful connection attempt of each connection
+	 * service using an ExecutorService and CountDownLatch. After the successful
+	 * connection, the InitializationService is started in which the areas and
+	 * batches are updated and the registration is performed in the RTLS system. The
+	 * double start of the application is prevented by the flag isRunning.
+	 */
+	public void startApplication() {
 		if (!isRunning) {
 			isRunning = true;
 
@@ -76,20 +106,30 @@ public class ApplicationManager {
 		}
 	}
 
-	public void handleMessage() {
-
-	}
-
+	/**
+	 * Stops the application and resets the flag isRunning.
+	 */
 	public void stopApplication() {
 		isRunning = false;
-		app.getStartButton().setDisable(false);
-		app.getStopButton().setDisable(true);
 	}
 
+	/**
+	 * Returns the running status of the application.
+	 * 
+	 * @return <code>true</code> if the application is running; <code>false</code>
+	 *         otherwise.
+	 */
 	public boolean isRunning() {
 		return isRunning;
 	}
 
+	/**
+	 * Starts a new BusinessLogigService and forwards the registered GeofenceEvent
+	 * to it.
+	 * 
+	 * @param payload
+	 *            the containing payload of the GeofenceEvent as a JSON string
+	 */
 	public void handleGeofenceEvent(JSONObject payload) {
 		if (isRunning) {
 			BusinessLogicService businessLogicService = new BusinessLogicService(SickDatabase.getInstance(), payload);

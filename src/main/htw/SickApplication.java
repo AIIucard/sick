@@ -68,6 +68,37 @@ import main.htw.xml.Badge;
 import main.htw.xml.BadgeList;
 import main.htw.xml.XMLMarshler;
 
+/**
+ * The SickApplication class represents the complete graphical user interface.
+ * This includes the menu bar, the display of the connection status of the
+ * services, the start and stop buttons, the management of the areas, the
+ * management of the batches, as well as the emulator buttons in the lower area.
+ * The graphical user interface is based on JavaFx. The class implements the
+ * Observer pattern to be able to react dynamically to service status
+ * changes.The SickApplication coordinates the following actions:
+ * <ul>
+ * <li>Initialization and rendering of the graphical user interface by JavaFx
+ * <li>Initialization of the corresponding Managers including:
+ * <ul>
+ * <li>the {@link CFGPropertyManager}
+ * <li>the {@link ApplicationManager}
+ * <li>the {@link XMLMarshler}
+ * </ul>
+ * <li>Loading of the corresponding data sets including:
+ * <ul>
+ * <li>the stored default and user properties
+ * <li>the configured areas from XML
+ * <li>the configured roles and their corresponding batches from XML
+ * </ul>
+ * <li>Start/ Stop of the application
+ * <li>Use of the visitor mode
+ * <li>Determining the robot position
+ * <li>Change of the name and size of the areas
+ * <li>Changing the role assignment of the batches
+ * </ul>
+ * In addition, the labeling of the table columns and buttons in this class can
+ * be changed.
+ */
 public class SickApplication extends Application implements Observer {
 
 	private static final String APP_TITLE = "This is S!ck";
@@ -125,10 +156,24 @@ public class SickApplication extends Application implements Observer {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	/**
+	 * Main method of the project.
+	 * 
+	 * @param args
+	 *            the start parameters that can be used for starting the application
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/**
+	 * This method is called when the application is started before rendering. In
+	 * this method, the database is initialized and the associated properties, areas
+	 * and roles are loaded. In addition, the height and width of the application
+	 * (in pixels) is loaded and set for display.
+	 * 
+	 * @see javafx.application.Application#init()
+	 */
 	@Override
 	public void init() {
 		try {
@@ -165,6 +210,16 @@ public class SickApplication extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * This method is called when the application is rendered and determines how the
+	 * application is displayed. In addition, a PropertyListener is added to the
+	 * application to react to changes in the application size.
+	 * 
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 * 
+	 * @param primaryStage
+	 *            the empty scene object of the JavaFx application
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		sickPrimaryStage = createPrimaryStage(primaryStage);
@@ -172,12 +227,28 @@ public class SickApplication extends Application implements Observer {
 		sickPrimaryStage.show();
 	}
 
+	/**
+	 * This method is called when the application is closed. It's used for saving
+	 * the application data.
+	 * 
+	 * @see javafx.application.Application#stop(javafx.stage.Stage)
+	 * 
+	 * @throws Exception
+	 *             Exception is generalized and depends on the Error type. Use the
+	 *             log message for debugging!
+	 */
 	@Override
 	public void stop() throws Exception {
 		super.stop();
 		saveData();
 	}
 
+	/**
+	 * Called by the observed object. These method updates the connection status
+	 * display.
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		Platform.runLater(new Runnable() {
@@ -191,6 +262,17 @@ public class SickApplication extends Application implements Observer {
 		});
 	}
 
+	/**
+	 * The method determines the layout for the application. The respective
+	 * interface elements are created and integrated into the layout. In addition, a
+	 * KeyEventHandler is added which closes the application by pressing the "ESC"
+	 * key.
+	 * 
+	 * @param primaryStage
+	 *            the empty scene object of the JavaFx application
+	 * 
+	 * @return the completed JavaFx scene for rendering
+	 */
 	private Stage createPrimaryStage(Stage primaryStage) {
 
 		primaryStage.setTitle(APP_TITLE);
@@ -199,7 +281,7 @@ public class SickApplication extends Application implements Observer {
 
 		sickMenuBar = createMenuBar();
 
-		HBox startStopButtons = createStartStopButtons(this);
+		HBox startStopButtons = createStartStopButtons();
 		GridPane statusArea = createConnectionStatusArea();
 		VBox areaTable = createTables();
 
@@ -234,6 +316,15 @@ public class SickApplication extends Application implements Observer {
 		return primaryStage;
 	}
 
+	/**
+	 * Creates a grid in which the connection status to the RTLS system, to the
+	 * robot and to the light module can be displayed via a label and a colored
+	 * icon. The label is updated via the update method of the SickApplication
+	 * class.
+	 * 
+	 * @return the connection status area as a 3x2 grid containing the label and the
+	 *         status icon
+	 */
 	private GridPane createConnectionStatusArea() {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -288,6 +379,13 @@ public class SickApplication extends Application implements Observer {
 		return grid;
 	}
 
+	/**
+	 * Creates a menu bar in which the appliaction data can be saved via a file tab
+	 * and the robot position can be defined via a configuration tab.
+	 * 
+	 * @return the menu bar containing a file tab for saving the application data
+	 *         and a configuration tab for determining the robot position
+	 */
 	private MenuBar createMenuBar() {
 		MenuBar menuBar = new MenuBar();
 		Menu menuFile = new Menu(MENU_FILE);
@@ -334,15 +432,23 @@ public class SickApplication extends Application implements Observer {
 				});
 			}
 		});
-
 		menuConfigure.getItems().addAll(editRobotPositionMenuItem);
-
 		menuBar.getMenus().addAll(menuFile, menuConfigure);
-
 		return menuBar;
 	}
 
-	private HBox createStartStopButtons(SickApplication app) {
+	/**
+	 * Creates a horizontal layout and the corresponding start and stop buttons for
+	 * the application. If the start button has been pressed, this button and the
+	 * menu entry for defining the robot position, the change button for configuring
+	 * the areas, the button for role assignment and the check box for VisitorMode
+	 * are disabled and the stop button will be enabled. This should prevent the
+	 * application from being started several times or data becoming inconsistent
+	 * during runtime.
+	 * 
+	 * @return the horizontal box layout containing a start and a stop button
+	 */
+	private HBox createStartStopButtons() {
 
 		startButton = new Button();
 		startButton.setText(START_BUTTON);
@@ -353,7 +459,7 @@ public class SickApplication extends Application implements Observer {
 				log.info("Started Application...");
 
 				appManager = ApplicationManager.getInstance();
-				appManager.startApplication(app);
+				appManager.startApplication();
 				startButton.setDisable(true);
 				stopButton.setDisable(false);
 				visitorModeCheckBox.setDisable(true);
@@ -406,12 +512,23 @@ public class SickApplication extends Application implements Observer {
 		return hBox;
 	}
 
+	/**
+	 * Resets the connection status for each application start action to
+	 * <code>ConnectionStatusType.NEW</code>.
+	 */
 	private void resetConnectionStatus() {
 		database.setRTLSConnectionStatus(ConnectionStatusType.NEW);
 		database.setRobotConnectionStatus(ConnectionStatusType.NEW);
 		database.setLightConnectionStatus(ConnectionStatusType.NEW);
 	}
 
+	/**
+	 * The method determines the layout for the table and their buttons display. The
+	 * respective interface elements are created and integrated into the layout.
+	 * 
+	 * @return the vertical layout with the containing area and batch tables and
+	 *         their configuration buttons
+	 */
 	private VBox createTables() {
 
 		areaTableData = FXCollections.observableArrayList(SickDatabase.getInstance().getAreaList().getAreas());
@@ -430,6 +547,23 @@ public class SickApplication extends Application implements Observer {
 		return vbox;
 	}
 
+	/**
+	 * Creates the display of the areas in a table. The table has the following
+	 * columns:
+	 * <ul>
+	 * <li>id the ID of the area
+	 * <li>name the name of the area
+	 * <li>layer the corresponding layer of the area
+	 * <li>distance the distance from the edge of the area to the robot
+	 * </ul>
+	 * 
+	 * The TableData is also linked to the table in this method. The configuration
+	 * button is disabled until an area is selected.
+	 * 
+	 * @param tableData
+	 *            the areas to display inside these table
+	 * @return the table view for the areas to display
+	 */
 	@SuppressWarnings("unchecked")
 	private TableView<Area> createAreaTable(ObservableList<Area> tableData) {
 		TableView<Area> tableView = new TableView<Area>();
@@ -484,6 +618,22 @@ public class SickApplication extends Application implements Observer {
 		return tableView;
 	}
 
+	/**
+	 * Creates the display of the batches in a table. The table has the following
+	 * columns:
+	 * <ul>
+	 * <li>address the address of the batch
+	 * <li>name the name of the batch
+	 * <li>role the corresponding role of the batch
+	 * </ul>
+	 * The batches are sorted in ascending order by name. The TableData is also
+	 * linked to the table in this method. The configuration button is disabled
+	 * until a batch is selected.
+	 * 
+	 * @param tableData
+	 *            the batches to display inside these table
+	 * @return the table view for the batches to display
+	 */
 	@SuppressWarnings("unchecked")
 	private TableView<Badge> createBadgeTable(ObservableList<Badge> tableData) {
 		TableView<Badge> tableView = new TableView<Badge>();
@@ -536,7 +686,15 @@ public class SickApplication extends Application implements Observer {
 		return tableView;
 	}
 
-	private FlowPane createAreaButtonPane(TableView<Area> table) {
+	/**
+	 * Creates the button panel for the area configuration button.
+	 * 
+	 * @param areaTableView
+	 *            the area table view for displaying the areas which is needed for
+	 *            the selection
+	 * @return the button panel with the corresponding configuration button
+	 */
+	private FlowPane createAreaButtonPane(TableView<Area> areaTableView) {
 		FlowPane areaButtonPane = new FlowPane();
 		areaButtonPane.setPadding(new Insets(5, 0, 5, 0));
 		areaButtonPane.setVgap(4);
@@ -547,7 +705,7 @@ public class SickApplication extends Application implements Observer {
 		Label label = new Label(AREAS_TITLE);
 		label.setFont(new Font("Source Sans Pro", 20));
 
-		editAreaButton = createEditAreaButton(table);
+		editAreaButton = createEditAreaButton(areaTableView);
 		editAreaButton.setDisable(true);
 
 		areaButtonPane.getChildren().addAll(label, editAreaButton);
@@ -555,7 +713,15 @@ public class SickApplication extends Application implements Observer {
 		return areaButtonPane;
 	}
 
-	private FlowPane createBadgeButtonPane(TableView<Badge> table) {
+	/**
+	 * Creates the button panel for the batch configuration button.
+	 * 
+	 * @param batchTableView
+	 *            the batch table view for displaying the batches which is needed
+	 *            for the selection
+	 * @return the button panel with the corresponding configuration button
+	 */
+	private FlowPane createBadgeButtonPane(TableView<Badge> batchTableView) {
 		FlowPane areaButtonPane = new FlowPane();
 		areaButtonPane.setPadding(new Insets(5, 0, 5, 0));
 		areaButtonPane.setVgap(4);
@@ -566,7 +732,7 @@ public class SickApplication extends Application implements Observer {
 		Label label = new Label(BADGES_TITLE);
 		label.setFont(new Font("Source Sans Pro", 20));
 
-		editBadgeButton = createEditBadgeButton(table);
+		editBadgeButton = createEditBadgeButton(batchTableView);
 		editBadgeButton.setDisable(true);
 
 		areaButtonPane.getChildren().addAll(label, editBadgeButton);
@@ -574,6 +740,13 @@ public class SickApplication extends Application implements Observer {
 		return areaButtonPane;
 	}
 
+	/**
+	 * Handles the selection for the area table view. Enables the area configuration
+	 * button if only one item is selected. Disables the button otherwise.
+	 * 
+	 * @param selectedItems
+	 *            the selected items inside the area table view
+	 */
 	private void handleAreaTableSelection(ObservableList<Area> selectedItems) {
 		if (selectedItems.size() > 1) {
 			editAreaButton.setDisable(true);
@@ -584,6 +757,14 @@ public class SickApplication extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * Handles the selection for the batch table view. Enables the batch
+	 * configuration button if only one item is selected. Disables the button
+	 * otherwise.
+	 * 
+	 * @param selectedItems
+	 *            the selected items inside the batch table view
+	 */
 	private void handleBadgeTableSelection(ObservableList<Badge> selectedItems) {
 		if (selectedItems.size() > 1) {
 			editBadgeButton.setDisable(true);
@@ -594,7 +775,16 @@ public class SickApplication extends Application implements Observer {
 		}
 	}
 
-	private Button createEditAreaButton(TableView<Area> table) {
+	/**
+	 * Creates the button for configuring the Areas. This button opens a dialog in
+	 * which the distance of the area to the robot is set. The perimeter coordinates
+	 * are calculated automatically and the area is updated in Zigpos.
+	 * 
+	 * @param areaTableView
+	 *            the area table view which is needed to get the selected item
+	 * @return the area configuration button
+	 */
+	private Button createEditAreaButton(TableView<Area> areaTableView) {
 		Button button = new Button();
 		button.setText(EDIT_AREA_BUTTON);
 		button.setOnAction(new EventHandler<ActionEvent>() {
@@ -602,11 +792,11 @@ public class SickApplication extends Application implements Observer {
 			@Override
 			public void handle(ActionEvent event) {
 				log.debug("Edit Area button hitted...");
-				Dialog<Pair<String, Double>> dialog = new EditAreaGUI(table);
+				Dialog<Pair<String, Double>> dialog = new EditAreaGUI(areaTableView);
 				Optional<Pair<String, Double>> result = dialog.showAndWait();
 
 				result.ifPresent(nameDistance -> {
-					ObservableList<Area> selectedItems = table.getSelectionModel().getSelectedItems();
+					ObservableList<Area> selectedItems = areaTableView.getSelectionModel().getSelectedItems();
 					Area selectedArea = selectedItems.get(0);
 
 					Area editArea = AreaManager.editArea(selectedArea, nameDistance.getKey(), nameDistance.getValue());
@@ -629,6 +819,15 @@ public class SickApplication extends Application implements Observer {
 		return button;
 	}
 
+	/**
+	 * Creates the button for configuring the batches. This button opens a dialog in
+	 * which the role of the batch is changed. The role can be Visitor, Laborant or
+	 * Professor.
+	 * 
+	 * @param areaTableView
+	 *            the area table view which is needed to get the selected item
+	 * @return the batch configuration button
+	 */
 	private Button createEditBadgeButton(TableView<Badge> table) {
 		Button button = new Button();
 		button.setText(EDIT_BADGE_BUTTON);
@@ -661,6 +860,15 @@ public class SickApplication extends Application implements Observer {
 		return button;
 	}
 
+	/**
+	 * Adds a new PropertyListener to the primaryStage. These PropertyListener
+	 * refreshes the table views and updates the height and width properties in the
+	 * PropertyManager.
+	 * 
+	 * @param primaryStage
+	 *            the application primaryStage for getting the new height and width
+	 *            properties values.
+	 */
 	private void addPropertyListener(Stage primaryStage) {
 		primaryStage.getScene().widthProperty().addListener((obs, oldVal, newVal) -> {
 			if (propManager != null) {
@@ -686,6 +894,13 @@ public class SickApplication extends Application implements Observer {
 		});
 	}
 
+	/**
+	 * Saves the corresponding application data by calling the
+	 * <code>storeProperties</code> method of the PropertyManage and the
+	 * <code>marshalAreaList</code> and <code>marshalBadgeList</code> of the
+	 * XMLMarshaller. Handles also the possible <code>IOException</code> and
+	 * <code>JAXBException</code> of the XMLMarshaller.
+	 */
 	private void saveData() {
 		try {
 			AreaList areaList = SickDatabase.getInstance().getAreaList();
@@ -708,6 +923,10 @@ public class SickApplication extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * Loads the corresponding application icons of the status area from the
+	 * resources.
+	 */
 	private void loadAppIconSet() {
 		try {
 			appIconSet.put("red", new Image(SickApplication.class.getResource("/status_error.png").toString()));
@@ -719,26 +938,14 @@ public class SickApplication extends Application implements Observer {
 		}
 	}
 
-	protected static Image createFXImage(String path, String description) {
-		return new Image(path);
-	}
-
-	public Button getStartButton() {
-		return startButton;
-	}
-
-	public void setStartButton(Button startButton) {
-		this.startButton = startButton;
-	}
-
-	public Button getStopButton() {
-		return stopButton;
-	}
-
-	public void setStopButton(Button stopButton) {
-		this.stopButton = stopButton;
-	}
-
+	/**
+	 * Updates the batch table view after loading the batches from Zigpos.
+	 * 
+	 * @param adress
+	 *            the address of the badge which has to be changed
+	 * @param badgeToChange
+	 *            the batch date as a batch object which has to be updated
+	 */
 	public static <T> void updateBadgeTable(String adress, Badge badgeToChange) {
 		Platform.runLater(new Runnable() {
 
