@@ -19,10 +19,8 @@ import main.htw.properties.PropertiesKeys;
 import main.htw.utils.ConnectionStatusType;
 
 /**
- * RobotHandler is a singleton, so that instantiation of the class is restricted
- * to one object. Because there is just one object needed to coordinate the
- * following actions.
- * 
+ * RobotHandler is a singleton, so the instantiation is restricted to one
+ * object. The RobotHandler coordinates the following actions:
  * <ul>
  * <li>Initializes the Connection to the Robot
  * <li>Send the calculated security level to the robot via OPCUA
@@ -37,6 +35,11 @@ public class RobotHandler extends SickHandler {
 
 	private static URI uri;
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private RobotHandler() {
 		// Use getInstance
 	}
@@ -47,7 +50,7 @@ public class RobotHandler extends SickHandler {
 	 * an instance of this class, the method returns a reference. The class get
 	 * instantiated with a URI which is defined and loaded from config file.
 	 *
-	 * @return instance
+	 * @return the new or referenced instance of this class.
 	 */
 	public static RobotHandler getInstance() {
 		if (instance == null) {

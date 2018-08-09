@@ -25,12 +25,11 @@ import main.htw.ApplicationManager;
 import main.htw.manager.AreaManager;
 
 /**
- * <code>SickMessageHandler</code> is a singleton, so that instantiation of the
- * class is restricted to one object. Because there is just one object needed to
- * coordinate the following actions.
- * 
+ * RobotHandler is a singleton, so the instantiation is restricted to one
+ * object. The RobotHandler coordinates the following actions:
  * <ul>
- * <li>1
+ * <li>Handle the incoming messages
+ * <li>Handle the {@link WebSocketAdapter}
  * </ul>
  */
 public class SickMessageHandler extends WebSocketAdapter {
@@ -40,6 +39,11 @@ public class SickMessageHandler extends WebSocketAdapter {
 	private static SickMessageHandler instance = null;
 	Session userSession = null;
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private SickMessageHandler() {
 		// Use getInstance
 	}
@@ -49,7 +53,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 	 * class can instantiate this class in one specific moment. If there is already
 	 * an instance of this class, the method returns a reference.
 	 *
-	 * @return instance
+	 * @return the new or referenced instance of this class.
 	 */
 	public static SickMessageHandler getInstance() throws IOException {
 		if (instance == null) {

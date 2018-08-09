@@ -29,6 +29,11 @@ public class LightHandler extends SickHandler {
 
 	private static URL url;
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private LightHandler() {
 		// Use getInstance
 	}

@@ -40,10 +40,8 @@ import main.htw.xml.Area;
 import main.htw.xml.Badge;
 
 /**
- * RTLSHandler is a singleton, so that instantiation of the class is restricted
- * to one object. Because there is just one object needed to coordinate the
- * following actions.
- * 
+ * RobotHandler is a singleton, so the instantiation is restricted to one
+ * object. The RobotHandler coordinates the following actions:
  * <ul>
  * <li>Initializes the Connection to the ZigPos RTLS System
  * <li>Registers to all geofencing events from the ZigPos RTLS System
@@ -65,6 +63,11 @@ public class RTLSHandler extends SickHandler {
 
 	private static URI uri;
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private RTLSHandler() {
 		// Use getInstance
 	}
@@ -79,7 +82,7 @@ public class RTLSHandler extends SickHandler {
 	 * If the method cannot create the URI from the websocket string an exception
 	 * will be thrown inside the method and the URI will be Null.
 	 *
-	 * @return instance
+	 * @return the new or referenced instance of this class.
 	 */
 	public static RTLSHandler getInstance() {
 		if (instance == null) {

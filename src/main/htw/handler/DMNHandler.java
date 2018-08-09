@@ -20,18 +20,16 @@ import javafx.util.Pair;
 import main.htw.utils.SickColor;
 
 /**
- * DMNHandler is a singleton, so that instantiation of the class is restricted
- * to one object. Because there is just one object needed to coordinate the
- * following actions. The class uses the Camunda library to process and
- * integrate the business rule management.
- * 
+ * DMNHandler is a singleton, so the instantiation is restricted to one object.
+ * The DMNHandler coordinates the following actions:
  * <ul>
  * <li>Initializes the DMNEngine
  * <li>Initializes the DMNdecisionList
  * <li>Load and parse the xml based Business Rule Management
  * <li>Evaluate the decision by the given role and geofence
  * </ul>
- *
+ * The class uses the Camunda library to process and integrate the business rule
+ * management.
  */
 public class DMNHandler {
 	private static Object lock = new Object();
@@ -43,6 +41,11 @@ public class DMNHandler {
 
 	private final static String DECISION_MODEL = "cfg" + File.separator + "sick.dmn";
 
+	/**
+	 * Use <code>getInstance</code> method!
+	 * 
+	 * @deprecated
+	 */
 	private DMNHandler() {
 		// Use getInstance
 	}
@@ -54,7 +57,7 @@ public class DMNHandler {
 	 * instantiation of the class, a DMNEngine that processes the Decision Model is
 	 * created.
 	 *
-	 * @return instance
+	 * @return the new or referenced instance of this class.
 	 */
 	public static DMNHandler getInstance() {
 		if (instance == null) {

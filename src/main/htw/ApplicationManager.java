@@ -62,7 +62,7 @@ public class ApplicationManager {
 	 * an instance of this class, the method returns a reference. The class get
 	 * instantiated with the database instance.
 	 *
-	 * @return The new or referenced instance of this class.
+	 * @return the new or referenced instance of this class.
 	 */
 	public static ApplicationManager getInstance() {
 		if (instance == null) {

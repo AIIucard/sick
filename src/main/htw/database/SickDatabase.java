@@ -69,7 +69,7 @@ public class SickDatabase extends Observable {
 	 * class can instantiate this class in one specific moment. If there is already
 	 * an instance of this class, the method returns a reference.
 	 *
-	 * @return The new or referenced instance of this class.
+	 * @return the new or referenced instance of this class.
 	 */
 	public static SickDatabase getInstance() {
 		if (instance == null) {
