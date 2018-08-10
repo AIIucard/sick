@@ -14,6 +14,18 @@ import main.htw.manager.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickColor;
 
+/**
+ * LigthHandler is a singleton, so the instantiation is restricted to one
+ * object. Because there is just one object needed to coordinate the following
+ * actions.
+ * 
+ * <ul>
+ * <li>Initializes the Connection to the light strip
+ * <li>Send the calculated color to the light strip via REST
+ * </ul>
+ *
+ */
+
 public class LightHandler extends SickHandler {
 
 	private static final String RED = "\"xy\": [0.734662, 0.265047]";
@@ -29,17 +41,15 @@ public class LightHandler extends SickHandler {
 
 	private static URL url;
 
-	/**
-	 * Use <code>getInstance</code> method!
-	 * 
-	 * @deprecated
-	 */
 	private LightHandler() {
 		// Use getInstance
 	}
 
 	/**
-	 * Gets the single instance of LightHandler.
+	 * Realizes the singleton pattern with synchronized(lock), ensures that just one
+	 * class can instantiate this class in one specific moment. If there is already
+	 * an instance of this class, the method returns a reference. The class get
+	 * instantiated with a URL which is defined and loaded from config file.
 	 *
 	 * @return single instance of LightHandler
 	 */
@@ -62,7 +72,9 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Initialize connection.
+	 * Initializes the connection to the loaded URL of the LightHandler instance.
+	 * Set the DoOutput flag to true to use the URL connection for output. If the
+	 * connection attempt is successful, sets database connection flag OK.
 	 */
 	private static void initializeConnection() {
 		try {
@@ -81,7 +93,9 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Sets the request settings.
+	 * Sets the REST request settings. "PUT" is set as the REST method for changing
+	 * the LED color. The media type (content type) is defined with
+	 * "application/json".
 	 */
 	private static void setRequestSettings() {
 		try {
@@ -94,10 +108,13 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Send light.
+	 * The method is called in the method setLight. Initializes the connection to
+	 * the light strip. Uses request settings to finally send the calculated LED
+	 * color to the light strip via REST-API. For control purposes, the server's
+	 * response is output using an output stream.
 	 *
-	 * @param color
-	 *            the color
+	 * @param calculated
+	 *            color for light strip from method setLight
 	 */
 	private static void sendLight(String color) {
 		initializeConnection();
@@ -137,10 +154,9 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Sets the light.
+	 * Sets the light color.
 	 *
 	 * @param color
-	 *            the new light
 	 */
 	public void setLight(SickColor color) {
 		switch (color) {
