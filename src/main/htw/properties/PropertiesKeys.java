@@ -1,5 +1,9 @@
 package main.htw.properties;
 
+/**
+ * Contains all property keys available in the application for a better
+ * overview.
+ */
 public class PropertiesKeys {
 
 	public static final String APP_WIDTH = "appWidth";

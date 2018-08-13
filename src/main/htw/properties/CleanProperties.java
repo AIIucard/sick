@@ -8,6 +8,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeSet;
 
+/**
+ * Save the default properties and reverts all changes.
+ *
+ */
 public class CleanProperties extends Properties {
 
 	public CleanProperties() {
