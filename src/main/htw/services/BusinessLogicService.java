@@ -72,7 +72,7 @@ public class BusinessLogicService extends Service<Void> {
 					if (activeBadge != null) {
 						ActiveArea activeAreaWithBadge = addBadgeToActiveArea(activeBadge, activeAreaToChange);
 						if (activeAreaWithBadge != null) {
-							isChanged = updateNearestActiveAreaIN(activeBadge, activeAreaWithBadge);
+							isChanged = updateNearestActiveAreaIN(activeAreaWithBadge);
 						} else {
 							log.error("Could not add badge to ActiveArea " + activeAreaToChange.getArea().getName()
 									+ "!");
@@ -89,7 +89,7 @@ public class BusinessLogicService extends Service<Void> {
 					// Check if badge is registered in SickDatabase
 					if (activeBadge != null) {
 						ActiveArea activeAreaWithoutBadge = removeBadgeFromActiveArea(activeBadge, activeAreaToChange);
-						isChanged = updateNearestActiveAreaOUT(activeBadge, activeAreaWithoutBadge);
+						isChanged = updateNearestActiveAreaOUT(activeAreaWithoutBadge);
 					} else {
 						log.info("Register badge with name:" + payload.get("customName") + " and address: "
 								+ payload.get("address"));
@@ -199,11 +199,11 @@ public class BusinessLogicService extends Service<Void> {
 		return AreaManager.removeActiveBadgeFromActiveArea(badge, activeAreaToChange);
 	}
 
-	private boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
-		return AreaManager.updateNearestActiveAreaIN(badge, activeAreaWithBadge);
+	private boolean updateNearestActiveAreaIN(ActiveArea activeAreaWithBadge) {
+		return AreaManager.updateNearestActiveAreaIN(activeAreaWithBadge);
 	}
 
-	private boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
-		return AreaManager.updateNearestActiveAreaOUT(badge, activeAreaWithoutBadge);
+	private boolean updateNearestActiveAreaOUT(ActiveArea activeAreaWithoutBadge) {
+		return AreaManager.updateNearestActiveAreaOUT(activeAreaWithoutBadge);
 	}
 }

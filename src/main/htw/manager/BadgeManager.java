@@ -11,10 +11,30 @@ import main.htw.datamodell.ActiveBadge;
 import main.htw.datamodell.RoleType;
 import main.htw.xml.Badge;
 
+/**
+ * The BadgeManager contains all functions necessary for managing the badges.
+ * These include:
+ * <ul>
+ * <li>Adding/ removing badges to active badges
+ * <li>Get a badge by an address
+ * <li>Check if the SickDatabase contains a specific badge
+ * <li>Add a badge to the database
+ * <li>Handle the role edit of a badge
+ * <li>Update the name of a badge
+ * </ul>
+ */
 public class BadgeManager {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+	/**
+	 * Search by address for a specific badge in the {@link SickDatabase}.
+	 * 
+	 * @param address
+	 *            the address of the badge to find.
+	 * @return the badge if an badge was found with the specific address;
+	 *         <code>null</code> otherwise
+	 */
 	public static Badge getBadgeByAddress(String address) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<Badge> badges = database.getBadgeList().getBadges();
@@ -27,6 +47,14 @@ public class BadgeManager {
 		return null;
 	}
 
+	/**
+	 * Search by address for a specific active badge in the {@link SickDatabase}.
+	 * 
+	 * @param address
+	 *            the address of the active badge to find.
+	 * @return the active badge if an active badge was found with the specific
+	 *         address; <code>null</code> otherwise
+	 */
 	public static ActiveBadge getActiveBadgeByAddress(String address) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<ActiveBadge> badges = database.getActiveBadgesList();
@@ -39,6 +67,14 @@ public class BadgeManager {
 		return null;
 	}
 
+	/**
+	 * Check by address if a badge exists in the {@link SickDatabase}.
+	 * 
+	 * @param address
+	 *            the address from the badge to find
+	 * @return <code>true</code> if a badge was found with the specific address;
+	 *         <code>false</code> otherwise
+	 */
 	public static boolean isBadgeInDataBase(String address) {
 		SickDatabase database = SickDatabase.getInstance();
 		for (Badge badgeToCheck : database.getBadgeList().getBadges()) {
@@ -49,6 +85,14 @@ public class BadgeManager {
 		return false;
 	}
 
+	/**
+	 * Check by address if an active badge exists in the {@link SickDatabase}.
+	 * 
+	 * @param address
+	 *            the address from the active badge to find
+	 * @return <code>true</code> if an active badge was found with the specific
+	 *         address; <code>false</code> otherwise
+	 */
 	public static boolean isActiveBadgeInDataBase(String address) {
 		SickDatabase database = SickDatabase.getInstance();
 		for (ActiveBadge badgeToCheck : database.getActiveBadgesList()) {
@@ -59,11 +103,27 @@ public class BadgeManager {
 		return false;
 	}
 
+	/**
+	 * Add a none existing badge to the {@link SickDatabase}.
+	 * 
+	 * @param badgeToAdd
+	 *            the badge to add.
+	 */
 	public static void addBadge(Badge badgeToAdd) {
-		SickDatabase.getInstance().getBadgeList().addBadge(badgeToAdd);
-		log.info("Added Badge " + badgeToAdd.getAddress() + " to Database!");
+		if (!isBadgeInDataBase(badgeToAdd.getAddress())) {
+			SickDatabase.getInstance().getBadgeList().addBadge(badgeToAdd);
+			log.info("Added Badge " + badgeToAdd.getAddress() + " to Database!");
+		} else {
+			log.error("Database alread contains a badge with the address: " + badgeToAdd.getAddress() + "!");
+		}
 	}
 
+	/**
+	 * Add a none existing badge to the active badges in the {@link SickDatabase}.
+	 * 
+	 * @param badgeToAdd
+	 *            the badge to add.
+	 */
 	public static void addBadgeToActiveBadges(Badge badgeToAdd) {
 		ActiveBadge activeBadge = new ActiveBadge(badgeToAdd);
 		if (!BadgeManager.isActiveBadgeInDataBase(activeBadge.getAddress())) {
@@ -72,7 +132,16 @@ public class BadgeManager {
 		}
 	}
 
-	public static Badge editBadge(Badge oldBadge, String badgeRole) {
+	/**
+	 * Change the role of an existing badge in the {@link SickDatabase}.
+	 * 
+	 * @param oldBadge
+	 *            the badge with the role to update.
+	 * @param badgeRole
+	 *            the new badge role.
+	 * @return the updated badge with the new role.
+	 */
+	public static Badge editBadgeRole(Badge oldBadge, String badgeRole) {
 		log.info("Edit Badge...");
 		SickDatabase database = SickDatabase.getInstance();
 		List<Badge> badgeList = database.getBadgeList().getBadges();
@@ -95,6 +164,14 @@ public class BadgeManager {
 		return oldBadge;
 	}
 
+	/**
+	 * Change the name of an existing badge in the {@link SickDatabase}.
+	 * 
+	 * @param address
+	 *            the address of the badge to update.
+	 * @param name
+	 *            the new name of the badge.
+	 */
 	public static void updateBadgeName(String address, String name) {
 		if (isBadgeInDataBase(address)) {
 			if (!BadgeManager.getBadgeByAddress(address).getName().equals(name)) {

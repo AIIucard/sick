@@ -93,7 +93,7 @@ public class SickMessageHandler extends WebSocketAdapter {
 
 			case "GEOFENCING_EVENT":
 				JSONObject payload = (JSONObject) jsonObject.get("payload");
-				if (AreaManager.checkIfActiveAreaExistsByID(Integer.parseInt(String.valueOf(payload.get("areaId"))))) {
+				if (AreaManager.isActiveAreaInDatabase(Integer.parseInt(String.valueOf(payload.get("areaId"))))) {
 					ApplicationManager.getInstance().handleGeofenceEvent(payload);
 				}
 				break;

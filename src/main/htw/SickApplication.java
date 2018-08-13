@@ -182,13 +182,13 @@ public class SickApplication extends Application implements Observer {
 			database.addObserver(this);
 			propManager = CFGPropertyManager.getInstance();
 			if (propManager != null) {
-				width = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_WIDTH));
-				height = Double.parseDouble(propManager.getProperty(PropertiesKeys.APP_HEIGHT));
+				width = Double.parseDouble(propManager.getPropertyValue(PropertiesKeys.APP_WIDTH));
+				height = Double.parseDouble(propManager.getPropertyValue(PropertiesKeys.APP_HEIGHT));
 
 				database.setRobotPositionX(
-						Double.parseDouble(propManager.getProperty(PropertiesKeys.ROBOT_X_COORDINATE)));
+						Double.parseDouble(propManager.getPropertyValue(PropertiesKeys.ROBOT_X_COORDINATE)));
 				database.setRobotPositionY(
-						Double.parseDouble(propManager.getProperty(PropertiesKeys.ROBOT_Y_COORDINATE)));
+						Double.parseDouble(propManager.getPropertyValue(PropertiesKeys.ROBOT_Y_COORDINATE)));
 			} else {
 				log.info("Continue without loaded properties...");
 			}
@@ -843,7 +843,7 @@ public class SickApplication extends Application implements Observer {
 					ObservableList<Badge> selectedItems = table.getSelectionModel().getSelectedItems();
 					Badge selectedBadge = selectedItems.get(0);
 
-					Badge editBadge = BadgeManager.editBadge(selectedBadge, role);
+					Badge editBadge = BadgeManager.editBadgeRole(selectedBadge, role);
 					int pos = 0;
 					for (int i = 0; i < badgeTableData.size(); ++i) {
 						Badge currentBadge = badgeTableData.get(i);

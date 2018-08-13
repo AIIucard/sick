@@ -59,7 +59,7 @@ public class RobotHandler extends SickHandler {
 					instance = new RobotHandler();
 					try {
 						propManager = CFGPropertyManager.getInstance();
-						uri = new URI(propManager.getProperty(PropertiesKeys.ROBOT_BASE_URL));
+						uri = new URI(propManager.getPropertyValue(PropertiesKeys.ROBOT_BASE_URL));
 					} catch (URISyntaxException e) {
 						log.error("Can not create new URI for RobotHandler! Got the following Exception: "
 								+ e.getLocalizedMessage());

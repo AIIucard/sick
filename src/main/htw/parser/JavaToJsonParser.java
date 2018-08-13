@@ -30,7 +30,7 @@ public class JavaToJsonParser {
 
 		// add inOutHysteresis
 		jsonString += "\"inOutHysteresis\": "
-				+ CFGPropertyManager.getInstance().getProperty(PropertiesKeys.IN_OUT_HYSTERESIS) + ",";
+				+ CFGPropertyManager.getInstance().getPropertyValue(PropertiesKeys.IN_OUT_HYSTERESIS) + ",";
 
 		// add layer
 		jsonString += "\"layer\": " + area.getLayer() + ",";

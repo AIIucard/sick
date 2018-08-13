@@ -91,8 +91,8 @@ public class RTLSHandler extends SickHandler {
 					instance = new RTLSHandler();
 					try {
 						propManager = CFGPropertyManager.getInstance();
-						String websocketString = propManager.getProperty(PropertiesKeys.WEBSOCKET_PROTOCOL)
-								+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
+						String websocketString = propManager.getPropertyValue(PropertiesKeys.WEBSOCKET_PROTOCOL)
+								+ propManager.getPropertyValue(PropertiesKeys.ZIGPOS_BASE_URL) + "/socket";
 						uri = new URI(websocketString);
 
 					} catch (URISyntaxException e) {
@@ -171,8 +171,8 @@ public class RTLSHandler extends SickHandler {
 		log.info("Adding new Area to Zigpos...");
 		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
 		try {
-			String websocketString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
-					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
+			String websocketString = propManager.getPropertyValue(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getPropertyValue(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 
 			URL url = new URL(websocketString);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -216,8 +216,8 @@ public class RTLSHandler extends SickHandler {
 		log.info("Updating Area in Zigpos...");
 		String jsonFormattedString = JavaToJsonParser.getAreaJson(area);
 		try {
-			String websocketString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
-					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas/" + area.getId();
+			String websocketString = propManager.getPropertyValue(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getPropertyValue(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas/" + area.getId();
 
 			URL url = new URL(websocketString);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -254,8 +254,8 @@ public class RTLSHandler extends SickHandler {
 	 *         if no area matches the given layer.
 	 */
 	private List<Area> getAllAreasForLayerFromZigpos(Long layer) {
-		String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
-				+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
+		String urlString = propManager.getPropertyValue(PropertiesKeys.HTTPS_PROTOCOL)
+				+ propManager.getPropertyValue(PropertiesKeys.ZIGPOS_BASE_URL) + "/geofencing/areas";
 		JSONArray jsonArray;
 
 		try {
@@ -276,7 +276,7 @@ public class RTLSHandler extends SickHandler {
 			String name = (String) jsonAreaObj.get("name");
 
 			if (areaLayer == layer) {
-				if (AreaManager.isAreaInDataBase(id)) {
+				if (AreaManager.isAreaInDatabase(id)) {
 					Area newArea = new Area(Integer.valueOf(id.intValue()), name,
 							Integer.valueOf(areaLayer.intValue()));
 					newArea.setDistanceToRobot(AreaManager.getAreaByID(id).getDistanceToRobot());
@@ -304,8 +304,8 @@ public class RTLSHandler extends SickHandler {
 	public void getActiveBadges() {
 		JSONArray jsonBadgeArray;
 		try {
-			String urlString = propManager.getProperty(PropertiesKeys.HTTPS_PROTOCOL)
-					+ propManager.getProperty(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
+			String urlString = propManager.getPropertyValue(PropertiesKeys.HTTPS_PROTOCOL)
+					+ propManager.getPropertyValue(PropertiesKeys.ZIGPOS_BASE_URL) + "/devices";
 			jsonBadgeArray = JsonReader.readJsonArrayFromUrl(urlString);
 
 			for (Object badgeObj : jsonBadgeArray) {
@@ -350,7 +350,7 @@ public class RTLSHandler extends SickHandler {
 	 * area doesn't exist in the ZigPos RTLS System it will be added to it.
 	 */
 	public void updateAreas() {
-		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
+		Long sickLayer = Long.parseLong(propManager.getPropertyValue(PropertiesKeys.AREA_LAYER));
 		List<Area> areasInLayer = getAllAreasForLayerFromZigpos(sickLayer);
 		List<Area> areasToCheck = new ArrayList<Area>();
 		List<Area> areaList = SickDatabase.getInstance().getAreaList().getAreas();
@@ -393,7 +393,7 @@ public class RTLSHandler extends SickHandler {
 	 */
 	public ArrayList<ActiveArea> getActiveAreas() {
 
-		Long sickLayer = Long.parseLong(propManager.getProperty(PropertiesKeys.AREA_LAYER));
+		Long sickLayer = Long.parseLong(propManager.getPropertyValue(PropertiesKeys.AREA_LAYER));
 		List<Area> areas = getAllAreasForLayerFromZigpos(sickLayer);
 
 		// Sort Areas by distance ==> 0 to 3

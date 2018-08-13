@@ -19,17 +19,39 @@ import main.htw.xml.AreaList;
 import main.htw.xml.Coordinate;
 import main.htw.xml.Shape;
 
+/**
+ * The AreaManager contains all functions necessary for managing the areas.
+ * These include:
+ * <ul>
+ * <li>Adding/ removing active badges to active areas
+ * <li>Manage and handle all corresponding services including:
+ * <li>Utilty methods for working with areas:
+ * <ul>
+ * <li>Get area by ID
+ * <li>Get active area by ID
+ * <li>Check if area exists by ID
+ * <li>Check for dublicate areas
+ * <li>Update area shapes
+ * <li>Check if database contains a specific area
+ * </ul>
+ * <li>Handle roles for areas
+ * <li>Handle the nearest active area
+ * </ul>
+ */
 public class AreaManager {
 
 	private static Logger log = LoggerFactory.getLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-	private static int getSickArea() {
-		int sickPosArea = -1;
-		CFGPropertyManager propManager = CFGPropertyManager.getInstance();
-		sickPosArea = Integer.parseInt(propManager.getProperty(PropertiesKeys.AREA_LAYER));
-		return sickPosArea;
-	}
-
+	/**
+	 * This method is for adding an ActiveBadge to an ActiveArea. The badge list of
+	 * the area is updated and the highest role in the area is redefined.
+	 * 
+	 * @param activeBadge
+	 *            the active badge to add.
+	 * @param activeArea
+	 *            the active area to which the badge should be added.
+	 * @return the updated active area with the added badge.
+	 */
 	public static ActiveArea addActiveBadgeToActiveArea(ActiveBadge activeBadge, ActiveArea activeArea) {
 		ActiveArea activeAreaWithBadge = null;
 		SickDatabase database = SickDatabase.getInstance();
@@ -54,6 +76,16 @@ public class AreaManager {
 		return activeAreaWithBadge;
 	}
 
+	/**
+	 * This method is for removing an ActiveBadge from an ActiveArea. The badge list
+	 * of the area is updated and the highest role in the area is redefined.
+	 * 
+	 * @param activeBadge
+	 *            the active badge to remove.
+	 * @param activeArea
+	 *            the active area from which the badge should be removed.
+	 * @return the updated active area without the removed badge.
+	 */
 	public static ActiveArea removeActiveBadgeFromActiveArea(ActiveBadge activeBadge, ActiveArea activeArea) {
 		ActiveArea activeAreaWithoutBadge = null;
 		SickDatabase database = SickDatabase.getInstance();
@@ -94,6 +126,14 @@ public class AreaManager {
 		return activeAreaWithoutBadge;
 	}
 
+	/**
+	 * Search for an area in the {@link SickDatabase} by ID
+	 * 
+	 * @param id
+	 *            the ID from the area to find
+	 * @return the area if an area was found with the specific id; <code>null</code>
+	 *         otherwise
+	 */
 	public static Area getAreaByID(Long id) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<Area> areas = database.getAreaList().getAreas();
@@ -107,6 +147,14 @@ public class AreaManager {
 		return null;
 	}
 
+	/**
+	 * Search for an active area in the {@link SickDatabase} by ID
+	 * 
+	 * @param id
+	 *            the ID from the active area to find
+	 * @return the active area if an active area was found with the specific id;
+	 *         <code>null</code> otherwise
+	 */
 	public static ActiveArea getActiveAreaByID(Integer id) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<ActiveArea> activeAreas = database.getActiveAreasList();
@@ -120,7 +168,15 @@ public class AreaManager {
 		return null;
 	}
 
-	public static boolean checkIfActiveAreaExistsByID(int id) {
+	/**
+	 * Check by ID if an active area exists in the {@link SickDatabase}
+	 * 
+	 * @param id
+	 *            the ID from the area to find
+	 * @return <code>true</code> if an area was found with the specific id;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean isActiveAreaInDatabase(int id) {
 		SickDatabase database = SickDatabase.getInstance();
 		List<ActiveArea> activeAreas = database.getActiveAreasList();
 		for (ActiveArea activeArea : activeAreas) {
@@ -131,6 +187,19 @@ public class AreaManager {
 		return false;
 	}
 
+	/**
+	 * Updating an area in the {@link SickDatabase}. The name and distance to the
+	 * robot will be updated. If the distance is changed, the coordinates are also
+	 * recalculated.
+	 * 
+	 * @param oldArea
+	 *            the area to update.
+	 * @param areaName
+	 *            the new name of the area.
+	 * @param distanceToRobot
+	 *            the new distance to the robot of the area.
+	 * @return the updated area with the new name and distance.
+	 */
 	public static Area editArea(Area oldArea, String areaName, Double distanceToRobot) {
 		log.info("Edit Area...");
 		SickDatabase database = SickDatabase.getInstance();
@@ -148,7 +217,7 @@ public class AreaManager {
 			if (areaToCheck.getName().equals(areaName) && areaToCheck.getDistanceToRobot().equals(distanceToRobot)) {
 				pos = i;
 
-				int sickPosArea = getSickArea();
+				int sickPosArea = getSickAreaLayer();
 				if (sickPosArea == -1) {
 					return null;
 				}
@@ -164,7 +233,24 @@ public class AreaManager {
 		return oldArea;
 	}
 
-	public static boolean isDublicatedArea(String oldName, Double oldDistance, String name, Double distance) {
+	/**
+	 * Check if an area to update already exists with the same name and distance in
+	 * the {@link SickDatabase}.
+	 * 
+	 * @param oldName
+	 *            the old name of the area to updated
+	 * @param oldDistance
+	 *            the old distance of the area to update
+	 * @param updatedName
+	 *            the updated name of the area to updated
+	 * @param updatedDistance
+	 *            the updated distance of the area to updated the ID from the area
+	 *            to find
+	 * @return <code>true</code> if another area with the same name or distance
+	 *         already exists; <code>false</code> otherwise
+	 */
+	public static boolean isDublicatedArea(String oldName, Double oldDistance, String updatedName,
+			Double updatedDistance) {
 		SickDatabase database = SickDatabase.getInstance();
 		ArrayList<Area> areaList = new ArrayList<Area>();
 		for (Area area : database.getAreaList().getAreas()) {
@@ -174,13 +260,18 @@ public class AreaManager {
 		}
 
 		for (Area area : areaList) {
-			if (area.getName().equals(name) || area.getDistanceToRobot().equals(distance)) {
+			if (area.getName().equals(updatedName) || area.getDistanceToRobot().equals(updatedDistance)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * Update all area shapes in the {@link SickDatabase}.The calculateCoordinates
+	 * method is used of the {@link SickUtils} for calculating the new coordinates
+	 * for the area shapes.
+	 */
 	public static void updateAreaShapes() {
 		log.info("Update Area Shapes...");
 		SickDatabase database = SickDatabase.getInstance();
@@ -201,7 +292,18 @@ public class AreaManager {
 		log.info("Area Shapes Updated");
 	}
 
-	public static boolean updateNearestActiveAreaIN(ActiveBadge badge, ActiveArea activeAreaWithBadge) {
+	/**
+	 * Update the pointer to the nearest active area in the
+	 * {@link SickDatabase}.This checks whether there is already a nearestActiveArea
+	 * or a next higher active area than the previous nearestActiveArea already
+	 * contains a badge. Only than the nearest active area has to be updated.
+	 * 
+	 * @param activeAreaWithBadge
+	 *            the updated active area with the added badge.
+	 * @return <code>true</code> if the nearest active area has changed;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean updateNearestActiveAreaIN(ActiveArea activeAreaWithBadge) {
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
 		if (nearestActiveArea == null) {
@@ -220,7 +322,18 @@ public class AreaManager {
 		return false;
 	}
 
-	public static boolean updateNearestActiveAreaOUT(ActiveBadge badge, ActiveArea activeAreaWithoutBadge) {
+	/**
+	 * Update the pointer to the nearest active area in the {@link SickDatabase}.
+	 * This checks whether the ID of the updated active area matches that of the
+	 * nearest active area and whether the updated active area contains exactly 0
+	 * badges. Only than the nearest active area has to be updated.
+	 * 
+	 * @param activeAreaWithoutBadge
+	 *            the updated active area without the badge.
+	 * @return <code>true</code> if the nearest active area has changed;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean updateNearestActiveAreaOUT(ActiveArea activeAreaWithoutBadge) {
 		SickDatabase database = SickDatabase.getInstance();
 		ActiveArea nearestActiveArea = database.getNearestActiveArea();
 		int lastLevel = -1;
@@ -253,7 +366,15 @@ public class AreaManager {
 		return false;
 	}
 
-	public static boolean isAreaInDataBase(Long id) {
+	/**
+	 * Check by ID if an area exists in the {@link SickDatabase}.
+	 * 
+	 * @param id
+	 *            the ID from the area to find
+	 * @return <code>true</code> if an area was found with the specific id;
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean isAreaInDatabase(Long id) {
 		SickDatabase database = SickDatabase.getInstance();
 		for (Area areaToCheck : database.getAreaList().getAreas()) {
 			if (areaToCheck.getId() == id.intValue()) {
@@ -263,6 +384,13 @@ public class AreaManager {
 		return false;
 	}
 
+	/**
+	 * Returns the lowest role of an badge in the active area.
+	 * 
+	 * @param activeArea
+	 *            the active area to get the lowest role from.
+	 * @return the lowest role of all badges in the active area.
+	 */
 	public static RoleType getLowestRoleInActiveArea(ActiveArea activeArea) {
 		RoleType lowestRole = activeArea.getHighestRoleType();
 		List<ActiveBadge> containgBatchesList = activeArea.getContaingBadgesList();
@@ -275,5 +403,15 @@ public class AreaManager {
 			}
 		}
 		return lowestRole;
+	}
+
+	/**
+	 * @return the Sick layer for the areas from the {@link CFGPropertyManager}.
+	 */
+	private static int getSickAreaLayer() {
+		int sickPosArea = -1;
+		CFGPropertyManager propManager = CFGPropertyManager.getInstance();
+		sickPosArea = Integer.parseInt(propManager.getPropertyValue(PropertiesKeys.AREA_LAYER));
+		return sickPosArea;
 	}
 }

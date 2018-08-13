@@ -14,6 +14,14 @@ import main.htw.manager.CFGPropertyManager;
 import main.htw.properties.PropertiesKeys;
 import main.htw.utils.SickColor;
 
+/**
+ * LightHandler is a singleton, so the instantiation is restricted to one
+ * object. The LightHandler coordinates the following actions:
+ * <ul>
+ * <li>Initializes the connection to the light module
+ * <li>Send light color to light module
+ * </ul>
+ */
 public class LightHandler extends SickHandler {
 
 	private static final String RED = "\"xy\": [0.734662, 0.265047]";
@@ -50,7 +58,7 @@ public class LightHandler extends SickHandler {
 					instance = new LightHandler();
 					try {
 						propManager = CFGPropertyManager.getInstance();
-						url = new URL(propManager.getProperty(PropertiesKeys.LIGHT_BASE_URL));
+						url = new URL(propManager.getPropertyValue(PropertiesKeys.LIGHT_BASE_URL));
 					} catch (MalformedURLException e) {
 						log.error("Can not create new URL for LightHandler! Got the following Exception: "
 								+ e.getLocalizedMessage());
@@ -94,10 +102,10 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Send light.
+	 * Send the light color to the light module via the established connection.
 	 *
 	 * @param color
-	 *            the color
+	 *            the light color
 	 */
 	private static void sendLight(String color) {
 		initializeConnection();
@@ -137,7 +145,7 @@ public class LightHandler extends SickHandler {
 	}
 
 	/**
-	 * Sets the light.
+	 * Sets the Sick light color.
 	 *
 	 * @param color
 	 *            the new light
