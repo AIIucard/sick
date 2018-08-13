@@ -6,8 +6,24 @@ import java.util.List;
 import main.htw.xml.Area;
 import main.htw.xml.Coordinate;
 
+/**
+ * Provides utility methods for the application.
+ *
+ */
 public class SickUtils {
 
+	/**
+	 * Calculate the shape coordinates based on the robot position and the distance
+	 * to the robot.
+	 * 
+	 * @param robotPositionX
+	 *            the X coordinate of the robot position.
+	 * @param robotPositionY
+	 *            the Y coordinate of the robot position.
+	 * @param distanceToRobot
+	 *            the distance to the robot.
+	 * @return a list of the calculated coordinates for the area shape.
+	 */
 	public static List<Coordinate> calculateCoordinates(double robotPositionX, double robotPositionY,
 			double distanceToRobot) {
 
@@ -52,6 +68,16 @@ public class SickUtils {
 		return coordinates;
 	}
 
+	/**
+	 * Check if two different areas have different coordinates.
+	 * 
+	 * @param areaToCheck
+	 *            the first area to check.
+	 * @param areaInLayer
+	 *            the second area to check.
+	 * @return <code>true</code> if areas have different coordinates;
+	 *         <code>false</code> otherwise
+	 */
 	public static boolean hasDifferentCoordinates(Area areaToCheck, Area areaInLayer) {
 		List<Coordinate> coordinates1 = areaToCheck.getShape().getCoordinates();
 		List<Coordinate> coordinates2 = areaInLayer.getShape().getCoordinates();
